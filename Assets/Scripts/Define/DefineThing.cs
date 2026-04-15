@@ -1,12 +1,16 @@
+using System;
 using UnityEngine;
 
-public class DefineThing : MonoBehaviour
+public abstract class DefineThing : MonoBehaviour
 {
     [SerializeField]
     protected string labelName;
     [SerializeField]
     [TextArea(3, 10)]
     protected string labelDescription;
+
+    public String LabelName => labelName;
+    public String LabelDescription => labelDescription;
 
     public virtual void ConfigError()
     {

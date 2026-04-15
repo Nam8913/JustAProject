@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class GameService
@@ -5,6 +6,7 @@ public class GameService
     static object _lock = new object();
     static GameService _game;
 
+    WorldHandler _worldHandler;
     GameSettings _settings;
 
     public static GameService Game
@@ -35,6 +37,19 @@ public class GameService
         _settings = new GameSettings();
     }
 
+    public void RegisterWorld(World world)
+    {
+        if(_worldHandler != null)
+        {
+            Debug.LogError("WorldHandler is already registered. Multiple worlds are not supported.");
+            return;
+        }
+        _worldHandler = new GameObject("WorldHandler").AddComponent<WorldHandler>();
+    }
+
     public GameSettings Settings => _settings;
+    public WorldHandler WorldHandler => _worldHandler;
+
+    public NavService Navigation => NavService.Instance;
 
 }
