@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AcquireRandomTargetBH : ActionNodeBH
@@ -9,6 +10,13 @@ public class AcquireRandomTargetBH : ActionNodeBH
         if (Context == null || Context.Creature == null)
         {
             return BHState.FAILURE;
+        }
+
+        // If the creature is already following a path, keep the current target unchanged.
+        // This prevents the request branch from accidentally replacing an in-progress route.
+        if (Context.TryGet(BehaviorTreeKeys.WanderPath, out List<Vector2> activePath) && activePath != null && activePath.Count > 0)
+        {
+            return BHState.SUCCESS;
         }
 
         Vector2 origin = Context.Creature.WorldPosition;

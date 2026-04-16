@@ -15,16 +15,25 @@ public class RequestPathBH : ActionNodeBH
             return BHState.FAILURE;
         }
 
+        // If there is already an active path for the same target, do not rebuild it.
+        if (Context.TryGet(BehaviorTreeKeys.WanderPath, out List<Vector2> activePath) &&
+            activePath != null &&
+            activePath.Count > 0 &&
+            Context.TryGet(BehaviorTreeKeys.WanderPathTarget, out Vector2 lockedTarget) &&
+            lockedTarget == targetPosition)
+        {
+            return BHState.SUCCESS;
+        }
+
         List<Vector2> path = Context.Navigation.GetPathFromTo(Context.Creature, targetPosition);
         if (path == null || path.Count == 0)
         {
-            Context.Remove(BehaviorTreeKeys.WanderPath);
-            Context.Remove(BehaviorTreeKeys.WanderPathIndex);
             return BHState.FAILURE;
         }
 
         Context.Set(BehaviorTreeKeys.WanderPath, path);
         Context.Set(BehaviorTreeKeys.WanderPathIndex, 0);
+        Context.Set(BehaviorTreeKeys.WanderPathTarget, targetPosition);
         return BHState.SUCCESS;
     }
 }

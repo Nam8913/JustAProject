@@ -9,14 +9,38 @@ public sealed class HPAPathfinder
     // Cache of per-chunk tile graphs so we only build detailed graphs when needed.
     private readonly Dictionary<Vector2Int, GraphPathfinder> tileGraphsByChunk = new Dictionary<Vector2Int, GraphPathfinder>();
 
+    // Last successful or attempted search data for debug drawing.
+    private List<Vector2> lastPath;
+    private List<Vector2Int> lastChunkRoute;
+    private List<Vector2> lastGatewayPoints;
+    private List<Vector2> lastGatewayEntryPoints;
+    private List<Vector2> lastGatewayExitPoints;
+
     // When true, a tile graph is removed after the chunk no longer has active creatures.
     public bool AutoReleaseUnusedChunkGraphs { get; set; } = true;
+
+    // Controls how many gateway candidates are sampled along a shared chunk border.
+    public int GatewayCountPerBorder { get; set; } = Mathf.Max(1, LocalTestValue.tilesPerChunk);
+
+    // Controls how many tiles inward we search when the outermost gateway tile is blocked.
+    public int GatewaySearchDepth { get; set; } = 2;
 
     // Expose the current chunk graph for debug rendering.
     public GraphPathfinder ChunkGraph => chunkGraph;
 
     // Expose cached tile graphs for debug rendering.
     public IReadOnlyDictionary<Vector2Int, GraphPathfinder> TileGraphsByChunk => tileGraphsByChunk;
+
+    // Expose the most recent path and chunk route so debug tools can render them.
+    public IReadOnlyList<Vector2> LastPath => lastPath;
+    public IReadOnlyList<Vector2Int> LastChunkRoute => lastChunkRoute;
+    public IReadOnlyList<Vector2> LastGatewayPoints => lastGatewayPoints;
+    public IReadOnlyList<Vector2> LastGatewayEntryPoints => lastGatewayEntryPoints;
+    public IReadOnlyList<Vector2> LastGatewayExitPoints => lastGatewayExitPoints;
+
+    // Expose the requested start and goal positions for the last query.
+    public Vector2 LastStartPosition { get; private set; }
+    public Vector2 LastGoalPosition { get; private set; }
 
     public HPAPathfinder()
     {
@@ -36,6 +60,15 @@ public sealed class HPAPathfinder
         // Clear old gizmo flags so a new search does not leave stale path colors behind.
         ClearDebugVisuals();
 
+        // Reset the last-search cache before building a new result.
+        lastPath = null;
+        lastChunkRoute = null;
+        lastGatewayPoints = null;
+        lastGatewayEntryPoints = null;
+        lastGatewayExitPoints = null;
+        LastStartPosition = startPosition;
+        LastGoalPosition = goalPosition;
+
         // Convert world positions to chunk coordinates first.
         Vector2Int startChunk = Chunk.GetChunkPosition(startPosition);
         Vector2Int goalChunk = Chunk.GetChunkPosition(goalPosition);
@@ -49,35 +82,40 @@ public sealed class HPAPathfinder
 
         // Step 2: refine each chunk in the route into tile-level movement.
         var finalPath = new List<Vector2>();
+        var selectedEntryPoints = new List<Vector2>();
+        var selectedExitPoints = new List<Vector2>();
 
         for (int i = 0; i < chunkRoute.Count; i++)
         {
             Vector2Int currentChunk = chunkRoute[i];
-            // For the first chunk, start from the exact world position.
-            // For the next chunks, start from the gateway toward the previous chunk.
-            Vector2 entryPoint = i == 0 ? startPosition : GetGatewayPoint(currentChunk, chunkRoute[i - 1]);
-            // For the last chunk, end at the exact world goal.
-            // For middle chunks, end at the gateway toward the next chunk.
-            Vector2 exitPoint = i == chunkRoute.Count - 1 ? goalPosition : GetGatewayPoint(currentChunk, chunkRoute[i + 1]);
-
             // Build or reuse the detailed tile graph for this chunk.
             GraphPathfinder tileGraph = GetOrCreateTileGraph(currentChunk);
-            // Find the path inside the current chunk only.
-            List<Vector2> segment = FindPathOnGraph(tileGraph, SnapToTileCenter(currentChunk, entryPoint), SnapToTileCenter(currentChunk, exitPoint));
+            // Pick the best entry/exit gateway pair and then find the path inside the current chunk.
+            Vector2Int? previousChunk = i > 0 ? chunkRoute[i - 1] : null;
+            Vector2Int? nextChunk = i < chunkRoute.Count - 1 ? chunkRoute[i + 1] : null;
 
-            if (segment == null)
+            if (!TryFindBestChunkSegment(tileGraph, currentChunk, previousChunk, nextChunk, startPosition, goalPosition, out List<Vector2> segment, out Vector2 selectedEntry, out Vector2 selectedExit))
             {
                 return null;
             }
 
+            selectedEntryPoints.Add(selectedEntry);
+            selectedExitPoints.Add(selectedExit);
+
             // Merge all chunk segments into one continuous world path.
             AppendSegment(finalPath, segment);
+        }
 
-            // Optional memory cleanup: remove the detailed graph if nobody is using this chunk.
-            if (AutoReleaseUnusedChunkGraphs && ThingHandler.GetCreatureCountInChunk(currentChunk) == 0)
-            {
-                tileGraphsByChunk.Remove(currentChunk);
-            }
+        // Cache the final result for debug rendering.
+        lastPath = new List<Vector2>(finalPath);
+        lastChunkRoute = new List<Vector2Int>(chunkRoute);
+        lastGatewayPoints = BuildGatewayMidpoints(selectedEntryPoints, selectedExitPoints);
+        lastGatewayEntryPoints = new List<Vector2>(selectedEntryPoints);
+        lastGatewayExitPoints = new List<Vector2>(selectedExitPoints);
+
+        if (AutoReleaseUnusedChunkGraphs)
+        {
+            ReleaseUnusedChunkGraphsExcept(lastChunkRoute);
         }
 
         return finalPath;
@@ -100,7 +138,7 @@ public sealed class HPAPathfinder
         // Run A* on chunk coordinates, then convert the result into chunk positions.
         Vector2 startNodePos = new Vector2(startChunk.x, startChunk.y);
         Vector2 goalNodePos = new Vector2(goalChunk.x, goalChunk.y);
-        List<Vector2> rawChunkPath = FindPathOnGraph(chunkGraph, startNodePos, goalNodePos);
+        List<Vector2> rawChunkPath = FindPathOnGraph(chunkGraph, startNodePos, goalNodePos, true);
 
         if (rawChunkPath == null)
         {
@@ -177,7 +215,103 @@ public sealed class HPAPathfinder
         return graph;
     }
 
-    private static List<Vector2> FindPathOnGraph(GraphPathfinder graph, Vector2 startPosition, Vector2 goalPosition)
+    private bool TryFindBestChunkSegment(
+        GraphPathfinder tileGraph,
+        Vector2Int chunkPosition,
+        Vector2Int? previousChunk,
+        Vector2Int? nextChunk,
+        Vector2 startPosition,
+        Vector2 goalPosition,
+        out List<Vector2> bestSegment,
+        out Vector2 selectedEntry,
+        out Vector2 selectedExit)
+    {
+        bestSegment = null;
+        selectedEntry = default;
+        selectedExit = default;
+
+        int maxDepth = Mathf.Clamp(GatewaySearchDepth, 0, LocalTestValue.tilesPerChunk - 1);
+
+        // Prefer the outer border first. Only move inward if no walkable portal exists there.
+        for (int depth = 0; depth <= maxDepth; depth++)
+        {
+            List<Vector2> entryCandidates = previousChunk.HasValue
+                ? GetGatewayCandidatesAtDepth(chunkPosition, previousChunk.Value, depth)
+                : new List<Vector2> { startPosition };
+
+            List<Vector2> exitCandidates = nextChunk.HasValue
+                ? GetGatewayCandidatesAtDepth(chunkPosition, nextChunk.Value, depth)
+                : new List<Vector2> { goalPosition };
+
+            if (TryFindBestSegmentFromCandidates(tileGraph, chunkPosition, entryCandidates, exitCandidates, out bestSegment, out selectedEntry, out selectedExit))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool TryFindBestSegmentFromCandidates(
+        GraphPathfinder tileGraph,
+        Vector2Int chunkPosition,
+        List<Vector2> entryCandidates,
+        List<Vector2> exitCandidates,
+        out List<Vector2> bestSegment,
+        out Vector2 selectedEntry,
+        out Vector2 selectedExit)
+    {
+        bestSegment = null;
+        selectedEntry = default;
+        selectedExit = default;
+
+        float bestCost = float.PositiveInfinity;
+        bool foundAny = false;
+
+        foreach (var entryCandidate in entryCandidates)
+        {
+            Vector2 snappedEntry = SnapToTileCenter(chunkPosition, entryCandidate);
+            if (!IsWalkableNode(tileGraph, snappedEntry))
+            {
+                continue;
+            }
+
+            foreach (var exitCandidate in exitCandidates)
+            {
+                Vector2 snappedExit = SnapToTileCenter(chunkPosition, exitCandidate);
+                if (!IsWalkableNode(tileGraph, snappedExit))
+                {
+                    continue;
+                }
+
+                List<Vector2> trialSegment = FindPathOnGraph(tileGraph, snappedEntry, snappedExit, false);
+                if (trialSegment == null)
+                {
+                    continue;
+                }
+
+                float trialCost = CalculateSegmentCost(snappedEntry, trialSegment, snappedExit);
+                if (trialCost < bestCost)
+                {
+                    bestCost = trialCost;
+                    bestSegment = trialSegment;
+                    selectedEntry = snappedEntry;
+                    selectedExit = snappedExit;
+                    foundAny = true;
+                }
+            }
+        }
+
+        if (!foundAny)
+        {
+            return false;
+        }
+
+        bestSegment = FindPathOnGraph(tileGraph, selectedEntry, selectedExit, true);
+        return bestSegment != null;
+    }
+
+    private static List<Vector2> FindPathOnGraph(GraphPathfinder graph, Vector2 startPosition, Vector2 goalPosition, bool recordDebug)
     {
         // Look up the node nearest to the requested start/end positions.
         NodeGraph startNode = graph.GetNode(startPosition);
@@ -198,7 +332,10 @@ public sealed class HPAPathfinder
         // Seed the starting node.
         startNode.gCost = 0f;
         startNode.hCost = Vector2.Distance(startNode.pos, goalNode.pos);
-        startNode.debugOpen = true;
+        if (recordDebug)
+        {
+            startNode.debugOpen = true;
+        }
 
         while (openSet.Count > 0)
         {
@@ -216,13 +353,16 @@ public sealed class HPAPathfinder
 
             openSet.Remove(currentNode);
             closedSet.Add(currentNode);
-            currentNode.debugOpen = false;
-            currentNode.debugClosed = true;
+            if (recordDebug)
+            {
+                currentNode.debugOpen = false;
+                currentNode.debugClosed = true;
+            }
 
             // Reached the goal, so rebuild the path by following parent links.
             if (currentNode == goalNode)
             {
-                return RetracePath(startNode, goalNode);
+                return RetracePath(startNode, goalNode, recordDebug);
             }
 
             // Evaluate every reachable neighbor.
@@ -242,7 +382,10 @@ public sealed class HPAPathfinder
                     neighbor.gCost = newMovementCost;
                     neighbor.hCost = Vector2.Distance(neighbor.pos, goalNode.pos);
                     neighbor.parent = currentNode;
-                    neighbor.debugOpen = true;
+                    if (recordDebug)
+                    {
+                        neighbor.debugOpen = true;
+                    }
 
                     if (!openSet.Contains(neighbor))
                     {
@@ -255,7 +398,7 @@ public sealed class HPAPathfinder
         return null;
     }
 
-    private static List<Vector2> RetracePath(NodeGraph startNode, NodeGraph goalNode)
+    private static List<Vector2> RetracePath(NodeGraph startNode, NodeGraph goalNode, bool recordDebug)
     {
         // Walk from goal back to start using parent pointers.
         var path = new List<Vector2>();
@@ -264,7 +407,10 @@ public sealed class HPAPathfinder
         while (currentNode != startNode)
         {
             // Mark the final route for gizmo drawing.
-            currentNode.debugPath = true;
+            if (recordDebug)
+            {
+                currentNode.debugPath = true;
+            }
             path.Add(currentNode.pos);
             currentNode = currentNode.parent;
 
@@ -275,7 +421,10 @@ public sealed class HPAPathfinder
         }
 
         // Mark the start node too, then reverse so the order is start -> goal.
-        startNode.debugPath = true;
+        if (recordDebug)
+        {
+            startNode.debugPath = true;
+        }
         path.Reverse();
         return path;
     }
@@ -303,6 +452,25 @@ public sealed class HPAPathfinder
         foreach (var graph in tileGraphsByChunk.Values)
         {
             ClearDebugVisuals(graph);
+        }
+    }
+
+    private void ReleaseUnusedChunkGraphsExcept(IReadOnlyCollection<Vector2Int> protectedChunks)
+    {
+        var protectedChunkSet = protectedChunks != null ? new HashSet<Vector2Int>(protectedChunks) : new HashSet<Vector2Int>();
+        var chunksToInspect = new List<Vector2Int>(tileGraphsByChunk.Keys);
+
+        foreach (var chunkPosition in chunksToInspect)
+        {
+            if (protectedChunkSet.Contains(chunkPosition))
+            {
+                continue;
+            }
+
+            if (ThingHandler.GetCreatureCountInChunk(chunkPosition) == 0)
+            {
+                tileGraphsByChunk.Remove(chunkPosition);
+            }
         }
     }
 
@@ -337,42 +505,180 @@ public sealed class HPAPathfinder
         }
     }
 
+    private static List<Vector2> BuildGatewayMidpoints(IReadOnlyList<Vector2> entryPoints, IReadOnlyList<Vector2> exitPoints)
+    {
+        var gateways = new List<Vector2>();
+
+        if (entryPoints == null || exitPoints == null)
+        {
+            return gateways;
+        }
+
+        int boundaryCount = Mathf.Min(entryPoints.Count, exitPoints.Count) - 1;
+        for (int i = 0; i < boundaryCount; i++)
+        {
+            gateways.Add((exitPoints[i] + entryPoints[i + 1]) * 0.5f);
+        }
+
+        return gateways;
+    }
+
+    private List<Vector2> GetGatewayCandidatesAtDepth(Vector2Int fromChunk, Vector2Int toChunk, int depth)
+    {
+        var candidates = new List<Vector2>();
+        Vector2Int delta = toChunk - fromChunk;
+
+        if (delta == Vector2Int.zero)
+        {
+            return candidates;
+        }
+
+        if (delta.x != 0 && delta.y != 0)
+        {
+            AddDiagonalGatewayCandidates(candidates, fromChunk, delta, depth);
+        }
+        else
+        {
+            AddAxisAlignedGatewayCandidates(candidates, fromChunk, delta, depth);
+        }
+
+        return candidates;
+    }
+
+    private void AddAxisAlignedGatewayCandidates(List<Vector2> candidates, Vector2Int fromChunk, Vector2Int delta, int depth)
+    {
+        var sampleIndices = BuildSampleTileIndices();
+
+        if (delta.x != 0)
+        {
+            int edgeXIndex = delta.x > 0 ? LocalTestValue.tilesPerChunk - 1 : 0;
+
+            foreach (int yIndex in sampleIndices)
+            {
+                int xIndex = delta.x > 0 ? edgeXIndex - depth : edgeXIndex + depth;
+                if (!IsValidTileIndex(xIndex, yIndex))
+                {
+                    continue;
+                }
+
+                AddUniqueCandidate(candidates, GetTileCenter(fromChunk, xIndex, yIndex));
+            }
+        }
+        else
+        {
+            int edgeYIndex = delta.y > 0 ? LocalTestValue.tilesPerChunk - 1 : 0;
+
+            foreach (int xIndex in sampleIndices)
+            {
+                int yIndex = delta.y > 0 ? edgeYIndex - depth : edgeYIndex + depth;
+                if (!IsValidTileIndex(xIndex, yIndex))
+                {
+                    continue;
+                }
+
+                AddUniqueCandidate(candidates, GetTileCenter(fromChunk, xIndex, yIndex));
+            }
+        }
+    }
+
+    private void AddDiagonalGatewayCandidates(List<Vector2> candidates, Vector2Int fromChunk, Vector2Int delta, int depth)
+    {
+        int edgeXIndex = delta.x > 0 ? LocalTestValue.tilesPerChunk - 1 : 0;
+        int edgeYIndex = delta.y > 0 ? LocalTestValue.tilesPerChunk - 1 : 0;
+        int inwardXStep = delta.x > 0 ? -1 : 1;
+        int inwardYStep = delta.y > 0 ? -1 : 1;
+
+        int cornerX = edgeXIndex + inwardXStep * depth;
+        int cornerY = edgeYIndex + inwardYStep * depth;
+
+        if (IsValidTileIndex(cornerX, edgeYIndex))
+        {
+            AddUniqueCandidate(candidates, GetTileCenter(fromChunk, cornerX, edgeYIndex));
+        }
+
+        if (IsValidTileIndex(edgeXIndex, cornerY))
+        {
+            AddUniqueCandidate(candidates, GetTileCenter(fromChunk, edgeXIndex, cornerY));
+        }
+
+        if (IsValidTileIndex(cornerX, cornerY))
+        {
+            AddUniqueCandidate(candidates, GetTileCenter(fromChunk, cornerX, cornerY));
+        }
+    }
+
+    private List<int> BuildSampleTileIndices()
+    {
+        int sampleCount = Mathf.Clamp(GatewayCountPerBorder, 1, LocalTestValue.tilesPerChunk);
+        var indices = new List<int>(sampleCount);
+        var seen = new HashSet<int>();
+
+        if (sampleCount == 1)
+        {
+            int centerIndex = Mathf.RoundToInt((LocalTestValue.tilesPerChunk - 1) * 0.5f);
+            indices.Add(centerIndex);
+            return indices;
+        }
+
+        for (int i = 0; i < sampleCount; i++)
+        {
+            float t = (float)i / (sampleCount - 1);
+            int index = Mathf.RoundToInt(t * (LocalTestValue.tilesPerChunk - 1));
+            if (seen.Add(index))
+            {
+                indices.Add(index);
+            }
+        }
+
+        return indices;
+    }
+
+    private static bool IsValidTileIndex(int xIndex, int yIndex)
+    {
+        return xIndex >= 0 && xIndex < LocalTestValue.tilesPerChunk &&
+               yIndex >= 0 && yIndex < LocalTestValue.tilesPerChunk;
+    }
+
+    private static Vector2 GetTileCenter(Vector2Int chunkPosition, int tileX, int tileY)
+    {
+        Vector2 origin = GetChunkOrigin(chunkPosition);
+        return new Vector2(origin.x + tileX + 0.5f, origin.y + tileY + 0.5f);
+    }
+
+    private static void AddUniqueCandidate(List<Vector2> candidates, Vector2 candidate)
+    {
+        if (!candidates.Contains(candidate))
+        {
+            candidates.Add(candidate);
+        }
+    }
+
+    private static bool IsWalkableNode(GraphPathfinder graph, Vector2 position)
+    {
+        NodeGraph node = graph.GetNode(position);
+        return node != null && node.walkable;
+    }
+
+    private static float CalculateSegmentCost(Vector2 startPosition, List<Vector2> segment, Vector2 goalPosition)
+    {
+        float totalCost = 0f;
+        Vector2 previousPoint = startPosition;
+
+        for (int i = 0; i < segment.Count; i++)
+        {
+            Vector2 currentPoint = segment[i];
+            totalCost += Vector2.Distance(previousPoint, currentPoint);
+            previousPoint = currentPoint;
+        }
+
+        totalCost += Vector2.Distance(previousPoint, goalPosition);
+        return totalCost;
+    }
+
     private static Vector2 GetChunkOrigin(Vector2Int chunkPosition)
     {
         // Convert a chunk coordinate to the world-space origin of that chunk.
         return new Vector2(chunkPosition.x * LocalTestValue.tilesPerChunk, chunkPosition.y * LocalTestValue.tilesPerChunk);
-    }
-
-    private static Vector2 GetGatewayPoint(Vector2Int fromChunk, Vector2Int toChunk)
-    {
-        // This is a simple placeholder gateway: the border point between two neighboring chunks.
-        Vector2 origin = GetChunkOrigin(fromChunk);
-        int dx = Mathf.Clamp(toChunk.x - fromChunk.x, -1, 1);
-        int dy = Mathf.Clamp(toChunk.y - fromChunk.y, -1, 1);
-
-        float center = (LocalTestValue.tilesPerChunk - 1) * 0.5f;
-        float x = origin.x + center;
-        float y = origin.y + center;
-
-        if (dx > 0)
-        {
-            x = origin.x + LocalTestValue.tilesPerChunk - 0.5f;
-        }
-        else if (dx < 0)
-        {
-            x = origin.x + 0.5f;
-        }
-
-        if (dy > 0)
-        {
-            y = origin.y + LocalTestValue.tilesPerChunk - 0.5f;
-        }
-        else if (dy < 0)
-        {
-            y = origin.y + 0.5f;
-        }
-
-        return new Vector2(x, y);
     }
 
     private static Vector2 SnapToTileCenter(Vector2Int chunkPosition, Vector2 position)

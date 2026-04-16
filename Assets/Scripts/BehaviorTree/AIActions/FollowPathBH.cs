@@ -32,6 +32,7 @@ public class FollowPathBH : ActionNodeBH
         {
             Context.Remove(BehaviorTreeKeys.WanderPath);
             Context.Remove(BehaviorTreeKeys.WanderPathIndex);
+            Context.Remove(BehaviorTreeKeys.WanderPathTarget);
             return BHState.SUCCESS;
         }
 
@@ -46,6 +47,7 @@ public class FollowPathBH : ActionNodeBH
             {
                 Context.Remove(BehaviorTreeKeys.WanderPath);
                 Context.Remove(BehaviorTreeKeys.WanderPathIndex);
+                Context.Remove(BehaviorTreeKeys.WanderPathTarget);
                 return BHState.SUCCESS;
             }
         }
