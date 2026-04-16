@@ -15,7 +15,9 @@ public class DebugScripts : MonoBehaviour
     [Header("Pathfinding")]
     [SerializeField] private bool showChunkMemoryInPathfinding = true;
     [SerializeField] private bool showTilesInChunkMemoryInPathfinding = true;
-    [SerializeField] private bool showOnlyLastRouteChunks = true;
+    [SerializeField] private bool showOnlyLastRouteChunks = false;
+    [SerializeField] private bool showFocusedPortalOnly = true;
+    [SerializeField] private int focusedPortalBoundaryIndex = 0;
     [SerializeField] private bool showChunkGraphEdges = false;
     [SerializeField] private bool showTileGraphEdges = false;
     [SerializeField] private bool showGatewayPoints = true;
@@ -111,6 +113,8 @@ public class DebugScripts : MonoBehaviour
         GUILayout.Label($"Last chunk route points: {lastChunkRouteCount}");
         GUILayout.Label($"Last gateway links: {lastGatewayCount}");
         GUILayout.Label($"Last path points: {lastPathCount}");
+        GUILayout.Label($"Focus portal only: {showFocusedPortalOnly}");
+        GUILayout.Label($"Focused portal boundary index: {focusedPortalBoundaryIndex}");
 
         if (pathfinder != null)
         {
@@ -119,6 +123,14 @@ public class DebugScripts : MonoBehaviour
             GUILayout.Label($"Gateway count per border: {pathfinder.GatewayCountPerBorder}");
             GUILayout.Label($"Gateway search depth: {pathfinder.GatewaySearchDepth}");
             GUILayout.Label($"Auto release unused graphs: {pathfinder.AutoReleaseUnusedChunkGraphs}");
+
+            if (showFocusedPortalOnly && TryGetFocusedPortalInfo(pathfinder, out int boundaryIndex, out Vector2Int fromChunk, out Vector2Int toChunk, out Vector2 exitPoint, out Vector2 entryPoint))
+            {
+                GUILayout.Label($"Focused chunk pair: {fromChunk} -> {toChunk}");
+                GUILayout.Label($"Focused boundary index: {boundaryIndex}");
+                GUILayout.Label($"Portal exit: {exitPoint}");
+                GUILayout.Label($"Portal entry: {entryPoint}");
+            }
         }
 
         GUILayout.EndArea();
@@ -163,6 +175,26 @@ public class DebugScripts : MonoBehaviour
             return;
         }
 
+        if (showFocusedPortalOnly)
+        {
+            if (showChunkMemoryInPathfinding)
+            {
+                ShowChunkGraph(pathfinder.ChunkGraph);
+            }
+
+            if (showTilesInChunkMemoryInPathfinding)
+            {
+                ShowTileGraphs(pathfinder.TileGraphsByChunk);
+            }
+
+            if (showGatewayPoints)
+            {
+                ShowFocusedPortal(pathfinder);
+            }
+
+            return;
+        }
+
         if (showChunkMemoryInPathfinding)
         {
             ShowChunkGraph(pathfinder.ChunkGraph);
@@ -196,7 +228,7 @@ public class DebugScripts : MonoBehaviour
         foreach (var node in chunkGraph.Graph.Values)
         {
             Vector2Int chunkPos = Vector2Int.RoundToInt(node.pos);
-            if (showOnlyLastRouteChunks && !ShouldShowChunk(chunkPos, pathfinder))
+            if ((showOnlyLastRouteChunks || showFocusedPortalOnly) && !ShouldShowChunk(chunkPos, pathfinder))
             {
                 continue;
             }
@@ -228,7 +260,7 @@ public class DebugScripts : MonoBehaviour
 
         foreach (var chunkGraphPair in tileGraphsByChunk)
         {
-            if (showOnlyLastRouteChunks && !ShouldShowChunk(chunkGraphPair.Key, pathfinder))
+            if ((showOnlyLastRouteChunks || showFocusedPortalOnly) && !ShouldShowChunk(chunkGraphPair.Key, pathfinder))
             {
                 continue;
             }
@@ -265,6 +297,12 @@ public class DebugScripts : MonoBehaviour
 
     private void ShowGatewayPoints(HPAPathfinder pathfinder)
     {
+        if (showFocusedPortalOnly)
+        {
+            ShowFocusedPortal(pathfinder);
+            return;
+        }
+
         if (pathfinder.LastGatewayEntryPoints == null || pathfinder.LastGatewayExitPoints == null)
         {
             return;
@@ -285,6 +323,23 @@ public class DebugScripts : MonoBehaviour
             Gizmos.color = goalColor;
             Gizmos.DrawWireSphere(exitPoint, gatewayRadius);
         }
+    }
+
+    private void ShowFocusedPortal(HPAPathfinder pathfinder)
+    {
+        if (!TryGetFocusedPortalInfo(pathfinder, out int boundaryIndex, out Vector2Int fromChunk, out Vector2Int toChunk, out Vector2 exitPoint, out Vector2 entryPoint))
+        {
+            return;
+        }
+
+        Gizmos.color = gatewayColor;
+        Gizmos.DrawLine(exitPoint, entryPoint);
+
+        Gizmos.color = startColor;
+        Gizmos.DrawWireSphere(exitPoint, gatewayRadius);
+
+        Gizmos.color = goalColor;
+        Gizmos.DrawWireSphere(entryPoint, gatewayRadius);
     }
 
     private void ShowLastPath(HPAPathfinder pathfinder)
@@ -364,11 +419,16 @@ public class DebugScripts : MonoBehaviour
         return count;
     }
 
-    private static bool ShouldShowChunk(Vector2Int chunkPosition, HPAPathfinder pathfinder)
+    private bool ShouldShowChunk(Vector2Int chunkPosition, HPAPathfinder pathfinder)
     {
         if (pathfinder == null || pathfinder.LastChunkRoute == null || pathfinder.LastChunkRoute.Count == 0)
         {
             return true;
+        }
+
+        if (FindFocusedPortalChunks(pathfinder, out Vector2Int focusedFromChunk, out Vector2Int focusedToChunk))
+        {
+            return chunkPosition == focusedFromChunk || chunkPosition == focusedToChunk;
         }
 
         for (int i = 0; i < pathfinder.LastChunkRoute.Count; i++)
@@ -380,6 +440,57 @@ public class DebugScripts : MonoBehaviour
         }
 
         return false;
+    }
+
+    private bool TryGetFocusedPortalInfo(HPAPathfinder pathfinder, out int boundaryIndex, out Vector2Int fromChunk, out Vector2Int toChunk, out Vector2 exitPoint, out Vector2 entryPoint)
+    {
+        boundaryIndex = 0;
+        fromChunk = default;
+        toChunk = default;
+        exitPoint = default;
+        entryPoint = default;
+
+        if (!FindFocusedPortalChunks(pathfinder, out fromChunk, out toChunk, out boundaryIndex))
+        {
+            return false;
+        }
+
+        if (pathfinder == null || pathfinder.LastGatewayExitPoints == null || pathfinder.LastGatewayEntryPoints == null)
+        {
+            return false;
+        }
+
+        if (boundaryIndex < 0 || boundaryIndex >= pathfinder.LastGatewayExitPoints.Count || boundaryIndex + 1 >= pathfinder.LastGatewayEntryPoints.Count)
+        {
+            return false;
+        }
+
+        exitPoint = pathfinder.LastGatewayExitPoints[boundaryIndex];
+        entryPoint = pathfinder.LastGatewayEntryPoints[boundaryIndex + 1];
+        return true;
+    }
+
+    private bool FindFocusedPortalChunks(HPAPathfinder pathfinder, out Vector2Int fromChunk, out Vector2Int toChunk)
+    {
+        int ignoredBoundaryIndex;
+        return FindFocusedPortalChunks(pathfinder, out fromChunk, out toChunk, out ignoredBoundaryIndex);
+    }
+
+    private bool FindFocusedPortalChunks(HPAPathfinder pathfinder, out Vector2Int fromChunk, out Vector2Int toChunk, out int boundaryIndex)
+    {
+        fromChunk = default;
+        toChunk = default;
+        boundaryIndex = 0;
+
+        if (pathfinder == null || pathfinder.LastChunkRoute == null || pathfinder.LastChunkRoute.Count < 2)
+        {
+            return false;
+        }
+
+        boundaryIndex = Mathf.Clamp(focusedPortalBoundaryIndex, 0, pathfinder.LastChunkRoute.Count - 2);
+        fromChunk = pathfinder.LastChunkRoute[boundaryIndex];
+        toChunk = pathfinder.LastChunkRoute[boundaryIndex + 1];
+        return true;
     }
 
     private static int CountCreatures()
