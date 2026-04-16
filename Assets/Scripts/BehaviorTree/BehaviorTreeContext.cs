@@ -23,8 +23,8 @@ public sealed class BehaviorTreeContext
     public Creature Creature { get; private set; }
     public GameObject GameObject => Tree != null ? Tree.gameObject : (Creature != null ? Creature.gameObject : null);
     public Transform Transform => Tree != null ? Tree.transform : (Creature != null ? Creature.transform : null);
-    public GameService Game => GameService.Game;
-    public NavService Navigation => GameService.Game.Navigation;
+    public GameService Game => GameService.Ins;
+    public NavService Navigation => GameService.Ins.Navigation;
     public float DeltaTime { get; internal set; }
 
     public void AttachCreature(Creature creature)

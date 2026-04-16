@@ -9,6 +9,6 @@ public class World
     {
         this.worldName = worldName;
         this.seed = seed;
-        GameService.Game.RegisterWorld(this);
+        GameService.RegisterWorld(this);
     }
 }

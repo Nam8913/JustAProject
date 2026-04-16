@@ -53,9 +53,9 @@ public class DebugScripts : MonoBehaviour
 
     void ShowActiveChunks()
     {
-        if(GameService.Game.WorldHandler != null)
+        if(GameService.Ins.WorldHandler != null)
         {
-            foreach(var chunkPos in GameService.Game.WorldHandler.GetActiveChunkPositions())
+            foreach(var chunkPos in GameService.Ins.WorldHandler.GetActiveChunkPositions())
             {
                 Gizmos.color = Color.green;
                 Gizmos.DrawWireCube((Vector2)chunkPos * LocalTestValue.tilesPerChunk + new Vector2(LocalTestValue.tilesPerChunk / 2f, LocalTestValue.tilesPerChunk / 2f), new Vector2(LocalTestValue.tilesPerChunk, LocalTestValue.tilesPerChunk));
@@ -65,9 +65,9 @@ public class DebugScripts : MonoBehaviour
 
     void ShowPathfindingChunkMemory()
     {
-        if(GameService.Game.Navigation != null)
+        if(GameService.Ins.Navigation != null)
         {
-            foreach(var chunkGraphPair in GameService.Game.Navigation.Pathfinder.TileGraphsByChunk)
+            foreach(var chunkGraphPair in GameService.Ins.Navigation.Pathfinder.TileGraphsByChunk)
             {
                 if(showChunkMemoryInPathfinding)
                 {
