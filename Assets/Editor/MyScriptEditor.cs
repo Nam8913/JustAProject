@@ -13,7 +13,7 @@ public class MyScriptEditor : Editor
         Test test = (Test)target;
 
         // Tạo button
-        if (GUILayout.Button("Find Path"))
+        if (GUILayout.Button("Do Something"))
         {
             test.DoSomeThing();
         }

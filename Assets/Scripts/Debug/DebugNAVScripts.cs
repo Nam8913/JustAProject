@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DebugScripts : MonoBehaviour
+public class DebugNAVScripts : MonoBehaviour
 {
     [Header("General")]
     [SerializeField] private bool isDebugMode = true;
