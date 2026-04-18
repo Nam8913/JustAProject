@@ -1,8 +1,17 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Chunk : MonoBehaviour
 {
     private Vector2Int chunkPosition;
+    Dictionary<Vector2, Tile> tiles = new Dictionary<Vector2, Tile>();
+    List<GameObject> tileObjects = new List<GameObject>();
+
+    void Start()
+    {
+        StartCoroutine(initTiles());
+    }
 
     public static Chunk CreateChunk(Vector2Int chunkPosition, GameObject parent = null)
     {
@@ -26,20 +35,52 @@ public class Chunk : MonoBehaviour
         return chunkPos;
     }
 
-    // void OnDrawGizmos()
-    // {
-    //     Gizmos.color = Color.green;
-    //     Gizmos.DrawWireCube(new Vector2(chunkPosition.x * LocalTestValue.tilesPerChunk + LocalTestValue.tilesPerChunk / 2, chunkPosition.y * LocalTestValue.tilesPerChunk + LocalTestValue.tilesPerChunk / 2), new Vector2(LocalTestValue.tilesPerChunk, LocalTestValue.tilesPerChunk));
-    
-    //     //Draw tiles
-    //     Gizmos.color = Color.gray;
-    //     for (int x = 0; x < LocalTestValue.tilesPerChunk; x++)
-    //     {
-    //         for (int y = 0; y < LocalTestValue.tilesPerChunk; y++)
-    //         {
-    //             //Gizmos.DrawWireCube(new Vector2(chunkPosition.x * LocalTestValue.tilesPerChunk + x + 0.5f, chunkPosition.y * LocalTestValue.tilesPerChunk + y + 0.5f), Vector2.one);
-    //             Gizmos.DrawWireSphere(new Vector2(chunkPosition.x * LocalTestValue.tilesPerChunk + x + 0.5f, chunkPosition.y * LocalTestValue.tilesPerChunk + y + 0.5f), 0.1f);
-    //         }
-    //     }
-    // }
+    IEnumerator initTiles()
+    {
+        int batchSize = 34; // Number of tiles to create per frame
+        for (int x = chunkPosition.x * LocalTestValue.tilesPerChunk; x < (chunkPosition.x + 1) * LocalTestValue.tilesPerChunk; x++)
+        {
+            for (int y = chunkPosition.y * LocalTestValue.tilesPerChunk; y < (chunkPosition.y + 1) * LocalTestValue.tilesPerChunk; y++)
+            {
+                float moveCost = Random.Range(0,100);
+                Tile tile = new Tile(new Vector2(x, y), this, moveCost/100f);
+
+                GameObject tileObject = new GameObject($"Tile:{x}|{y}");
+                tileObject.transform.position = new Vector2(x,y);
+                tileObject.transform.SetParent(this.transform);
+                tileObjects.Add(tileObject);
+                tiles[tile.tilePosition] = tile;
+
+                SpriteRenderer renderer = tileObject.AddComponent<SpriteRenderer>();
+                //Texture2D texture2D = ResourcesHandler.GetTextureByName("dirt");
+                //renderer.sprite = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 256);;
+                renderer.sprite = LocalRefDefaultRS.GetSpriteByName("Square");
+
+                if(tileObjects.Count % batchSize == 0)
+                {
+                    yield return null; // Wait for the next frame after creating a batch of tiles
+                }
+
+                DebugTile debugTile = tileObject.AddComponent<DebugTile>();
+                debugTile.tile = tile;
+                debugTile.isWalkable = tile.isWalkable;
+                debugTile.moveCost = tile.moveCost;
+            }
+        }
+    }
+
+    public Tile GetTileAtPosition(Vector2 position)
+    {
+        if (tiles.TryGetValue(position, out Tile tile))
+        {
+            return tile;
+        }
+        return null; // Return null if the tile does not exist
+    }
+
+    public Tile GetTileAtWorldPosition(Vector2 position)
+    {
+        Vector2 tilePosition = new Vector2(Mathf.Floor(position.x), Mathf.Floor(position.y));
+        return GetTileAtPosition(tilePosition);
+    }
 }

@@ -171,7 +171,7 @@ public sealed class HPAPathfinder
         {
             for (int y = minY; y <= maxY; y++)
             {
-                chunkGraph.AddNodeByVector2(new Vector2(x, y), true);
+                chunkGraph.AddNodeByVector2(new Vector2(x, y), true, 1f);
             }
         }
 
@@ -187,12 +187,14 @@ public sealed class HPAPathfinder
         // Reuse the cached tile graph if the chunk was already built.
         if (tileGraphsByChunk.TryGetValue(chunkPosition, out GraphPathfinder existingGraph))
         {
+            SyncTileGraphMoveCosts(existingGraph, chunkPosition);
             return existingGraph;
         }
 
         // Create a tile graph that lives entirely inside one chunk.
         var graph = new GraphPathfinder();
         Vector2 chunkOrigin = GetChunkOrigin(chunkPosition);
+        Chunk worldChunk = GetChunk(chunkPosition);
 
         // Add one node per tile center inside the chunk.
         for (int x = 0; x < LocalTestValue.tilesPerChunk; x++)
@@ -200,9 +202,11 @@ public sealed class HPAPathfinder
             for (int y = 0; y < LocalTestValue.tilesPerChunk; y++)
             {
                 Vector2 nodePosition = new Vector2(chunkOrigin.x + x + 0.5f, chunkOrigin.y + y + 0.5f);
-                graph.AddNodeByVector2(nodePosition, true);
+                graph.AddNodeByVector2(nodePosition, true, GetTileMoveCost(worldChunk, nodePosition));
             }
         }
+
+        SyncTileGraphMoveCosts(graph, chunkPosition);
 
         // Connect neighboring tiles so the local search can move in 8 directions.
         foreach (var node in graph.Graph.Values)
@@ -290,7 +294,7 @@ public sealed class HPAPathfinder
                     continue;
                 }
 
-                float trialCost = CalculateSegmentCost(snappedEntry, trialSegment, snappedExit);
+                float trialCost = CalculateSegmentCost(tileGraph, snappedEntry, trialSegment);
                 if (trialCost < bestCost)
                 {
                     bestCost = trialCost;
@@ -325,13 +329,15 @@ public sealed class HPAPathfinder
         // Reset previous search state before running A* again.
         ResetNodes(graph);
 
+        float heuristicScale = GetMinimumMoveCost(graph);
+
         // openSet = candidates to evaluate, closedSet = nodes already processed.
         var openSet = new List<NodeGraph> { startNode };
         var closedSet = new HashSet<NodeGraph>();
 
         // Seed the starting node.
         startNode.gCost = 0f;
-        startNode.hCost = Vector2.Distance(startNode.pos, goalNode.pos);
+        startNode.hCost = Vector2.Distance(startNode.pos, goalNode.pos) * heuristicScale;
         if (recordDebug)
         {
             startNode.debugOpen = true;
@@ -375,12 +381,12 @@ public sealed class HPAPathfinder
                     continue;
                 }
 
-                float newMovementCost = currentNode.gCost + edge.cost;
+                float newMovementCost = currentNode.gCost + (edge.cost * neighbor.moveCost);
                 if (newMovementCost < neighbor.gCost || !openSet.Contains(neighbor))
                 {
                     // Store the best route found so far to this neighbor.
                     neighbor.gCost = newMovementCost;
-                    neighbor.hCost = Vector2.Distance(neighbor.pos, goalNode.pos);
+                    neighbor.hCost = Vector2.Distance(neighbor.pos, goalNode.pos) * heuristicScale;
                     neighbor.parent = currentNode;
                     if (recordDebug)
                     {
@@ -659,7 +665,7 @@ public sealed class HPAPathfinder
         return node != null && node.walkable;
     }
 
-    private static float CalculateSegmentCost(Vector2 startPosition, List<Vector2> segment, Vector2 goalPosition)
+    private static float CalculateSegmentCost(GraphPathfinder graph, Vector2 startPosition, List<Vector2> segment)
     {
         float totalCost = 0f;
         Vector2 previousPoint = startPosition;
@@ -667,12 +673,81 @@ public sealed class HPAPathfinder
         for (int i = 0; i < segment.Count; i++)
         {
             Vector2 currentPoint = segment[i];
-            totalCost += Vector2.Distance(previousPoint, currentPoint);
+            NodeGraph node = graph.GetNode(currentPoint);
+            float moveCost = node != null ? node.moveCost : 1f;
+            totalCost += Vector2.Distance(previousPoint, currentPoint) * moveCost;
             previousPoint = currentPoint;
         }
-
-        totalCost += Vector2.Distance(previousPoint, goalPosition);
         return totalCost;
+    }
+
+    private Chunk GetChunk(Vector2Int chunkPosition)
+    {
+        GameService gameService = GameService.Ins;
+        if (gameService == null || gameService.WorldHandler == null)
+        {
+            return null;
+        }
+
+        Vector2 worldPosition = new Vector2(
+            chunkPosition.x * LocalTestValue.tilesPerChunk,
+            chunkPosition.y * LocalTestValue.tilesPerChunk);
+        return gameService.WorldHandler.GetChunk(worldPosition);
+    }
+
+    private static float GetTileMoveCost(Chunk chunk, Vector2 worldPosition)
+    {
+        if (chunk == null)
+        {
+            return 1f;
+        }
+
+        Tile tile = chunk.GetTileAtWorldPosition(worldPosition);
+        if (tile == null)
+        {
+            return 1f;
+        }
+
+        return Mathf.Max(0f, tile.moveCost);
+    }
+
+    private void SyncTileGraphMoveCosts(GraphPathfinder graph, Vector2Int chunkPosition)
+    {
+        Chunk worldChunk = GetChunk(chunkPosition);
+        if (worldChunk == null)
+        {
+            return;
+        }
+
+        foreach (var node in graph.Graph.Values)
+        {
+            node.moveCost = GetTileMoveCost(worldChunk, node.pos);
+        }
+    }
+
+    private static float GetMinimumMoveCost(GraphPathfinder graph)
+    {
+        float minimumMoveCost = float.PositiveInfinity;
+
+        foreach (var node in graph.Graph.Values)
+        {
+            if (!node.walkable)
+            {
+                continue;
+            }
+
+            if (node.moveCost < minimumMoveCost)
+            {
+                minimumMoveCost = node.moveCost;
+            }
+        }
+
+        if (float.IsPositiveInfinity(minimumMoveCost))
+        {
+            return 1f;
+        }
+
+        return Mathf.Max(0f, minimumMoveCost);
     }
 
     private static Vector2 GetChunkOrigin(Vector2Int chunkPosition)

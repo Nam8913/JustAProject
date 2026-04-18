@@ -5,6 +5,7 @@ public sealed class NodeGraph
 {
     public Vector2 pos;
     public bool walkable;
+    public float moveCost = 1f;
     public bool debugOpen;
     public bool debugClosed;
     public bool debugPath;

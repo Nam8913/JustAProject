@@ -4,7 +4,7 @@ using UnityEngine;
 public class LocalRefDefaultRS : MonoBehaviour
 {
     [SerializeField] private List<Sprite> listSpriteRef = new List<Sprite>();
-
+    
     [SerializeField] private List<Material> listMaterialRef = new List<Material>();
     private static Dictionary<string, Sprite> dictSprite = new Dictionary<string, Sprite>();
     private static Dictionary<string, Material> dictMaterial = new Dictionary<string, Material>();

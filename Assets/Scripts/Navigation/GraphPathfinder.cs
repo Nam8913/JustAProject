@@ -26,12 +26,18 @@ public sealed class GraphPathfinder
 
     public void AddNodeByVector2(Vector2 pos, bool walkable)
     {
+        AddNodeByVector2(pos, walkable, 1f);
+    }
+
+    public void AddNodeByVector2(Vector2 pos, bool walkable, float moveCost)
+    {
         if (!graph.ContainsKey(pos))
         {
             var node = new NodeGraph
             {
                 pos = pos,
                 walkable = walkable,
+                moveCost = moveCost,
                 edges = new List<EdgeGraph>()
             };
             graph.Add(pos, node);

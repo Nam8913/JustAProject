@@ -34,7 +34,7 @@ public sealed class Astar
             for(int y = 0; y < 10; y++)
             {
                 // Mỗi node mới được đánh dấu là có thể đi qua.
-                graphPathfinder.AddNodeByVector2(new Vector2(x, y), true);
+                graphPathfinder.AddNodeByVector2(new Vector2(x, y), true, 1f);
             }
         }
 
@@ -96,7 +96,7 @@ public sealed class Astar
                     continue;
 
                 // Tính chi phí từ start tới neighbor thông qua currentNode.
-                float newMovementCostToNeighbor = currentNode.gCost + edge.cost;
+                float newMovementCostToNeighbor = currentNode.gCost + (edge.cost * neighbor.moveCost);
                 if (newMovementCostToNeighbor < neighbor.gCost || !openSet.Contains(neighbor))
                 {
                     neighbor.gCost = newMovementCostToNeighbor;

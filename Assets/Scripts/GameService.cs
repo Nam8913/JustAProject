@@ -13,6 +13,9 @@ public class GameService
     GameSettings _settings;
 
     Camera _mainCamera;
+    PlayerInputActions _playerInputActions;
+
+    //BuildService _buildService;
 
     public static GameService Ins
     {
@@ -25,7 +28,11 @@ public class GameService
                     _gameService = new GameService();
                 }else if (!isStarted)
                 {
-                    Debug.LogError("GameService is not started. Please register a world to start the game.");
+                    if(Application.isPlaying)
+                    {
+                        Debug.LogError("GameService is not started. Please register a world to start the game.");
+                    }
+                    return null;
                 }
                 return _gameService;
             }
@@ -65,6 +72,8 @@ public class GameService
         
         // Initialize game settings and other necessary components
         _settings = new GameSettings();
+        _playerInputActions = new PlayerInputActions();
+        _playerInputActions.Enable();
     }
 
     public static void RegisterWorld(World world)
@@ -76,7 +85,7 @@ public class GameService
             return;
         }
         Ins._worldHandler = new GameObject("WorldHandler").AddComponent<WorldHandler>();
-
+        //Ins._buildService = new BuildService(Ins._worldHandler);
     }
 
     private Game Game => _game;
@@ -86,5 +95,19 @@ public class GameService
     public Camera MainCamera => _mainCamera;
 
     public NavService Navigation => NavService.Instance;
+
+    // public BuildService BuildService
+    // {
+    //     get
+    //     {
+    //         if(_buildService == null)
+    //         {
+    //             Debug.LogError("BuildService is not initialized. Please register a world to start the game.");
+    //         }
+    //         return _buildService;
+    //     }
+    // }
+
+    public PlayerInputActions PlayerInput => _playerInputActions;
 
 }
