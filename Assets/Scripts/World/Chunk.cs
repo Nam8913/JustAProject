@@ -37,13 +37,14 @@ public class Chunk : MonoBehaviour
 
     IEnumerator initTiles()
     {
+        float scale = 0.05f; // Adjust the scale for noise frequency
         int batchSize = 34; // Number of tiles to create per frame
         for (int x = chunkPosition.x * LocalTestValue.tilesPerChunk; x < (chunkPosition.x + 1) * LocalTestValue.tilesPerChunk; x++)
         {
             for (int y = chunkPosition.y * LocalTestValue.tilesPerChunk; y < (chunkPosition.y + 1) * LocalTestValue.tilesPerChunk; y++)
             {
-                float moveCost = Random.Range(0,100);
-                Tile tile = new Tile(new Vector2(x, y), this, moveCost/100f);
+                float moveCost = GameService.Ins.Noise.FBM(x * scale, y * scale); // Example move cost based on Perlin noise
+                Tile tile = new Tile(new Vector2(x, y), this, moveCost);
 
                 GameObject tileObject = new GameObject($"Tile:{x}|{y}");
                 tileObject.transform.position = new Vector2(x,y);

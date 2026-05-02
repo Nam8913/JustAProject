@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public static class PlayerInput
 {
-    private static PlayerInputActions InputActions => GameService.Ins.PlayerInput;
+    private static PlayerInputActions InputActions => GameService.PlayerInput;
     public static Vector2 Move => InputActions.Player.Move.ReadValue<Vector2>();
     public static Vector2 Look => InputActions.Player.Look.ReadValue<Vector2>();
     public static Vector2 UIMousePosition => InputActions.UI.Point.ReadValue<Vector2>();
@@ -11,8 +11,7 @@ public static class PlayerInput
     {
         get
         {
-            Camera camera = GameService.Ins.MainCamera ?? Camera.main;
-            Vector2 worldMousePos = camera.ScreenToWorldPoint(UIMousePosition);
+            Vector2 worldMousePos = GameService.MainCamera.ScreenToWorldPoint(UIMousePosition);
             return worldMousePos;
         }
     }

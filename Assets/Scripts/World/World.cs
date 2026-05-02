@@ -11,4 +11,7 @@ public class World
         this.seed = seed;
         GameService.RegisterWorld(this);
     }
+
+    public int Seed => seed;
+    public string WorldName => worldName;
 }

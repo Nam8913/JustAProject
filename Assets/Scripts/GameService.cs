@@ -6,16 +6,20 @@ public class GameService
     static object _lock = new object();
     static bool isStarted = false;
     static GameService _gameService;
+    static Camera _mainCamera;
+    static PlayerInputActions _playerInputActions = new PlayerInputActions();
+    static BuildService _buildService = new BuildService();
 
     Game _game;
+    ModernHashNoise _noise;
 
     WorldHandler _worldHandler;
     GameSettings _settings;
 
-    Camera _mainCamera;
-    PlayerInputActions _playerInputActions;
+    
+    
 
-    //BuildService _buildService;
+    
 
     public static GameService Ins
     {
@@ -72,8 +76,6 @@ public class GameService
         
         // Initialize game settings and other necessary components
         _settings = new GameSettings();
-        _playerInputActions = new PlayerInputActions();
-        _playerInputActions.Enable();
     }
 
     public static void RegisterWorld(World world)
@@ -85,29 +87,40 @@ public class GameService
             return;
         }
         Ins._worldHandler = new GameObject("WorldHandler").AddComponent<WorldHandler>();
-        //Ins._buildService = new BuildService(Ins._worldHandler);
+        Ins._noise = new ModernHashNoise(world.Seed); // Initialize the noise generator
     }
 
-    private Game Game => _game;
+    public Game Game => _game;
+    public ModernHashNoise Noise => _noise;
     public GameSettings Settings => _settings;
     public WorldHandler WorldHandler => _worldHandler;
     
-    public Camera MainCamera => _mainCamera;
+    public static Camera MainCamera
+    {
+        get
+        {
+            if(_mainCamera == null)
+            {
+                _mainCamera = Camera.main;
+            }
+            return _mainCamera;
+        }
+        set
+        {
+            _mainCamera = value;
+        }
+    }
 
     public NavService Navigation => NavService.Instance;
 
-    // public BuildService BuildService
-    // {
-    //     get
-    //     {
-    //         if(_buildService == null)
-    //         {
-    //             Debug.LogError("BuildService is not initialized. Please register a world to start the game.");
-    //         }
-    //         return _buildService;
-    //     }
-    // }
+    public static BuildService BuildService
+    {
+        get
+        {
+            return _buildService;
+        }
+    }
 
-    public PlayerInputActions PlayerInput => _playerInputActions;
+    public static PlayerInputActions PlayerInput => _playerInputActions;
 
 }

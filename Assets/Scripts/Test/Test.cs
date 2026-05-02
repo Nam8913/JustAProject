@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NUnit.Framework;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -20,48 +21,52 @@ public class Test : MonoBehaviour
 
 
         demoCreature.transform.position = Vector2.zero;
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        // if (PlayerInput.isMouseWasPressedThisFrame(0))
-        // {
-        //     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //     RaycastHit hit;
+        
 
-        //     if (Physics.Raycast(ray, out hit))
-        //     {
-        //     Debug.Log("Hit: " + hit.collider.name);
-        //     }
-        // }
+    }
 
-        Debug.DrawRay((Vector3)PlayerInput.MousePosition + new Vector3(0,0,0.9f), new Vector3(0,0,-1), Color.red, 0.1f);
-
-        if(PlayerInput.isButtonPressed("Jump"))
+    void FixedUpdate()
+    {
+        Vector2 move = PlayerInput.Move;
+        if(move != Vector2.zero)
         {
-            Debug.Log("Jump button was pressed this frame.");
-        }
-
-        if(PlayerInput.isButtonDown("Jump"))
-        {
-            Debug.Log("Jump button is being held down.");
-        }
-
-        if(PlayerInput.isButtonReleased("Jump"))
-        {
-            Debug.Log("Jump button was released this frame.");
+            Camera.main.transform.position += new Vector3(move.x, move.y, 0) * Time.deltaTime * 5f;
         }
     }
 
-    public void DoSomeThing()
+    void OnGUI()
     {
         
     }
 
-    void OnDrawGizmos()
+    [MakeButtonFuncOnTestClass]
+    void DoSomeThing()
     {
-        
+        for(int i = 0; i <= 5; i++)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(Vector2.zero + new Vector2(0.2f * i, 0.2f * i), -Vector2.up);
+            if(hit)
+            {
+                Debug.Log($"Hit: {hit.collider.name} at position {hit.point}");
+            }
+        }
+    }
+
+    [MakeButtonFuncOnTestClass]
+    void DoSomeThingElse()
+    {
+        GameObject square = new GameObject("Square1");
+        SpriteRenderer renderer = square.AddComponent<SpriteRenderer>();
+        renderer.sprite = LocalRefDefaultRS.GetSpriteByName("Square");
+        square.transform.position = Vector2.zero + new Vector2(0.5f,0.5f);
+        square.AddComponent<BoxCollider2D>();
+
+         
     }
 }
