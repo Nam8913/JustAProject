@@ -59,6 +59,11 @@ public class WorldHandler : MonoBehaviour
         
     }
 
-    
+    void OnDestroy()
+    {
+        GameService.SetWorld(null);
+        GameService.SetWorldHandler(null);
+        GameService.SetNoise(null);
+    } 
 }
 

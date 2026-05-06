@@ -9,7 +9,16 @@ public class World
     {
         this.worldName = worldName;
         this.seed = seed;
-        GameService.RegisterWorld(this);
+    }
+
+    public static void RegisterNewWorldToCurrentWorld(World world)
+    {
+        if(GameService.GetWorld() != null)
+        {
+            Debug.LogError("World is already registered. Multiple worlds are not supported.");
+            return;
+        }
+        GameService.SetWorld(world);
     }
 
     public int Seed => seed;
