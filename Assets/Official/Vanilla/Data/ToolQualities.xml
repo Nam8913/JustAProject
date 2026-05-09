@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Data>
+    <ToolQualities>
+        <Id>tool_hammer</Id>
+        <label>Hammer Tool Quality</label>
+    </ToolQualities>
+    <ToolQualities>
+        <Id>tool_screwdriver</Id>
+        <label>Screwdriver Tool Quality</label>
+    </ToolQualities>
+    <ToolQualities>
+        <Id>tool_wrench</Id>
+        <label>Wrench Tool Quality</label>
+    </ToolQualities>
+    <ToolQualities>
+        <Id>tool_wood_saw</Id>
+        <label>Wood Saw Tool Quality</label>
+    </ToolQualities>
+    <ToolQualities>
+        <Id>tool_metal_saw</Id>
+        <label>Metal Saw Tool Quality</label>
+    </ToolQualities>
+    <ToolQualities>
+        <Id>tool_cut</Id>
+        <label>Cut Tool Quality</label>
+    </ToolQualities>
+</Data>

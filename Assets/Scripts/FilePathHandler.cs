@@ -40,6 +40,17 @@ public static class FilePathHandler
         return folderPath;
     }
 
+    private static string GetOrCreateModsFolder(string folderName)
+    {
+        string folderPath = Path.Combine(fileExecutionPath, folderName);
+        DirectoryInfo dir = new DirectoryInfo(folderPath);
+        if(!dir.Exists)
+        {
+            dir.Create();
+        }
+        return folderPath;
+    }
+
     public static string GetFolderPathByType(System.Type type , string nameIfNotFound = null)
     {
         if(GetNameFolderByType.TryGetValue(type, out string folderName))
@@ -64,7 +75,12 @@ public static class FilePathHandler
         {typeof(Material), "Materials"},
     };
 
-     
+    public static string ModsFolderPath => GetOrCreateModsFolder("Mods");
+    public static string OfficialDataFolderPath => GetOrCreateModsFolder("Official");
+
+    public static string ConfigFolderPath => FolderUnderSaveDataPath("Config");
+    public static string SavesFolderPath => FolderUnderSaveDataPath("Saves");
+    public static string LogsFolderPath => FolderUnderSaveDataPath("Logs");
 
     private static string saveDataPath;
 

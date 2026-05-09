@@ -1,12 +1,16 @@
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class Game : MonoBehaviour
 {
     private void Awake()
     { 
-        
+        Debug.Log("Game Awake" + this.GetType().Name);
+        if(!isGlobalInitialized)
+        {
+            isGlobalInitialized = true;
+            GameService.Ins.GlobalInitialize();
+        }
+        GameService.Ins.InitializeWhenChangeScene();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public virtual void Start()
@@ -45,5 +49,5 @@ public abstract class Game : MonoBehaviour
         
     }
 
-    
+    static bool isGlobalInitialized = false;
 }

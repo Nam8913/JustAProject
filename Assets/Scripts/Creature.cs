@@ -36,6 +36,11 @@ public class Creature : DefineThing
         behaviorTree.Initialize(rootNode, this);
     }
 
+    public override void Start()
+    {
+        base.Start();
+    }
+
     public Vector2 WorldPosition => transform.position;
 
     public Vector2Int CurrentChunkPosition => Chunk.GetChunkPosition(transform.position);

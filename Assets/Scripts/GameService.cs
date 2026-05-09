@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class GameService
@@ -39,12 +38,20 @@ public class GameService
     private GameService()
     {
         // Private constructor to prevent instantiation from outside
-        Initialize();
     }
 
-
-    private void Initialize()
+    public void GlobalInitialize()
     {
+        // Initialize game settings and other necessary components
+        _settings = new GameSettings();
+
+        LoadAllData.LoadAll();
+    }
+
+    // This method should be called when the scene changes to re-initialize necessary components
+    public void InitializeWhenChangeScene()
+    {
+        Debug.Log("Initializing GameService for new scene...");
         _mainCamera = Camera.main;
         
         
@@ -66,9 +73,6 @@ public class GameService
             Debug.Log(SceneHandler.CurrentScene);
         }
         #endif
-        
-        // Initialize game settings and other necessary components
-        _settings = new GameSettings();
     }
 
     

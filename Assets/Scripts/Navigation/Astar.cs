@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.GraphToolkit.Editor;
 using UnityEngine;
 
 public sealed class Astar
