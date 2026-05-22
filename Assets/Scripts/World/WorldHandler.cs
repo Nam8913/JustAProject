@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class WorldHandler : MonoBehaviour
@@ -42,6 +41,27 @@ public class WorldHandler : MonoBehaviour
             return chunk;
         }
         return null; // Or you could choose to create a new chunk here if it doesn't exist
+    }
+
+    public Chunk GetChunk(int chunkX, int chunkY)
+    {
+        Vector2Int chunkPos = new Vector2Int(chunkX, chunkY);
+        if (activeChunks.TryGetValue(chunkPos, out Chunk chunk))
+        {
+            return chunk;
+        }
+        return null; // Or you could choose to create a new chunk here if it doesn't exist
+    }
+
+    public Tile GetTileAtWorldPosition(Vector2 position)
+    {
+        Chunk chunk = GetChunk(position);
+        if (chunk == null)
+        {
+            return null;
+        }
+
+        return chunk.GetTileAtWorldPosition(position);
     }
 
     public Dictionary<Vector2Int, Chunk> GetActiveChunks()

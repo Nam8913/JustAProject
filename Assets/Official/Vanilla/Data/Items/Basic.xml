@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Data>
+    <Define>
+        <Id>log</Id>
+        <label>Log</label>
+        <destroyable>true</destroyable>
+        <maxStackCount>20</maxStackCount>
+        <volume>50</volume>
+        <mass>30</mass>
+        <length>1.4</length>
+    </Define>
+</Data>

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameService
 {
@@ -12,12 +13,18 @@ public class GameService
     static Game_Play _gamePlay;
     static Game_Entry _gameEntry;
 
+    static Canvas _canvas;
+    static CanvasScaler _canvasScaler;
+    static GraphicRaycaster _graphicRaycaster;
+
     ModernHashNoise _noise;
     World _world;
 
     WorldHandler _worldHandler;
     GameSettings _settings;
 
+    PlayerController _playerController;
+    GameObject _focusObject;
     
 
     public static GameService Ins
@@ -73,6 +80,44 @@ public class GameService
             Debug.Log(SceneHandler.CurrentScene);
         }
         #endif
+
+        GameObject canvasObj = GameObject.Find("Canvas");
+        if (canvasObj != null)
+        {
+            _canvas = canvasObj.GetComponent<Canvas>();
+            _canvasScaler = canvasObj.GetComponent<CanvasScaler>();
+            _graphicRaycaster = canvasObj.GetComponent<GraphicRaycaster>();
+        }else
+        {
+            canvasObj = new GameObject("Canvas");
+            _canvas = canvasObj.AddComponent<Canvas>();
+            _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            _canvasScaler = canvasObj.AddComponent<CanvasScaler>();
+            _graphicRaycaster = canvasObj.AddComponent<GraphicRaycaster>();
+        }
+
+        {
+            _canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            Resolution resolution = GameService.Ins.Settings.GetCurrentResolution();
+            _canvasScaler.referenceResolution = new Vector2(resolution.width, resolution.height);
+            _canvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+            _canvasScaler.matchWidthOrHeight = 0.5f;
+        }
+    }
+
+    public void SetFocusObject(GameObject obj)
+    {
+        _focusObject = obj;
+
+        if(this._playerController != null)
+        {
+            this._playerController.SetFocusObject(obj);
+        }
+    }
+
+    public GameObject GetFocusObject()
+    {
+        return _focusObject;
     }
 
     
@@ -83,6 +128,22 @@ public class GameService
     public ModernHashNoise Noise => _noise;
     public GameSettings Settings => _settings;
     public WorldHandler WorldHandler => _worldHandler;
+
+    public Canvas Canvas => _canvas;
+    public CanvasScaler CanvasScaler => _canvasScaler;
+    public GraphicRaycaster GraphicRaycaster => _graphicRaycaster;
+    
+    public PlayerController PlayerController
+    {
+        get
+        {
+            return _playerController;
+        }
+        set
+        {
+            _playerController = value;
+        }
+    }
     
     public static Camera MainCamera
     {

@@ -37,7 +37,6 @@ public static class ThingHandler
 
         GameObject newObj = new GameObject(id);
         DefineThing defineThing = newObj.AddComponent(typeOfDifineThing) as DefineThing;
-        defineThing.ConfigError();
         thingsActive.Add(defineThing);
 
         Type typeDef = DatabaseThing.GetTypeById(id);
@@ -50,28 +49,46 @@ public static class ThingHandler
                 defineThing.SetDef(define);
                 foreach(var compProp in define.compsProps)
                 {
-                    System.Type helperComp = compProp.compClass;
-                    if(helperComp != null && typeof(HelperComp).IsAssignableFrom(helperComp))
+                    System.Type comp = compProp.compClass;
+                    bool flag1 = comp != null;
+                    bool flag2 = typeof(EntitiesComp).IsAssignableFrom(comp);
+                    bool flag3 = comp.IsAbstract;
+                    if(flag1 && flag2 && !flag3)
                     {
-                        HelperComp helperCompInstance = (HelperComp)Activator.CreateInstance(helperComp);
-                        helperCompInstance.props = compProp;
-                        helperCompInstance.parent = defineThing;
-                        if(helperCompInstance != null)
+                        EntitiesComp compInstance = (EntitiesComp)Activator.CreateInstance(comp);
+                        compInstance.props = compProp;
+                        compInstance.owner = defineThing;
+                        if(compInstance != null)
                         {
-                            defineThing.AddHelperComp(helperCompInstance);
+                            defineThing.AddComp(compInstance);
                         }
                         else
                         {
-                            Debug.LogError($"Failed to create an instance of HelperComp type {helperComp.Name} for thing with id {id}. Make sure the type has a parameterless constructor.");
+                            Debug.LogError($"Failed to create an instance of HelperComp type {comp.Name} for thing with id {id}. Make sure the type has a parameterless constructor.");
                         }
                     }
                     else
                     {
-                        Debug.LogError($"Comp class is null or not a valid HelperComp type in definition for thing with id {id}. Make sure the compClass is specified and inherits from HelperComp.");
+                        if(flag3)
+                        {
+                            Debug.LogWarning($"Comp class {comp.Name} is abstract and cannot be instantiated for thing with id {id}. Skipping this comp. Make sure the compClass is not abstract.");
+                            continue;
+                        }else if(!flag1)
+                        {
+                            Debug.LogError($"Comp class is not specified in definition for thing with id {id}. Make sure the compClass is specified.");
+                        }else if(!flag2)
+                        {
+                            Debug.LogError($"Comp class {comp.Name} does not inherit from HelperComp in definition for thing with id {id}. Make sure the compClass inherits from HelperComp.");
+                        }else
+                        {
+                            Debug.LogError($"Comp class {comp.Name} is invalid for thing with id {id}. Make sure the compClass is a non-abstract class that inherits from HelperComp.");
+                        }
                     }
                 }
             }
         }
+
+        defineThing.ConfigError();
 
         return defineThing;
     }

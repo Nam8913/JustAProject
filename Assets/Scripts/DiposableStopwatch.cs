@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class DisposableStopwatch : IDisposable
 {
+    private string str = "-";
     private Stopwatch stopwatch;
 
-    public DisposableStopwatch()
+    public DisposableStopwatch(string str = "-")
     {
+        this.str = str;
         stopwatch = Stopwatch.StartNew();
     }
 
     public void Dispose()
     {
         stopwatch.Stop();
-        UnityEngine.Debug.Log($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
+        UnityEngine.Debug.Log($"{str}: Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
     } 
 }

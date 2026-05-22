@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 [System.Serializable]
 public class Define : BuildableData
 {
+    [SerializeReference]
     public List<CompProperties> compsProps = new List<CompProperties>();
     public int maxStackCount = 1;
     public float mass = 1f;

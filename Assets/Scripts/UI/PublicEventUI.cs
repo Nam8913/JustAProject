@@ -9,7 +9,7 @@ public class PublicEventUI : MonoBehaviour
     [SerializeField]private GameObject settingWindow;
     void Start()
     {
-        canvas = GameService.Ins.GameEntry.canvas;
+        canvas = GameService.Ins.Canvas;
 
         if(newGameWindow != null)
         {

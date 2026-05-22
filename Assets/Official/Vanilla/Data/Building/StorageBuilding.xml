@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Data>
+    <Define GameObjectTarget="Thing:chest">
+        <Id>chest</Id>
+        <label>Chest</label>
+        <destroyable>true</destroyable>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>false</rotatable>
+                <uninstallable>false</uninstallable>
+                <repairable>false</repairable>
+            </li>
+            <li Class="TestProp">
+                <compClass>TestHelperComp</compClass>
+                <testFloat>123.45</testFloat>
+            </li>
+            <li Class="ContainerProperties">
+                <compClass>ProvideContainer_Comp</compClass>
+                <maxWeight>100</maxWeight>
+                <maxVolume>100</maxVolume>
+                <maxLength>100</maxLength>
+            </li>
+        </compsProps>
+    </Define>
+</Data>

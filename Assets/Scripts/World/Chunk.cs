@@ -6,7 +6,7 @@ public class Chunk : MonoBehaviour
 {
     private Vector2Int chunkPosition;
     Dictionary<Vector2, Tile> tiles = new Dictionary<Vector2, Tile>();
-    List<GameObject> tileObjects = new List<GameObject>();
+    Dictionary<Vector2, GameObject> tileObjects = new Dictionary<Vector2, GameObject>();
 
     void Start()
     {
@@ -49,7 +49,7 @@ public class Chunk : MonoBehaviour
                 GameObject tileObject = new GameObject($"Tile:{x}|{y}");
                 tileObject.transform.position = new Vector2(x,y);
                 tileObject.transform.SetParent(this.transform);
-                tileObjects.Add(tileObject);
+                tileObjects[tile.tilePosition] = tileObject;
                 tiles[tile.tilePosition] = tile;
 
                 SpriteRenderer renderer = tileObject.AddComponent<SpriteRenderer>();
@@ -61,6 +61,8 @@ public class Chunk : MonoBehaviour
                 {
                     yield return null; // Wait for the next frame after creating a batch of tiles
                 }
+
+                tile.SetGameObject(tileObject);
 
                 DebugTile debugTile = tileObject.AddComponent<DebugTile>();
                 debugTile.tile = tile;

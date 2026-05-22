@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TestHelperComp : HelperComp
+public class TestComp : EntitiesComp
 {
     public override void Init()
     {

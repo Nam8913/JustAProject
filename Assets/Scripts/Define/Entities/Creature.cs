@@ -15,25 +15,25 @@ public class Creature : DefineThing
         labelDescription = "A creature with no special traits and no special abilities just for test.";
         statsHolder = new StatsHolder();
         BaseStats.AddAllBaseStatus(statsHolder);
-        statsHolder.MS = 1f;
+        statsHolder.MS = 0.1f;
         traitsHolder = new TraitsHolder();
     }
 
     void Awake()
     {
-        behaviorTree = GetComponent<BehaviorTree>();
-        if (behaviorTree == null)
-        {
-            behaviorTree = gameObject.AddComponent<BehaviorTree>();
-        }
+        // behaviorTree = GetComponent<BehaviorTree>();
+        // if (behaviorTree == null)
+        // {
+        //     behaviorTree = gameObject.AddComponent<BehaviorTree>();
+        // }
 
-        RootNodeBH rootNode = behaviorTree.rootNode;
-        if (rootNode == null)
-        {
-            rootNode = BehaviorTreeFactory.CreateDefaultCreatureTree(this);
-        }
+        // RootNodeBH rootNode = behaviorTree.rootNode;
+        // if (rootNode == null)
+        // {
+        //     rootNode = BehaviorTreeFactory.CreateDefaultCreatureTree(this);
+        // }
 
-        behaviorTree.Initialize(rootNode, this);
+        // behaviorTree.Initialize(rootNode, this);
     }
 
     public override void Start()

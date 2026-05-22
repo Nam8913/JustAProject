@@ -1,23 +1,34 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Test : MonoBehaviour
 {
+    public RawImage testImage;
+    public GameObject test;
     // World world;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        GameService.Ins.GlobalInitialize();
-        // world = new World("testWorld", 12345);
-        // DebugNAVScripts debugScripts = this.gameObject.AddComponent<DebugNAVScripts>();
-
-        // Creature demoCreature = ThingHandler.CreateThing<Creature>();
-        // SpriteRenderer renderer = demoCreature.gameObject.AddComponent<SpriteRenderer>();
-        // renderer.sprite = LocalRefDefaultRS.GetSpriteByName("Circle");
-
-        // CircleCollider2D collider2D = demoCreature.gameObject.AddComponent<CircleCollider2D>();
+        // GameService.PlayerInput.Enable();
+        // GameService.Ins.GlobalInitialize();
 
 
-        // demoCreature.transform.position = Vector2.zero;
+        if(UnityEngine.InputSystem.Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            Debug.Log("Space key was pressed.");
+            // Attempt to drop 1 "log" from the testThing's container
+            //int droppedQuantity = ItemInteractionService.DropToWorld(testThing, "log", 1);
+
+            Vector2 playerPos = GameService.Ins.GetFocusObject().transform.position;
+            Vector2Int toChunk = Chunk.GetChunkPosition(playerPos);
+            Vector2 toTile = new Vector2(Mathf.Floor(playerPos.x), Mathf.Floor(playerPos.y));
+            Tile tile = GameService.GetWorldHandler().GetChunk(toChunk.x, toChunk.y).GetTileAtPosition(toTile);
+            if(tile.TryGetExistingContainer(out Container container))
+            {
+                container.TryAddItem("log", 1);
+                Debug.Log(container.GetContainerInfo());
+            }
+        }
 
     }
 
@@ -30,11 +41,11 @@ public class Test : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector2 move = PlayerInput.Move;
-        if(move != Vector2.zero)
-        {
-            Camera.main.transform.position += new Vector3(move.x, move.y, 0) * Time.deltaTime * 5f;
-        }
+        // Vector2 move = PlayerInput.Move;
+        // if(move != Vector2.zero)
+        // {
+        //     Camera.main.transform.position += new Vector3(move.x, move.y, 0) * Time.deltaTime * 5f;
+        // }
     }
 
     void OnGUI()
@@ -45,25 +56,10 @@ public class Test : MonoBehaviour
     [MakeButtonFuncOnTestClass]
     void DoSomeThing()
     {
-        for(int i = 0; i <= 5; i++)
-        {
-            RaycastHit2D hit = Physics2D.Raycast(Vector2.zero + new Vector2(0.2f * i, 0.2f * i), -Vector2.up);
-            if(hit)
-            {
-                Debug.Log($"Hit: {hit.collider.name} at position {hit.point}");
-            }
-        }
     }
 
     [MakeButtonFuncOnTestClass]
     void DoSomeThingElse()
     {
-        GameObject square = new GameObject("Square1");
-        SpriteRenderer renderer = square.AddComponent<SpriteRenderer>();
-        renderer.sprite = LocalRefDefaultRS.GetSpriteByName("Square");
-        square.transform.position = Vector2.zero + new Vector2(0.5f,0.5f);
-        square.AddComponent<BoxCollider2D>();
-
-         
     }
 }
