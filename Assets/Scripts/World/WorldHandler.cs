@@ -4,6 +4,9 @@ using UnityEngine;
 public class WorldHandler : MonoBehaviour
 {
     private Dictionary<Vector2Int, Chunk> activeChunks = new Dictionary<Vector2Int, Chunk>();
+    private int pendingChunkInitializationCount;
+
+    public bool IsInitialized { get; private set; }
 
     void Awake()
     {
@@ -11,6 +14,7 @@ public class WorldHandler : MonoBehaviour
 
     void Start()
     {
+        IsInitialized = false;
         InitChunkAroundPlayer();
         NavService.Instance.PrewarmChunkGraphAround(LocalTestValue.focusAtPlayer);
     }
@@ -28,8 +32,30 @@ public class WorldHandler : MonoBehaviour
         {
             for(int y = startY; y <= endY; y++)
             {
-                activeChunks[new Vector2Int(x, y)] = Chunk.CreateChunk(new Vector2Int(x, y),this.gameObject);
+                Chunk chunk = Chunk.CreateChunk(new Vector2Int(x, y),this.gameObject);
+                activeChunks[new Vector2Int(x, y)] = chunk;
+                pendingChunkInitializationCount++;
+                chunk.InitializedCallback += OnChunkInitialized;
             }
+        }
+
+        if (pendingChunkInitializationCount == 0)
+        {
+            IsInitialized = true;
+        }
+    }
+
+    private void OnChunkInitialized(Chunk chunk)
+    {
+        if (chunk != null)
+        {
+            chunk.InitializedCallback -= OnChunkInitialized;
+        }
+
+        pendingChunkInitializationCount = Mathf.Max(0, pendingChunkInitializationCount - 1);
+        if (pendingChunkInitializationCount == 0)
+        {
+            IsInitialized = true;
         }
     }
 

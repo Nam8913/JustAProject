@@ -57,26 +57,26 @@ public class ShowInventoryGUI : MonoBehaviour
         _instance = this;
     }
 
-    void OnGUI()
+    void LateUpdate()
     {
-        if(targetToShow == null)
+        if (targetToShow == null)
         {
             return;
         }
+
+        WorldHandler worldHandler = GameService.GetWorldHandler();
+        if (worldHandler == null || !worldHandler.IsInitialized)
+        {
+            return;
+        }
+
         Vector2Int targetTilePos = GetTargetTilePos();
         if (targetTilePos == lastTargetTilePos)
         {
             return;
         }
-        lastTargetTilePos = targetTilePos;
 
-        
-       RefreshAround();
-        debugStr = string.Empty;
-        foreach(var tile in lastNearbyContainer)
-        {
-            debugStr += $"Tile {tile.tilePosition} has container.\n";
-        }
+        RefreshAll();
     }
 
     private void OnDrawGizmos()
@@ -105,6 +105,13 @@ public class ShowInventoryGUI : MonoBehaviour
         RefreshAll();
     }
 
+    void OnDisable()
+    {
+        UnsubscribeFromNearbyContainers();
+        lastNearbyContainer.Clear();
+        lastTargetTilePos = new Vector2Int(int.MinValue, int.MinValue);
+    }
+
     // void OnDisable()
     // {
         
@@ -124,7 +131,49 @@ public class ShowInventoryGUI : MonoBehaviour
 
     public void RefreshAll()
     {
-        
+        if (targetToShow == null)
+        {
+            if (aroundView != null && lastNearbyContainer.Count > 0)
+            {
+                aroundView.MakeContainerListUI(new List<Tile>(), lastNearbyContainer);
+            }
+
+            UnsubscribeFromNearbyContainers();
+            lastNearbyContainer.Clear();
+            lastTargetTilePos = new Vector2Int(int.MinValue, int.MinValue);
+            debugStr = string.Empty;
+            return;
+        }
+
+        WorldHandler worldHandler = GameService.GetWorldHandler();
+        if (worldHandler == null || !worldHandler.IsInitialized)
+        {
+            return;
+        }
+
+        lastTargetTilePos = GetTargetTilePos();
+        RefreshAround();
+        UpdateDebugStr();
+    }
+
+    private void UpdateDebugStr()
+    {
+        debugStr = string.Empty;
+        foreach(var tile in lastNearbyContainer)
+        {
+            debugStr += $"Tile {tile.tilePosition} has container.\n";
+        }
+    }
+
+    private void UnsubscribeFromNearbyContainers()
+    {
+        foreach (var tile in lastNearbyContainer)
+        {
+            if (tile != null && tile.TryGetExistingContainer(out Container container))
+            {
+                container.Changed -= CallbackOnAddedItemToEmptyContainer;
+            }
+        }
     }
 
     public void RefreshAround()
@@ -144,7 +193,7 @@ public class ShowInventoryGUI : MonoBehaviour
                     getAddContainersHasItems.Add(tile);
                 }else
                 {
-                    if(tile.TryGetContainer(out Container c))
+                    if(tile.TryGetExistingContainer(out Container c))
                     {
                         c.Changed += CallbackOnAddedItemToEmptyContainer;
                     }
@@ -163,7 +212,7 @@ public class ShowInventoryGUI : MonoBehaviour
                     getRemoveContainersHasItems.Add(tile);
                 }else
                 {
-                    if(tile.TryGetContainer(out Container c))
+                    if(tile.TryGetExistingContainer(out Container c))
                     {
                         c.Changed -= CallbackOnAddedItemToEmptyContainer;
                     }
@@ -171,13 +220,21 @@ public class ShowInventoryGUI : MonoBehaviour
             }
         }
         lastNearbyContainer = getNearbyContainer;
-        aroundView.MakeContainerListUI(getAddContainersHasItems, getRemoveContainersHasItems);
+        if (aroundView != null)
+        {
+            aroundView.MakeContainerListUI(getAddContainersHasItems, getRemoveContainersHasItems);
+        }
     }
 
     public void CallbackOnAddedItemToEmptyContainer()
     {
         using(DisposableStopwatch s = new DisposableStopwatch("CallbackOnAddedItemToEmptyContainer"))
         {
+            if (aroundView == null)
+            {
+                return;
+            }
+
             List<Tile> tilesHasItems = lastNearbyContainer.Where(t => t.HasItems).ToList();
             Dictionary<GameObject, Tile> tempDic = new Dictionary<GameObject, Tile>();
 
@@ -198,7 +255,7 @@ public class ShowInventoryGUI : MonoBehaviour
             }
             tilesHasItems.ForEach(t =>
             {
-                if(t.TryGetContainer(out Container c))
+                    if(t.TryGetExistingContainer(out Container c))
                 {
                     c.Changed -= CallbackOnAddedItemToEmptyContainer;
                 }
@@ -259,7 +316,7 @@ public class ShowInventoryGUI : MonoBehaviour
                         continue;
                     }
 
-                    if (!tile.TryGetContainer(out Container tileContainer) || tileContainer == null)
+                    if (!tile.TryGetExistingContainer(out Container tileContainer) || tileContainer == null)
                     {
                         continue;
                     }

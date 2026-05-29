@@ -10,6 +10,8 @@ public class GameSettings
     bool runInBackgroundable;
     string currFullScreenMode;
     Resolution resolution;
+    
+    bool isDevMode;
 
     public GameSettings()
     {
@@ -22,11 +24,39 @@ public class GameSettings
         currFullScreenMode = Screen.fullScreenMode.ToString();
 
         resolution = Screen.currentResolution;
+
+        isDevMode = false;
     }
 
     public string DebugString()
     {
         return $"Screen Width: {screenWidth}, Screen Height: {screenHeight}, Full Screen: {isFullScreen}, Target Frame Rate: {targetFrameRate}";
+    }
+
+    public bool IsDevMode()
+    {
+        return isDevMode;
+    }
+
+    public void SetDevMode(bool value)
+    {
+        isDevMode = value;
+        PublicEventUI.CallBackOnDevMode();
+    }
+
+    public bool IsFullScreen()
+    {
+        return isFullScreen;
+    }
+
+    public void SetFullScreen(bool value)
+    {
+        if(Screen.fullScreenMode != FullScreenMode.Windowed)
+        {
+            return;
+        }
+        Screen.fullScreen = value;
+        isFullScreen = Screen.fullScreen;
     }
 
     public string GetCurrentFullScreenMode()

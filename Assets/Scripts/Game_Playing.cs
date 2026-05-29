@@ -23,7 +23,7 @@ public class Game_Play : Game
     public override void Update()
     {
         base.Update();
-        
+
     }
 
     public override void FixedUpdate()

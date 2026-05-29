@@ -18,7 +18,8 @@ public class Tile : IContainerOwner
         {
             if (container == null)
             {
-                container = new Container(1000, float.PositiveInfinity, float.PositiveInfinity);
+                // container = new Container(1000, float.PositiveInfinity, float.PositiveInfinity);
+                Debug.LogError("Container is null. This should not happen as Tile constructor initializes it. Check Tile initialization.");
             }
 
             return container;
@@ -49,6 +50,8 @@ public class Tile : IContainerOwner
         this.tilePosition = tilePosition;
         this.chunk = chunk;
         this.moveCost = moveCost;
+
+        container = new Container(1000, float.PositiveInfinity, float.PositiveInfinity);
     }
 
     public bool TryGetContainer(out Container container)
@@ -80,7 +83,7 @@ public class Tile : IContainerOwner
                         continue;
                     }
 
-                    if (!tile.TryGetContainer(out Container tileContainer) || tileContainer == null)
+                    if (!tile.TryGetExistingContainer(out Container tileContainer) || tileContainer == null)
                     {
                         continue;
                     }

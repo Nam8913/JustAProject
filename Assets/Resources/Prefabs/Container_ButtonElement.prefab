@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 50}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3080774348652171746
 CanvasRenderer:
@@ -133,3 +133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42183095bf90ef408084c3af45f9f0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ContainerButton
+  selectedObjectColor: {r: 0.7607843, g: 0.6511748, b: 0.050980374, a: 0.98}
+  selectedButtonColor: {r: 0.35, g: 0.48, b: 0.74, a: 0.98}
+  normalButtonColor: {r: 1, g: 1, b: 1, a: 0.98}
+  owner: {fileID: 0}

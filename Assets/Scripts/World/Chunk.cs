@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Chunk : MonoBehaviour
 {
     private Vector2Int chunkPosition;
     Dictionary<Vector2, Tile> tiles = new Dictionary<Vector2, Tile>();
     Dictionary<Vector2, GameObject> tileObjects = new Dictionary<Vector2, GameObject>();
+
+    public bool IsInitialized { get; private set; }
+    public event Action<Chunk> InitializedCallback;
 
     void Start()
     {
@@ -70,6 +74,9 @@ public class Chunk : MonoBehaviour
                 debugTile.moveCost = tile.moveCost;
             }
         }
+
+        IsInitialized = true;
+        InitializedCallback?.Invoke(this);
     }
 
     public Tile GetTileAtPosition(Vector2 position)

@@ -96,7 +96,23 @@ public static class TypeUtils
         return typeof(System.Collections.IEnumerable).IsAssignableFrom(type);
     }
 
+    public static bool IsRawData(this Type type)
+    {
+        if(rawDataTypesCached.Contains(type))
+        {
+            return true;
+        }
+
+        if(typeof(RawData).IsAssignableFrom(type))
+        {
+            rawDataTypesCached.Add(type);
+            return true;
+        }
+        return false;
+    }
+
     private static Dictionary<string,Type> typesCached = new Dictionary<string,Type>();
+    private static HashSet<Type> rawDataTypesCached = new HashSet<Type>();
     // private static Dictionary<Type, List<Type>> cachedSubClasses = new Dictionary<Type, List<Type>>();
     // private static Dictionary<Type, List<Type>> cachedSubClassesNonAbstract = new Dictionary<Type, List<Type>>();
     // private static Dictionary<Type, List<Type>> cachedTypesWithAttribute = new Dictionary<Type, List<Type>>();
