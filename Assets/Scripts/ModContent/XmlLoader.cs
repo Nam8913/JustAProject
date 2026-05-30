@@ -59,7 +59,7 @@ public static class XmlLoader
                 return (T)((object)root.FirstChild.Value);
             }
             //object convertedValue = Convert.ChangeType(root.FirstChild.Value, type);
-            object convertedValue = GetObjectFromString<T>(root.FirstChild.Value, settings);
+            object convertedValue = GetObjectFromString<T>(root.FirstChild.Value, settings, root);
             return (T)convertedValue;
         }
 
@@ -137,7 +137,7 @@ public static class XmlLoader
                 }
 
                 string fieldName = child.Name;
-                var fieldInfo = type3.GetField(fieldName);
+                var fieldInfo = type3.GetField(fieldName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
                 if(fieldInfo == null)
                 {
                     if(settings.IgnoreExtraFields)
@@ -185,7 +185,7 @@ public static class XmlLoader
         return defaultType;
     }
 
-    private static object GetObjectFromString<T>(String value, XmlConverterSettings settings)
+    private static object GetObjectFromString<T>(String value, XmlConverterSettings settings, XmlNode contextNode = null)
     {
         if(settings.TryGetConverter(typeof(T), out XmlConverter converter))
         {
@@ -209,7 +209,14 @@ public static class XmlLoader
         }
         else
         {
-            Debug.LogError($"No converter registered for type {typeof(T).FullName}");
+            if(contextNode != null)
+            {
+                Debug.LogError($"No converter registered for type {typeof(T).FullName} at XML node '{contextNode.Name}'. Value: '{value}'");
+            }
+            else
+            {
+                Debug.LogError($"No converter registered for type {typeof(T).FullName}. Value string parse error: '{value}'");
+            }
             return default(T);
         }
     }

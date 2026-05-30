@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-
+[Serializable]
 public class GameSettings
 {
     float screenWidth;
@@ -9,12 +9,16 @@ public class GameSettings
     float targetFrameRate;
     bool runInBackgroundable;
     string currFullScreenMode;
+
+    [NonSerialized]
     Resolution resolution;
     
     bool isDevMode;
 
     public GameSettings()
     {
+        resolution = Screen.currentResolution;
+
         // Initialize default settings
         screenWidth = Screen.width;
         screenHeight = Screen.height;
@@ -23,14 +27,21 @@ public class GameSettings
         runInBackgroundable = Application.runInBackground;
         currFullScreenMode = Screen.fullScreenMode.ToString();
 
-        resolution = Screen.currentResolution;
-
         isDevMode = false;
     }
 
     public string DebugString()
     {
-        return $"Screen Width: {screenWidth}, Screen Height: {screenHeight}, Full Screen: {isFullScreen}, Target Frame Rate: {targetFrameRate}";
+        return String.Concat(
+            $"Screen Width: {screenWidth}\n",
+            $"Screen Height: {screenHeight}\n",
+            $"Is Full Screen: {isFullScreen}\n",
+            $"Target Frame Rate: {targetFrameRate}\n",
+            $"Run In Background: {runInBackgroundable}\n",
+            $"Current Full Screen Mode: {currFullScreenMode}\n",
+            $"Resolution: {resolution.width} x {resolution.height} @ {resolution.refreshRateRatio}Hz\n",
+            $"Is Dev Mode: {isDevMode}\n"
+        );
     }
 
     public bool IsDevMode()

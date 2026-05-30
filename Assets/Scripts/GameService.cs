@@ -50,7 +50,11 @@ public class GameService
     public void GlobalInitialize()
     {
         // Initialize game settings and other necessary components
-        _settings = new GameSettings();
+        GameSettings settings = XmlLoader.LoadFromXml<GameSettings>(FilePathHandler.SettingsFilePath);
+        if(settings == null)
+        {
+            settings = new GameSettings();
+        }
 
         LoadAllData.LoadAll();
     }

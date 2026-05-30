@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameSettings>
+  <screenWidth>1920</screenWidth>
+  <screenHeight>1080</screenHeight>
+  <isFullScreen>false</isFullScreen>
+  <targetFrameRate>-1</targetFrameRate>
+  <runInBackgroundable>true</runInBackgroundable>
+  <currFullScreenMode>Windowed</currFullScreenMode>
+  <isDevMode>true</isDevMode>
+</GameSettings>

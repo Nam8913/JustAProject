@@ -82,6 +82,8 @@ public static class FilePathHandler
     public static string SavesFolderPath => FolderUnderSaveDataPath("Saves");
     public static string LogsFolderPath => FolderUnderSaveDataPath("Logs");
 
+    public static string SettingsFilePath => Path.Combine(ConfigFolderPath, "Settings.xml");
+
     private static string saveDataPath;
 
     private static string fileExecutionPath = Application.dataPath;

@@ -77,6 +77,7 @@ public class XmlConverterSettings
                 { typeof(short), new ShortXmlConverter() },
                 { typeof(byte), new ByteXmlConverter() },
                 { typeof(char), new CharXmlConverter() },
+                { typeof(uint), new UInt32XmlConverter() },
                 { typeof(System.Type), new TypeXmlConverter() }
             }
     };
