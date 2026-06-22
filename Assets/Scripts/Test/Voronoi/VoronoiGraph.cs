@@ -26,10 +26,10 @@ public class VoronoiGraph : MonoBehaviour
     public GameObject voronoiEdgesRenderer;
 
     [Header("Temp")]
-    bool dirty = true;
+    bool dirty = false;
     private List<Vector2> seeds = new List<Vector2>();
 
-    [Header("Debug")]
+    [Header("Cache")]
     public List<Vector2> farPoints = new List<Vector2>();
     public List<Vector2> triCenters = new List<Vector2>();
     [Range(0.1f, 100f)]
@@ -42,7 +42,7 @@ public class VoronoiGraph : MonoBehaviour
         seeds[dynamicPoints.IndexOf(point)] = point.transform.position;
     }
 
-    private GameObject CreateLineRenderer(string name, Color color, float width, bool setParent = true)
+    private GameObject CreateLineRenderer(string name, bool setParent = true)
     {
         GameObject lineObj = new GameObject(name);
         MeshRenderer meshRenderer = lineObj.AddComponent<MeshRenderer>();
@@ -57,19 +57,19 @@ public class VoronoiGraph : MonoBehaviour
 
     void RenderCheck()
     {
-        if(graphEdgesRenderer == null)
+        if (graphEdgesRenderer == null)
         {
-            graphEdgesRenderer = CreateLineRenderer("GraphEdges", graphEdgeColor, 0.05f);
+            graphEdgesRenderer = CreateLineRenderer("GraphEdges");
         }
 
-        if(delaunayEdgesRenderer == null)
+        if (delaunayEdgesRenderer == null)
         {
-            delaunayEdgesRenderer = CreateLineRenderer("DelaunayEdges", delaunayEdgeColor, 0.02f);
+            delaunayEdgesRenderer = CreateLineRenderer("DelaunayEdges");
         }
 
-        if(voronoiEdgesRenderer == null)
+        if (voronoiEdgesRenderer == null)
         {
-            voronoiEdgesRenderer = CreateLineRenderer("VoronoiEdges", voronoiEdgeColor, 0.02f);
+            voronoiEdgesRenderer = CreateLineRenderer("VoronoiEdges");
         }
     }
 
@@ -80,9 +80,9 @@ public class VoronoiGraph : MonoBehaviour
 
     void Start()
     {
-        
+        dirty = true;
 
-        if(dynamicPoints.Count <= 1)
+        if (dynamicPoints.Count <= 1)
         {
             return;
         }
@@ -112,14 +112,14 @@ public class VoronoiGraph : MonoBehaviour
     void DrawGraph()
     {
         // 1. Gọi thuật toán
-        var triangles = TestSpace.DelaunayTriangulator.Triangulate(seeds);
+        var triangles = DelaunayTriangulator.Triangulate(seeds);
 
         // 2. Trích xuất danh sách các cạnh duy nhất (các cặp điểm nối với nhau) và tính tâm đường tròn ngoại tiếp của mỗi tam giác
         HashSet<(int, int)> edges = new HashSet<(int, int)>();
         triCenters.Clear(); // Xóa danh sách cũ
 
         // LƯU Ý: Tạo một danh sách mới để lưu tam giác với chỉ số ổn định
-        List<TestSpace.DelaunayTriangulator.Triangle> stableTriangles = new List<TestSpace.DelaunayTriangulator.Triangle>();
+        List<Triangle> stableTriangles = new List<Triangle>();
 
         foreach (var tri in triangles)
         {
@@ -140,7 +140,7 @@ public class VoronoiGraph : MonoBehaviour
         }
 
         // 4. Xây dựng bản đồ để biết tam giác nào kề cạnh nào .Xây dựng edgeToTriangles từ stableTriangles (KHÔNG phải từ triangles gốc)
-        
+
 
         // Tạo Dictionary lưu: (cạnh gồm 2 chỉ số đỉnh) -> danh sách các tam giác chứa cạnh đó
         Dictionary<(int, int), List<int>> edgeToTriangles = new Dictionary<(int, int), List<int>>();
@@ -155,7 +155,7 @@ public class VoronoiGraph : MonoBehaviour
 
         // 5. Tạo các cạnh Voronoi từ các tam giác kề nhau
 
-        List<VoronoiClipper.Segment> rawVoronoiEdges = new List<VoronoiClipper.Segment>();
+        List<Segment> rawVoronoiEdges = new List<Segment>();
         List<RawVoronoiSegment> rawVoronoiSegments = new List<RawVoronoiSegment>();
 
         foreach (var kvp in edgeToTriangles)
@@ -165,12 +165,12 @@ public class VoronoiGraph : MonoBehaviour
 
             if (triIndices.Count == 2)
             {
-                
+
                 // Cạnh nội bộ: nối 2 circumcenter
                 Vector2 p1 = triCenters[triIndices[0]];
                 Vector2 p2 = triCenters[triIndices[1]];
 
-                var seg = new VoronoiClipper.Segment(p1, p2);
+                var seg = new Segment(p1, p2);
                 rawVoronoiSegments.Add(new RawVoronoiSegment(seg, sharedEdge));
                 rawVoronoiEdges.Add(seg);
             }
@@ -210,25 +210,25 @@ public class VoronoiGraph : MonoBehaviour
                 float extendLength = extendedLength; // có thể điều chỉnh
                 Vector2 farPoint = circumCenter + perpDir;
 
-                if(!IsPointInPolygon(farPoint, voronoiGraphPoints))
+                if (!IsPointInPolygon(farPoint, voronoiGraphPoints))
                 {
-                    continue; 
+                    continue;
                 }
 
                 farPoints.Add(circumCenter + perpDir * extendLength); // Lưu lại để debug
-                VoronoiClipper.Segment seg = new VoronoiClipper.Segment(circumCenter, circumCenter + perpDir * extendLength);
+                Segment seg = new Segment(circumCenter, circumCenter + perpDir * extendLength);
                 rawVoronoiSegments.Add(new RawVoronoiSegment(seg, sharedEdge));
 
-                rawVoronoiEdges.Add(new VoronoiClipper.Segment(circumCenter,seg.end));
+                rawVoronoiEdges.Add(new Segment(circumCenter, seg.end));
             }
         }
 
         HashSet<(int, int)> validPairs = new HashSet<(int, int)>();
 
-        List<VoronoiClipper.Segment> finalClippedEdges = new List<VoronoiClipper.Segment>();
+        List<Segment> finalClippedEdges = new List<Segment>();
         foreach (var raw in rawVoronoiSegments)
         {
-            var clippedParts = VoronoiClipper.ClipSegmentByPolygon(raw.segment, voronoiGraphPoints);
+            var clippedParts = Voronoi.ClipSegmentByPolygon(raw.segment, voronoiGraphPoints);
             if (clippedParts.Count > 0)
             {
                 validPairs.Add(raw.seedPair); // Đánh dấu cặp này hợp lệ
@@ -251,7 +251,7 @@ public class VoronoiGraph : MonoBehaviour
             }
         }
     }
-#region Rendering
+    #region Rendering
     void RendererGraphEdges(float width = 0.2f)
     {
         // Vẽ các cạnh biên của đồ thị Voronoi
@@ -331,40 +331,32 @@ public class VoronoiGraph : MonoBehaviour
             RendererVoronoiEdges();
         }
 
-        if(!renderGizmosGraphEdges && graphEdgesRenderer.activeSelf != false)
+        if (!renderGizmosGraphEdges && graphEdgesRenderer.activeSelf != false)
         {
             graphEdgesRenderer.SetActive(false);
         }
-        else if(renderGizmosGraphEdges && graphEdgesRenderer.activeSelf != true)
+        else if (renderGizmosGraphEdges && graphEdgesRenderer.activeSelf != true)
         {
             graphEdgesRenderer.SetActive(true);
         }
 
-        if(!renderGizmosDelaunayEdges && delaunayEdgesRenderer.activeSelf != false)
+        if (!renderGizmosDelaunayEdges && delaunayEdgesRenderer.activeSelf != false)
         {
             delaunayEdgesRenderer.SetActive(false);
         }
-        else if(renderGizmosDelaunayEdges && delaunayEdgesRenderer.activeSelf != true)
+        else if (renderGizmosDelaunayEdges && delaunayEdgesRenderer.activeSelf != true)
         {
             delaunayEdgesRenderer.SetActive(true);
         }
 
-        if(!renderGizmosVoronoiEdges && voronoiEdgesRenderer.activeSelf != false)
+        if (!renderGizmosVoronoiEdges && voronoiEdgesRenderer.activeSelf != false)
         {
             voronoiEdgesRenderer.SetActive(false);
         }
-        else if(renderGizmosVoronoiEdges && voronoiEdgesRenderer.activeSelf != true)
+        else if (renderGizmosVoronoiEdges && voronoiEdgesRenderer.activeSelf != true)
         {
             voronoiEdgesRenderer.SetActive(true);
         }
-    }
-
-    void AddEdgeToDict(int i, int j, int triIdx, Dictionary<(int, int), List<int>> dict)
-    {
-        if (i > j) (i, j) = (j, i); // luôn để (min, max)
-        var key = (i, j);
-        if (!dict.ContainsKey(key)) dict[key] = new List<int>();
-        dict[key].Add(triIdx);
     }
 
     void OnDrawGizmos()
@@ -375,7 +367,7 @@ public class VoronoiGraph : MonoBehaviour
             Gizmos.DrawSphere(new Vector3(point.x, point.y, 0), 0.1f);
         }
 
-        if(renderGizmosGraphEdges)
+        if (renderGizmosGraphEdges)
         {
             List<(Vector2, Vector2)> voronoiGraphEdges = new List<(Vector2, Vector2)>();
             int n = voronoiGraphPoints.Count;
@@ -392,7 +384,7 @@ public class VoronoiGraph : MonoBehaviour
             }
         }
 
-        if(renderGizmosDelaunayEdges)
+        if (renderGizmosDelaunayEdges)
         {
             foreach (var edge in delaunayEdges)
             {
@@ -401,7 +393,7 @@ public class VoronoiGraph : MonoBehaviour
             }
         }
 
-        if(renderGizmosVoronoiEdges)
+        if (renderGizmosVoronoiEdges)
         {
             foreach (var edge in voronoiEdges)
             {
@@ -420,8 +412,8 @@ public class VoronoiGraph : MonoBehaviour
         foreach (var point in farPoints)
         {
             // Gizmos.DrawSphere(new Vector3(point.x, point.y, 0), 0.1f);
-            Debug.DrawLine(new Vector3(point.x - 0.2f, point.y - 0.2f), new Vector3(point.x + 0.2f, point.y + 0.2f),Color.magenta);
-            Debug.DrawLine(new Vector3(point.x - 0.2f, point.y + 0.2f), new Vector3(point.x + 0.2f, point.y - 0.2f),Color.magenta);
+            Debug.DrawLine(new Vector3(point.x - 0.2f, point.y - 0.2f), new Vector3(point.x + 0.2f, point.y + 0.2f), Color.magenta);
+            Debug.DrawLine(new Vector3(point.x - 0.2f, point.y + 0.2f), new Vector3(point.x + 0.2f, point.y - 0.2f), Color.magenta);
         }
 
         foreach (var center in triCenters)
@@ -429,6 +421,14 @@ public class VoronoiGraph : MonoBehaviour
             Debug.DrawLine(new Vector3(center.x - 0.2f, center.y - 0.2f), new Vector3(center.x + 0.2f, center.y + 0.2f), Color.black);
             Debug.DrawLine(new Vector3(center.x - 0.2f, center.y + 0.2f), new Vector3(center.x + 0.2f, center.y - 0.2f), Color.black);
         }
+    }
+
+    void AddEdgeToDict(int i, int j, int triIdx, Dictionary<(int, int), List<int>> dict)
+    {
+        if (i > j) (i, j) = (j, i); // luôn để (min, max)
+        var key = (i, j);
+        if (!dict.ContainsKey(key)) dict[key] = new List<int>();
+        dict[key].Add(triIdx);
     }
 
     Vector2 GetCircumcenter(Vector2 A, Vector2 B, Vector2 C)
@@ -536,38 +536,151 @@ public class VoronoiGraph : MonoBehaviour
         triangles.Add(startIndex + 3);
     }
 
-}
-
-public class RawVoronoiSegment
-{
-    public VoronoiClipper.Segment segment;
-    public (int, int) seedPair; // cặp seed (a,b) đã chuẩn hóa
-    public RawVoronoiSegment(VoronoiClipper.Segment seg, (int, int) pair)
+    public class RawVoronoiSegment
     {
-        segment = seg;
-        seedPair = pair;
+        public Segment segment;
+        public (int, int) seedPair; // cặp seed (a,b) đã chuẩn hóa
+        public RawVoronoiSegment(Segment seg, (int, int) pair)
+        {
+            segment = seg;
+            seedPair = pair;
+        }
     }
-}
 
-namespace TestSpace
-{
-    using System.Collections.Generic;
-    using UnityEngine;
+    public struct Triangle
+    {
+        public int a, b, c;
+
+        public Triangle(int a, int b, int c)
+        {
+            this.a = a;
+            this.b = b;
+            this.c = c;
+        }
+    }
+
+    public struct Segment
+    {
+        public Vector2 start;
+        public Vector2 end;
+        public Segment(Vector2 s, Vector2 e) { start = s; end = e; }
+    }
+
+    public static class Voronoi
+    {
+
+        // -------------------- Các hàm hình học phụ trợ --------------------
+
+        /// <summary>
+        /// Kiểm tra điểm có nằm trong đa giác (dùng Ray Casting).
+        /// </summary>
+        public static bool IsPointInPolygon(Vector2 point, List<Vector2> polygon)
+        {
+            int n = polygon.Count;
+            bool inside = false;
+            for (int i = 0, j = n - 1; i < n; j = i++)
+            {
+                Vector2 vi = polygon[i];
+                Vector2 vj = polygon[j];
+
+                bool intersect = ((vi.y > point.y) != (vj.y > point.y));
+                if (intersect)
+                {
+                    float xIntersect = (vj.x - vi.x) * (point.y - vi.y) / (vj.y - vi.y) + vi.x;
+                    if (point.x < xIntersect)
+                        inside = !inside;
+                }
+            }
+            return inside;
+        }
+        public static List<Segment> ClipSegmentByPolygon(Segment seg, List<Vector2> polygon)
+        {
+            List<Segment> results = new List<Segment>();
+            if (polygon.Count < 3) return results;
+
+            Vector2 A = seg.start;
+            Vector2 B = seg.end;
+            Vector2 dir = B - A;
+            float len = dir.magnitude;
+            if (len < Mathf.Epsilon) // đoạn thẳng có độ dài 0
+            {
+                if (IsPointInPolygon(A, polygon))
+                    results.Add(new Segment(A, A));
+                return results;
+            }
+
+            // Bước 1: Thu thập tất cả tham số t tại các điểm giao với cạnh đa giác
+            List<float> tValues = new List<float> { 0f, 1f }; // luôn có hai đầu mút
+
+            for (int i = 0; i < polygon.Count; i++)
+            {
+                Vector2 p1 = polygon[i];
+                Vector2 p2 = polygon[(i + 1) % polygon.Count];
+                Vector2 edge = p2 - p1;
+
+                // Tính giao điểm giữa đoạn thẳng (A->B) và cạnh (p1->p2)
+                // Giải hệ: A + t*dir = p1 + u*edge
+                float det = dir.x * edge.y - dir.y * edge.x;
+                if (Mathf.Abs(det) < 1e-6f) continue; // song song hoặc trùng
+
+                float t = ((p1.x - A.x) * edge.y - (p1.y - A.y) * edge.x) / det;
+                float u = ((p1.x - A.x) * dir.y - (p1.y - A.y) * dir.x) / det;
+
+                // Giao điểm nằm trong cả hai đoạn (từ 0 đến 1, và u từ 0 đến 1)
+                if (t > 0f && t < 1f && u >= 0f && u <= 1f)
+                {
+                    tValues.Add(t);
+                }
+            }
+
+            // Sắp xếp và loại bỏ các giá trị trùng lặp
+            tValues.Sort();
+            for (int i = tValues.Count - 1; i > 0; i--)
+            {
+                if (Mathf.Abs(tValues[i] - tValues[i - 1]) < 1e-6f)
+                    tValues.RemoveAt(i);
+            }
+
+            // Bước 2: Với mỗi khoảng giữa hai t liên tiếp, kiểm tra điểm giữa có nằm trong đa giác không
+            for (int i = 0; i < tValues.Count - 1; i++)
+            {
+                float t1 = tValues[i];
+                float t2 = tValues[i + 1];
+                float mid = (t1 + t2) * 0.5f;
+                Vector2 midPoint = A + dir * mid;
+
+                if (IsPointInPolygon(midPoint, polygon))
+                {
+                    // Đoạn con từ t1 đến t2 hoàn toàn nằm trong (hoặc trên biên)
+                    Vector2 start = A + dir * t1;
+                    Vector2 end = A + dir * t2;
+                    results.Add(new Segment(start, end));
+                }
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Áp dụng clipping cho toàn bộ danh sách cạnh của đồ thị Voronoi.
+        /// Trả về danh sách cạnh mới đã bị cắt gọn trong đa giác.
+        /// </summary>
+        public static List<Segment> ClipVoronoiEdges(List<Segment> originalEdges, List<Vector2> clipPolygon)
+        {
+            List<Segment> clipped = new List<Segment>();
+            foreach (var edge in originalEdges)
+            {
+                var parts = ClipSegmentByPolygon(edge, clipPolygon);
+                clipped.AddRange(parts);
+            }
+            return clipped;
+        }
+    }
 
     public static class DelaunayTriangulator
     {
         // Cấu trúc tam giác lưu 3 chỉ số đỉnh
-        public struct Triangle
-        {
-            public int a, b, c;
 
-            public Triangle(int a, int b, int c)
-            {
-                this.a = a;
-                this.b = b;
-                this.c = c;
-            }
-        }
 
         // Hàm chính: trả về danh sách tam giác từ danh sách điểm
         public static List<Triangle> Triangulate(List<Vector2> points)
@@ -699,123 +812,5 @@ namespace TestSpace
             public bool Equals(Edge other) => (a == other.a && b == other.b);
             public override int GetHashCode() => a * 1000003 + b;
         }
-    }
-}
-
-
-
-public static class VoronoiClipper
-{
-
-    // -------------------- Các hàm hình học phụ trợ --------------------
-    public struct Segment
-    {
-        public Vector2 start;
-        public Vector2 end;
-        public Segment(Vector2 s, Vector2 e) { start = s; end = e; }
-    }
-    /// <summary>
-    /// Kiểm tra điểm có nằm trong đa giác (dùng Ray Casting).
-    /// </summary>
-    public static bool IsPointInPolygon(Vector2 point, List<Vector2> polygon)
-    {
-        int n = polygon.Count;
-        bool inside = false;
-        for (int i = 0, j = n - 1; i < n; j = i++)
-        {
-            Vector2 vi = polygon[i];
-            Vector2 vj = polygon[j];
-
-            bool intersect = ((vi.y > point.y) != (vj.y > point.y));
-            if (intersect)
-            {
-                float xIntersect = (vj.x - vi.x) * (point.y - vi.y) / (vj.y - vi.y) + vi.x;
-                if (point.x < xIntersect)
-                    inside = !inside;
-            }
-        }
-        return inside;
-    }
-    public static List<Segment> ClipSegmentByPolygon(Segment seg, List<Vector2> polygon)
-    {
-        List<Segment> results = new List<Segment>();
-        if (polygon.Count < 3) return results;
-
-        Vector2 A = seg.start;
-        Vector2 B = seg.end;
-        Vector2 dir = B - A;
-        float len = dir.magnitude;
-        if (len < Mathf.Epsilon) // đoạn thẳng có độ dài 0
-        {
-            if (IsPointInPolygon(A, polygon))
-                results.Add(new Segment(A, A));
-            return results;
-        }
-
-        // Bước 1: Thu thập tất cả tham số t tại các điểm giao với cạnh đa giác
-        List<float> tValues = new List<float> { 0f, 1f }; // luôn có hai đầu mút
-
-        for (int i = 0; i < polygon.Count; i++)
-        {
-            Vector2 p1 = polygon[i];
-            Vector2 p2 = polygon[(i + 1) % polygon.Count];
-            Vector2 edge = p2 - p1;
-
-            // Tính giao điểm giữa đoạn thẳng (A->B) và cạnh (p1->p2)
-            // Giải hệ: A + t*dir = p1 + u*edge
-            float det = dir.x * edge.y - dir.y * edge.x;
-            if (Mathf.Abs(det) < 1e-6f) continue; // song song hoặc trùng
-
-            float t = ((p1.x - A.x) * edge.y - (p1.y - A.y) * edge.x) / det;
-            float u = ((p1.x - A.x) * dir.y - (p1.y - A.y) * dir.x) / det;
-
-            // Giao điểm nằm trong cả hai đoạn (từ 0 đến 1, và u từ 0 đến 1)
-            if (t > 0f && t < 1f && u >= 0f && u <= 1f)
-            {
-                tValues.Add(t);
-            }
-        }
-
-        // Sắp xếp và loại bỏ các giá trị trùng lặp
-        tValues.Sort();
-        for (int i = tValues.Count - 1; i > 0; i--)
-        {
-            if (Mathf.Abs(tValues[i] - tValues[i - 1]) < 1e-6f)
-                tValues.RemoveAt(i);
-        }
-
-        // Bước 2: Với mỗi khoảng giữa hai t liên tiếp, kiểm tra điểm giữa có nằm trong đa giác không
-        for (int i = 0; i < tValues.Count - 1; i++)
-        {
-            float t1 = tValues[i];
-            float t2 = tValues[i + 1];
-            float mid = (t1 + t2) * 0.5f;
-            Vector2 midPoint = A + dir * mid;
-
-            if (IsPointInPolygon(midPoint, polygon))
-            {
-                // Đoạn con từ t1 đến t2 hoàn toàn nằm trong (hoặc trên biên)
-                Vector2 start = A + dir * t1;
-                Vector2 end = A + dir * t2;
-                results.Add(new Segment(start, end));
-            }
-        }
-
-        return results;
-    }
-
-    /// <summary>
-    /// Áp dụng clipping cho toàn bộ danh sách cạnh của đồ thị Voronoi.
-    /// Trả về danh sách cạnh mới đã bị cắt gọn trong đa giác.
-    /// </summary>
-    public static List<Segment> ClipVoronoiEdges(List<Segment> originalEdges, List<Vector2> clipPolygon)
-    {
-        List<Segment> clipped = new List<Segment>();
-        foreach (var edge in originalEdges)
-        {
-            var parts = ClipSegmentByPolygon(edge, clipPolygon);
-            clipped.AddRange(parts);
-        }
-        return clipped;
     }
 }
