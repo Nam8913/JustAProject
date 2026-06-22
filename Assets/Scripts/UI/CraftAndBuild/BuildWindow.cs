@@ -1,15 +1,14 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CraftWindow : MonoBehaviour
+public class BuildWindow : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private GameObject content_categoryContent;
-    [SerializeField] private GameObject content_recipesContent;
-    [SerializeField] private Button craftButton;
+    [SerializeField] private GameObject content_structureRecipesContent;
+    [SerializeField] private Button buildButton;
     [SerializeField] private TMPro.TMP_Text infor;
 
     [Header("Prefabs")]
@@ -17,16 +16,10 @@ public class CraftWindow : MonoBehaviour
     [SerializeField] private GameObject recipePrefab;
 
     [Header("Temp")]
-    private DefineThing owner;
     private RectTransform holderInforText;
-    private List<Recipe> recipes = new List<Recipe>();
+    private List<StructureRecipe> structureRecipes = new List<StructureRecipe>();
     private string currentSelectedRecipeId = string.Empty;
     private string currentSelectedCategory = string.Empty;
-
-    public void SetOwner(DefineThing owner)
-    {
-        this.owner = owner;
-    }
 
     public void ToggleSelf()
     {
@@ -42,7 +35,7 @@ public class CraftWindow : MonoBehaviour
         float currentWidthCategory = this.transform.Find("CategoryScrollView").GetComponent<RectTransform>().rect.width;
         GridLayoutGroup gridLayout = content_categoryContent.GetComponent<GridLayoutGroup>();
         gridLayout.cellSize = new Vector2(currentWidthCategory, gridLayout.cellSize.y);
-        List<string> categories = recipes.Select(r => r.category).Distinct().ToList();
+        List<string> categories = structureRecipes.Select(r => r.category).Distinct().ToList();
         foreach(var category in categories)
         {
             GameObject categoryGO = Instantiate(categoryPrefab, content_categoryContent.transform);
@@ -59,22 +52,22 @@ public class CraftWindow : MonoBehaviour
             return;
         }
         currentSelectedCategory = category;
-        foreach(Transform child in content_recipesContent.transform)
+        foreach(Transform child in content_structureRecipesContent.transform)
         {
             Destroy(child.gameObject);
         }
 
-        List<Recipe> recipesInCategory = recipes.Where(r => r.category == category).ToList();
-        foreach(var recipe in recipesInCategory)
+        List<StructureRecipe> structureRecipesInCategory = structureRecipes.Where(r => r.category == category).ToList();
+        foreach(var recipe in structureRecipesInCategory)
         {
-            GameObject recipeGO = Instantiate(recipePrefab, content_recipesContent.transform);
+            GameObject recipeGO = Instantiate(recipePrefab, content_structureRecipesContent.transform);
             recipeGO.GetComponentInChildren<TMPro.TMP_Text>().text = recipe.Id;
             Button button = recipeGO.GetComponent<Button>();
             button.onClick.AddListener(() => OnRecipeClicked(recipe));
         }
     }
 
-    private void OnRecipeClicked(Recipe recipe)
+    private void OnRecipeClicked(StructureRecipe recipe)
     {
         if(currentSelectedRecipeId == recipe.Id)
         {
@@ -98,11 +91,11 @@ public class CraftWindow : MonoBehaviour
         holderInforText.sizeDelta = new Vector2(holderInforText.sizeDelta.x, holderInforText.sizeDelta.y); // Reset to default height
     }
 
-    private string GetInforTextForRecipe(Recipe recipe)
+    private string GetInforTextForRecipe(StructureRecipe recipe)
     {
         string text = $"<b>{recipe.Id}</b>\n\n";
         text += $"Category: {recipe.category}\n\n";
-
+        
         text += "Ingredients:\n";
         foreach(var component in recipe.components)
         {
@@ -115,7 +108,7 @@ public class CraftWindow : MonoBehaviour
             text += string.Join(" OR ", options);
             text += "\n";
         }
-
+        
         text += "\nRequired Tool Qualities:\n";
         foreach(var quality in recipe.qualities)
         {
@@ -126,82 +119,10 @@ public class CraftWindow : MonoBehaviour
 
     public void LoadRecipes()
     {
-        recipes = DatabaseThing.Store[typeof(Recipe)].Values.Cast<Recipe>().ToList();
-        foreach(var recipe in recipes)
+        structureRecipes = DatabaseThing.Store[typeof(StructureRecipe)].Values.Cast<StructureRecipe>().ToList();
+        foreach(var recipe in structureRecipes)
         {
-            Debug.Log($"Loaded recipe: {recipe.Id}");
+            Debug.Log($"Loaded structure recipe: {recipe.Id}");
         }
-    }
-
-    private bool isRecipeCraftable(Recipe recipe)
-    {
-        ShowInventoryGUI showInventoryGUI = ShowInventoryGUI.Instance;
-        if(showInventoryGUI == null)
-        {
-            return false; // Can't determine if recipe is craftable without access to player's inventory
-        }
-
-        ProvideContainer_Comp holder = owner.GetComp<ProvideContainer_Comp>();
-        if(holder == null)        {
-            return false; // Owner does not have a container to hold crafted item
-        }
-
-
-
-        // Check if player has required components
-        foreach(var component in recipe.components)
-        {
-            bool hasAtLeastOneOption = false;
-            foreach(var option in component.Options)
-            {
-                if(HasItem(holder.OwnedContainer, option.thingId, option.quantity))
-                {
-                    hasAtLeastOneOption = true;
-                    break;
-                }
-            }
-            if(!hasAtLeastOneOption)
-            {
-                return false; // Player does not have any of the options for this component
-            }
-        }
-
-        // // Check if player has required tool qualities
-        // foreach(var quality in recipe.qualities)
-        // {
-        //     if(!GameService.PlayerToolManager.HasToolWithQuality(quality.id, quality.level))
-        //     {
-        //         return false; // Player does not have a tool with the required quality
-        //     }
-        // }
-
-        return true; // Player meets all requirements to craft this recipe
-
-    }
-
-    private bool HasItem(Container root,string itemId,int quantity)
-    {
-        if(root == null)
-        {
-            return false;
-        }
-
-        int get = root.GetItemQuantity(itemId);
-        if(get <= 0 || get < quantity)
-        {
-            return false;
-        }
-
-        foreach(Container subContainer in root.children)
-        {
-            bool any = HasItem(subContainer, itemId, quantity);
-            if(any)
-            {
-                return true;
-            }
-        }
-
-        return true;
-
     }
 }

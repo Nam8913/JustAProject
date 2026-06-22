@@ -50,10 +50,10 @@ public class GameService
     public void GlobalInitialize()
     {
         // Initialize game settings and other necessary components
-        GameSettings settings = XmlLoader.LoadFromXml<GameSettings>(FilePathHandler.SettingsFilePath);
-        if(settings == null)
+        _settings = XmlLoader.LoadFromXml<GameSettings>(FilePathHandler.SettingsFilePath);
+        if(_settings == null)
         {
-            settings = new GameSettings();
+            _settings = new GameSettings();
         }
 
         LoadAllData.LoadAll();
@@ -102,7 +102,7 @@ public class GameService
 
         {
             _canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            Resolution resolution = GameService.Ins.Settings.GetCurrentResolution();
+            Resolution resolution = GameService.Settings.GetCurrentResolution();
             _canvasScaler.referenceResolution = new Vector2(resolution.width, resolution.height);
             _canvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
             _canvasScaler.matchWidthOrHeight = 0.5f;
@@ -116,6 +116,14 @@ public class GameService
         if(this._playerController != null)
         {
             this._playerController.SetFocusObject(obj);
+        }else
+        {
+            _playerController = obj.GetComponent<PlayerController>();
+            if(_playerController == null)
+            {
+                _playerController = obj.AddComponent<PlayerController>();
+            }
+            this._playerController.SetFocusObject(obj);
         }
     }
 
@@ -126,26 +134,40 @@ public class GameService
 
     
 
-    public Game Game => _game;
-    public Game_Play GamePlay => _gamePlay;
-    public Game_Entry GameEntry => _gameEntry;
-    public ModernHashNoise Noise => _noise;
-    public GameSettings Settings => _settings;
-    public WorldHandler WorldHandler => _worldHandler;
+    public static Game Game => _game;
+    public static Game_Play GamePlay => _gamePlay;
+    public static Game_Entry GameEntry => _gameEntry;
+    public static ModernHashNoise Noise => _gameService._noise;
+    public static GameSettings Settings => _gameService._settings;
+    public static WorldHandler WorldHandler => _gameService._worldHandler;
 
-    public Canvas Canvas => _canvas;
-    public CanvasScaler CanvasScaler => _canvasScaler;
-    public GraphicRaycaster GraphicRaycaster => _graphicRaycaster;
+    public static Canvas Canvas => _canvas;
+    public static CanvasScaler CanvasScaler => _canvasScaler;
+    public static GraphicRaycaster GraphicRaycaster => _graphicRaycaster;
     
-    public PlayerController PlayerController
+    public static PlayerController PlayerController
     {
         get
         {
-            return _playerController;
+            return Ins._playerController;
         }
         set
         {
-            _playerController = value;
+            Ins._playerController = value;
+        }
+    }
+    public static CraftWindow CraftWindow
+    {
+        get
+        {
+            return PlayUI.CraftWindow;
+        }
+    }
+    public static BuildWindow BuildWindow
+    {
+        get
+        {
+            return PlayUI.BuildWindow;
         }
     }
     

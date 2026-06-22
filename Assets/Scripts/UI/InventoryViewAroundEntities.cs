@@ -4,15 +4,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InventoryViewAroundEntities : MonoBehaviour
+public class InventoryViewAroundEntities : MonoBehaviour, IInventoryView
 {
-    public static InventoryViewAroundEntities Ins
-    {
-        get
-        {
-            return ShowInventoryGUI.Instance != null ? ShowInventoryGUI.Instance.aroundView : null;
-        }
-    }
     [Header("References_UI")]
     [SerializeField]
     public GameObject viewItemContainerElement;
@@ -38,33 +31,12 @@ public class InventoryViewAroundEntities : MonoBehaviour
     [SerializeField]
     private GameObject itemPrefab;
 
+    [Header("Temp")]
     [SerializeField]
     private ContainerButton currentlySelectedContainerButton;
-
     private Container currentlySelectedContainer;
-
     [SerializeField]
     private List<ContainerButton> containerButtons = new List<ContainerButton>();
-
-    public static void SetSelectedContainerButton(ContainerButton button)
-    {
-        InventoryViewAroundEntities view = InventoryViewAroundEntities.Ins;
-        if (view == null)
-        {
-            return;
-        }
-
-        view.UnsubscribeSelectedContainer();
-        view.currentlySelectedContainerButton = button;
-        view.RefreshContainerButtonVisuals();
-        view.RefreshSelectedContainerUI();
-    }
-
-    public static ContainerButton GetSelectedContainerButton()
-    {
-        InventoryViewAroundEntities view = InventoryViewAroundEntities.Ins;
-        return view != null ? view.currentlySelectedContainerButton : null;
-    }
 
     public GameObject GetContentScrollViewOfContainerList()
     {
@@ -82,7 +54,7 @@ public class InventoryViewAroundEntities : MonoBehaviour
 
     private void OnDisable()
     {
-        UnsubscribeSelectedContainer();
+        UnSelectedCurrContainer();
     }
 
     public void MakeContainerListUI(List<Tile> needAdd, List<Tile> needRemove)
@@ -103,7 +75,7 @@ public class InventoryViewAroundEntities : MonoBehaviour
                         if(currentlySelectedContainerButton == button)
                         {
                             currentlySelectedContainerButton = null; // Deselect if the currently selected container is being removed
-                            UnsubscribeSelectedContainer();
+                            UnSelectedCurrContainer();
                             ClearItemContainerViews();
                         }
                     }
@@ -129,7 +101,7 @@ public class InventoryViewAroundEntities : MonoBehaviour
         RefreshContainerButtonVisuals();
     }
 
-    public void TryGetSelectedContainer(out Container container)
+    private void TryGetSelectedContainer(out Container container)
     {
         container = null;
         if(currentlySelectedContainerButton == null)
@@ -161,6 +133,7 @@ public class InventoryViewAroundEntities : MonoBehaviour
         float index = content_ListContainer.GetComponent<RectTransform>().rect.width;
         containerGO.GetComponent<RectTransform>().sizeDelta = new Vector2(index, index);
         ContainerButton containerButton = containerGO.GetComponent<ContainerButton>();
+        containerButton.SetUI(this);
         containerButtons.Add(containerButton);
         containerButton.SetOwner(tile.GetGameObject());
     }
@@ -177,7 +150,7 @@ public class InventoryViewAroundEntities : MonoBehaviour
         if(currentlySelectedContainerButton == uiElement)
         {
             currentlySelectedContainerButton = null;
-            UnsubscribeSelectedContainer();
+            UnSelectedCurrContainer();
             ClearItemContainerViews();
         }
 
@@ -188,7 +161,7 @@ public class InventoryViewAroundEntities : MonoBehaviour
 
         RefreshContainerButtonVisuals();
     }
-
+    #region  ContainerItem UI Methods
     private void ClearItemContainerViews()
     {
         foreach(var item in content_ItemContainer.GetComponentsInChildren<Transform>().ToList())
@@ -212,12 +185,31 @@ public class InventoryViewAroundEntities : MonoBehaviour
             text.text = item.GetInfo();
         }
     }
+    #endregion
 
-    private void RefreshSelectedContainerUI()
+    private void CallbackOnContainerChanged()
     {
-        UnsubscribeSelectedContainer();
+        Debug.Log("Container changed, refreshing item container UI.");
         ClearItemContainerViews();
+        TryGetSelectedContainer(out Container container);
+        if (container == null)
+        {
+            return;
+        }
+        MakeItemContainerUI(container);
+    }
 
+    private void UnSelectedCurrContainer()
+    {
+        if (currentlySelectedContainer != null)
+        {
+            currentlySelectedContainer.Changed -= CallbackOnContainerChanged;
+            currentlySelectedContainer = null;
+        }
+    }
+
+    private void MakeContainerFromSelectedContainerButton()
+    {
         TryGetSelectedContainer(out Container container);
         if (container == null)
         {
@@ -226,16 +218,7 @@ public class InventoryViewAroundEntities : MonoBehaviour
 
         currentlySelectedContainer = container;
         MakeItemContainerUI(container);
-        currentlySelectedContainer.Changed += UpdateItemContainerUI;
-    }
-
-    private void UnsubscribeSelectedContainer()
-    {
-        if (currentlySelectedContainer != null)
-        {
-            currentlySelectedContainer.Changed -= UpdateItemContainerUI;
-            currentlySelectedContainer = null;
-        }
+        currentlySelectedContainer.Changed += CallbackOnContainerChanged;
     }
 
     private void RefreshContainerButtonVisuals()
@@ -250,8 +233,40 @@ public class InventoryViewAroundEntities : MonoBehaviour
         }
     }
 
-    public void UpdateItemContainerUI()
+    #region IInventoryView Interface Methods
+    public void GetSelectedContainer(ContainerButton button)
     {
-        RefreshSelectedContainerUI();
+        if (button == null)
+        {
+            return;
+        }
+
+        if(currentlySelectedContainerButton == button)
+        {
+            return; // Already selected
+        }
+
+        ClearItemContainerViews();
+
+        this.UnSelectedCurrContainer();
+        this.currentlySelectedContainerButton = button;
+        this.RefreshContainerButtonVisuals();
+        this.MakeContainerFromSelectedContainerButton();
     }
+
+    public void TryRemoveContainerButton(ContainerButton button)
+    {
+        if(currentlySelectedContainerButton == button)
+        {
+            UnSelectedCurrContainer();
+            ClearItemContainerViews();
+        }
+
+        if(containerButtons.Contains(button))
+        {
+            containerButtons.Remove(button);
+        }
+    }
+
+    #endregion
 }

@@ -9,9 +9,15 @@ public class LocalRefDefaultRS : MonoBehaviour
     private static Dictionary<string, Sprite> dictSprite = new Dictionary<string, Sprite>();
     private static Dictionary<string, Material> dictMaterial = new Dictionary<string, Material>();
     
-
+    static bool isInitialized = false;
     void Awake()
     {
+        if(isInitialized)
+        {
+            return;
+        }
+        isInitialized= true;
+        
         foreach(var item in listSpriteRef)
         {
             dictSprite.Add(item.name, item);

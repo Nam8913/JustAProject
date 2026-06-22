@@ -683,8 +683,7 @@ public sealed class HPAPathfinder
 
     private Chunk GetChunk(Vector2Int chunkPosition)
     {
-        GameService gameService = GameService.Ins;
-        if (gameService == null || gameService.WorldHandler == null)
+        if (GameService.Ins == null || GameService.WorldHandler == null)
         {
             return null;
         }
@@ -692,7 +691,7 @@ public sealed class HPAPathfinder
         Vector2 worldPosition = new Vector2(
             chunkPosition.x * LocalTestValue.tilesPerChunk,
             chunkPosition.y * LocalTestValue.tilesPerChunk);
-        return gameService.WorldHandler.GetChunk(worldPosition);
+        return GameService.WorldHandler.GetChunk(worldPosition);
     }
 
     private static float GetTileMoveCost(Chunk chunk, Vector2 worldPosition)

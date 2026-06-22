@@ -52,7 +52,7 @@ public class GameSettings
     public void SetDevMode(bool value)
     {
         isDevMode = value;
-        PublicEventUI.CallBackOnDevMode();
+        EntryUI.CallBackOnDevMode();
     }
 
     public bool IsFullScreen()

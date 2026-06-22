@@ -55,33 +55,33 @@ public static class ToggleBinderDict
             "devmode",
             (
                 () => {
-                    bool value = GameService.Ins.Settings.IsDevMode();
+                    bool value = GameService.Settings.IsDevMode();
                     Debug.Log("Getting dev mode value: " + value);
                     return value; 
                 },
-                (value) => GameService.Ins.Settings.SetDevMode(value)
+                (value) => GameService.Settings.SetDevMode(value)
             )
         },
         {
             "fullscreen",
             (
                 () => {
-                    bool value = GameService.Ins.Settings.IsFullScreen();
+                    bool value = GameService.Settings.IsFullScreen();
                     Debug.Log("Getting fullscreen value:" + value);
                     return value; 
                 },
-                (value) => GameService.Ins.Settings.SetFullScreen(value)
+                (value) => GameService.Settings.SetFullScreen(value)
             )
         },
         {
             "runinbackground",
             (
                 () => {
-                    bool value = GameService.Ins.Settings.IsRunInBackground();
+                    bool value = GameService.Settings.IsRunInBackground();
                     Debug.Log("Getting run in background value: " + value);
                     return value; 
                 },
-                (value) => GameService.Ins.Settings.SetRunInBackgroundable(value)
+                (value) => GameService.Settings.SetRunInBackgroundable(value)
             )
         }
     };

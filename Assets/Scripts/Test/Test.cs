@@ -1,10 +1,9 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Test : MonoBehaviour
 {
-    public RawImage testImage;
-    public GameObject test;
     // World world;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -57,12 +56,12 @@ public class Test : MonoBehaviour
         
     }
 
-    [MakeButtonFuncOnTestClass]
+    [MakeButtonFuncOnTestClass(false)]
     void DoSomeThing()
     {
     }
 
-    [MakeButtonFuncOnTestClass]
+    [MakeButtonFuncOnTestClass(true)]
     void DoSomeThingElse()
     {
     }

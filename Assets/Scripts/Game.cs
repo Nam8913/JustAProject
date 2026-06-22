@@ -21,7 +21,14 @@ public abstract class Game : MonoBehaviour
     // Update is called once per frame
     public virtual void Update()
     {
-        
+        try
+        {
+           EventQueue.ProcessNextEvent();
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"Error: {ex} \n {ex.StackTrace}");
+        }
     }
 
     public virtual void FixedUpdate()

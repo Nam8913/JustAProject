@@ -47,11 +47,11 @@ public class Chunk : MonoBehaviour
         {
             for (int y = chunkPosition.y * LocalTestValue.tilesPerChunk; y < (chunkPosition.y + 1) * LocalTestValue.tilesPerChunk; y++)
             {
-                float moveCost = GameService.Ins.Noise.FBM(x * scale, y * scale); // Example move cost based on Perlin noise
+                float moveCost = GameService.Noise.FBM(x * scale, y * scale); // Example move cost based on Perlin noise
                 Tile tile = new Tile(new Vector2(x, y), this, moveCost);
 
                 GameObject tileObject = new GameObject($"Tile:{x}|{y}");
-                tileObject.transform.position = new Vector2(x,y);
+                tileObject.transform.position = new Vector3(x + 0.5f, y + 0.5f, 0.01f); // Center the tile object on the tile position
                 tileObject.transform.SetParent(this.transform);
                 tileObjects[tile.tilePosition] = tileObject;
                 tiles[tile.tilePosition] = tile;

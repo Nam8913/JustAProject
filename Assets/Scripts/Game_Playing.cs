@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Game_Play : Game
 {
@@ -17,13 +18,34 @@ public class Game_Play : Game
             GameService.SetNoise(new ModernHashNoise(world.Seed));
             GameService.SetWorldHandler(new GameObject("WorldHandler").AddComponent<WorldHandler>());
         }
+
+         
+
+        DefineThing player = ThingHandler.CreateThingById("HumanDef");
+
+        GameObject sprite = new GameObject("PlayerSprite");
+        sprite.transform.position = new Vector3(0, 0, -1);
+        sprite.transform.localScale = new Vector3(0.3f, 0.3f, 1);
+        sprite.transform.SetParent(player.transform);
+
+        SpriteRenderer spriteRenderer = sprite.AddComponent<SpriteRenderer>();
+        spriteRenderer.sprite = LocalRefDefaultRS.GetSpriteByName("Circle");
+
+        GameService.Ins.SetFocusObject(player.gameObject);
+        //ShowInventoryGUI.Instance.SetTargetToShow(player);
     }
 
     // Update is called once per frame
     public override void Update()
     {
         base.Update();
-
+        if(Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            Vector2 playerPos = GameService.Ins.GetFocusObject().transform.position;
+            Tile tile = GameService.GetWorldHandler().GetChunk(playerPos).GetTileAtWorldPosition(playerPos);
+            tile.GroundContainer.TryAddItem("log",1); 
+            Debug.Log("Added log to tile at (0,0)");
+        }
     }
 
     public override void FixedUpdate()

@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class ContainerButton : MonoBehaviour
 {
+    private IInventoryView ui;
+
     [SerializeField]
     private Color selectedObjectColor = new Color(0.76f, 0.68f, 0.05f, 0.98f);
     [SerializeField]
@@ -117,7 +119,8 @@ public class ContainerButton : MonoBehaviour
         }
 
         Debug.Log($"Clicked container button with owner {owner.name}");
-        InventoryViewAroundEntities.SetSelectedContainerButton(this);
+        //InventoryViewAroundEntities.SetSelectedContainerButton(this);
+        ui.GetSelectedContainer(this);
     }
 
     void OnDestroy()
@@ -128,10 +131,14 @@ public class ContainerButton : MonoBehaviour
             ApplyOwnerHighlight();
         }
 
-        InventoryViewAroundEntities view = InventoryViewAroundEntities.Ins;
-        if (view != null)
+        if (ui != null)
         {
-            view.RemoveContainerByTile(this);
+            ui.TryRemoveContainerButton(this);
         }
+    }
+
+    public void SetUI(IInventoryView ui)
+    {
+        this.ui = ui;
     }
 }

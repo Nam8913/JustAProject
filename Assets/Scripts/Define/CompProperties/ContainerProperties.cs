@@ -1,5 +1,5 @@
 using UnityEngine;
-
+[System.Serializable]
 public class ContainerProperties : CompProperties
 {
     public float maxWeight = 0;

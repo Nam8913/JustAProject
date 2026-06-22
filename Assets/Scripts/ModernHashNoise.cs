@@ -51,6 +51,20 @@ public class ModernHashNoise
     }
 
     // =====================================================
+    // BASIC PERLIN NOISE 2D
+    // =====================================================
+
+    public float PerlinNoise(float x, float y)
+    {
+        return UnityEngine.Mathf.PerlinNoise(x, y);
+    }
+
+    public float PerlinNoise1D(float x)
+    {
+        return UnityEngine.Mathf.PerlinNoise1D(x);
+    }
+
+    // =====================================================
     // BASIC VALUE NOISE 2D
     // =====================================================
 

@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class PublicEventUI : MonoBehaviour
+public class EntryUI : MonoBehaviour
 {
-    static PublicEventUI ins;
+    static EntryUI ins;
     static string nameHolderObj = string.Empty;
     [SerializeField]private Canvas canvas;
     [SerializeField]private GameObject newGameWindow;
@@ -18,7 +18,7 @@ public class PublicEventUI : MonoBehaviour
     {
         if(ins != null)
         {
-            Debug.LogError("Multiple instances of PublicEventUI detected. There should only be one instance of PublicEventUI in the scene.");
+            Debug.LogError("Multiple instances of EntryUI detected. There should only be one instance of EntryUI in the scene.");
             Destroy(this);
             return;
         }
@@ -28,7 +28,7 @@ public class PublicEventUI : MonoBehaviour
 
     void Start()
     {
-        canvas = GameService.Ins.Canvas;
+        canvas = GameService.Canvas;
 
         if(newGameWindow != null)
         {
@@ -60,7 +60,7 @@ public class PublicEventUI : MonoBehaviour
         {
             return;
         }
-        if(GameService.Ins.Settings.IsDevMode())
+        if(GameService.Settings.IsDevMode())
         {
             ins.devWindowButton.SetActive(true);
         }else

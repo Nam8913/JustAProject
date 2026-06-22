@@ -50,7 +50,7 @@ public static class DropdownBinderDict
         {
             "resolution", 
             (
-                () => GameService.Ins.Settings.showAvailableResolutions().ToList(), 
+                () => GameService.Settings.showAvailableResolutions().ToList(), 
                 (int index) =>
                 {
                     Debug.Log("Selected resolution index: " + index);
@@ -66,16 +66,16 @@ public static class DropdownBinderDict
                     switch (index)
                     {
                         case 0:
-                            GameService.Ins.Settings.SetExclusiveFullscreen();
+                            GameService.Settings.SetExclusiveFullscreen();
                             break;
                         case 1:
-                            GameService.Ins.Settings.SetFullscreenWindow();
+                            GameService.Settings.SetFullscreenWindow();
                             break;
                         case 2:
-                            GameService.Ins.Settings.SetMaximized();
+                            GameService.Settings.SetMaximized();
                             break;
                         case 3:
-                            GameService.Ins.Settings.SetWindowed();
+                            GameService.Settings.SetWindowed();
                             break;
                         default:
                             Debug.LogError("Invalid fullscreen mode index: " + index);

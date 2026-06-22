@@ -65,6 +65,11 @@ namespace ModContent
             foreach(var file in files)
             {
                 string content = File.ReadAllText(file);
+                if(string.IsNullOrEmpty(content))
+                {
+                    Debug.LogWarning($"XML file at path {file} is empty. Skipping.");
+                    continue;
+                }
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(content);
                 XmlNode root = doc.DocumentElement;

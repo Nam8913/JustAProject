@@ -14,6 +14,8 @@ public abstract class DefineThing : MonoBehaviour, IContainerOwner
 
     [SerializeField]
     public Define def;
+    [SerializeField]
+    [SerializeReference]
     public List<EntitiesComp> components = new List<EntitiesComp>();
 
     public String ID => this.Id;

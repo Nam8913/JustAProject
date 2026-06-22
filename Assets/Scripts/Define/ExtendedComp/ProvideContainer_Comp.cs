@@ -1,5 +1,5 @@
 using UnityEngine;
-
+[System.Serializable]
 public class ProvideContainer_Comp : EntitiesComp
 {
     private Container container;

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Data>
+    <Recipe>
+        <Id>plank_recipe</Id>
+        <category>materials</category>
+        <result>plank</result>
+        <timeCraft>2</timeCraft>
+        <components>
+            <li>
+            <Options>
+                <li>
+                <thingId>log</thingId>
+                <quantity>1</quantity>
+                </li>
+            </Options>
+            </li>
+        </components>
+        <qualities>
+            <li>
+            <id>tool_wood_saw</id>
+            <level>1</level>
+            </li>
+        </qualities>
+    </Recipe>
+</Data>
