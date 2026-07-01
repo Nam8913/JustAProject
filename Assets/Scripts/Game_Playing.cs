@@ -21,17 +21,17 @@ public class Game_Play : Game
 
          
 
-        DefineThing player = ThingHandler.CreateThingById("HumanDef");
+        //DefineThing player = ThingHandler.CreateThingById("HumanDef");
 
-        GameObject sprite = new GameObject("PlayerSprite");
-        sprite.transform.position = new Vector3(0, 0, -1);
-        sprite.transform.localScale = new Vector3(0.3f, 0.3f, 1);
-        sprite.transform.SetParent(player.transform);
+        // GameObject sprite = new GameObject("PlayerSprite");
+        // sprite.transform.position = new Vector3(0, 0, -1);
+        // sprite.transform.localScale = new Vector3(0.3f, 0.3f, 1);
+        // sprite.transform.SetParent(player.transform);
 
-        SpriteRenderer spriteRenderer = sprite.AddComponent<SpriteRenderer>();
-        spriteRenderer.sprite = LocalRefDefaultRS.GetSpriteByName("Circle");
+        // SpriteRenderer spriteRenderer = sprite.AddComponent<SpriteRenderer>();
+        // spriteRenderer.sprite = LocalRefDefaultRS.GetSpriteByName("Circle");
 
-        GameService.Ins.SetFocusObject(player.gameObject);
+        // GameService.Ins.SetFocusObject(player.gameObject);
         //ShowInventoryGUI.Instance.SetTargetToShow(player);
     }
 

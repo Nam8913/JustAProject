@@ -5,10 +5,8 @@ using UnityEngine;
 public class VoronoiGraph : MonoBehaviour
 {
     public List<Vector2> voronoiGraphPoints = new List<Vector2>();
-    //public List<Vector2> seeds = new List<Vector2>();
     private List<(Vector2, Vector2)> delaunayEdges = new List<(Vector2, Vector2)>();
     private List<(Vector2, Vector2)> voronoiEdges = new List<(Vector2, Vector2)>();
-
     public List<DynamicVoronoiPoint> dynamicPoints = new List<DynamicVoronoiPoint>();
 
     [Header("Settings")]
@@ -25,13 +23,13 @@ public class VoronoiGraph : MonoBehaviour
     public GameObject delaunayEdgesRenderer;
     public GameObject voronoiEdgesRenderer;
 
-    [Header("Temp")]
-    bool dirty = false;
-    private List<Vector2> seeds = new List<Vector2>();
 
     [Header("Cache")]
+    private List<Vector2> seeds = new List<Vector2>();
     public List<Vector2> farPoints = new List<Vector2>();
     public List<Vector2> triCenters = new List<Vector2>();
+    bool dirty = false;
+    
     [Range(0.1f, 100f)]
     public float extendedLength = 1;
 
@@ -154,45 +152,48 @@ public class VoronoiGraph : MonoBehaviour
         }
 
         // 5. Tạo các cạnh Voronoi từ các tam giác kề nhau
-
-        List<Segment> rawVoronoiEdges = new List<Segment>();
         List<RawVoronoiSegment> rawVoronoiSegments = new List<RawVoronoiSegment>();
+        List<Segment> finalClippedEdges = new List<Segment>();
+        HashSet<(int, int)> validPairs = new HashSet<(int, int)>();
 
         foreach (var kvp in edgeToTriangles)
         {
             var triIndices = kvp.Value;
-            var sharedEdge = kvp.Key; // (indexA, indexB)
+            var sharedEdge = kvp.Key;
+
+            Segment seg;
 
             if (triIndices.Count == 2)
             {
-
-                // Cạnh nội bộ: nối 2 circumcenter
                 Vector2 p1 = triCenters[triIndices[0]];
                 Vector2 p2 = triCenters[triIndices[1]];
 
-                var seg = new Segment(p1, p2);
-                rawVoronoiSegments.Add(new RawVoronoiSegment(seg, sharedEdge));
-                rawVoronoiEdges.Add(seg);
+                // Nếu cả 2 circumcenter đều ngoài polygon thì segment này
+                // rất có thể là artifact của tam giác degenerate → bỏ qua
+                bool p1Inside = IsPointInPolygon(p1, voronoiGraphPoints);
+                bool p2Inside = IsPointInPolygon(p2, voronoiGraphPoints);
+
+                if (!p1Inside && !p2Inside)
+                {
+                    // Kiểm tra thêm: nếu segment không đi qua polygon thì bỏ
+                    var test = Voronoi.ClipSegmentByPolygon(new Segment(p1, p2), voronoiGraphPoints);
+                    if (test.Count == 0) continue;
+                }
+
+                seg = new Segment(p1, p2);
             }
-            if (triIndices.Count == 1)
+            else if (triIndices.Count == 1)
             {
-                // Cạnh biên: kéo dài từ circumcenter ra ngoài theo hướng vuông góc cạnh Delaunay
                 int triIdx = triIndices[0];
                 Vector2 circumCenter = triCenters[triIdx];
-
                 Vector2 edgeA = seeds[sharedEdge.Item1];
                 Vector2 edgeB = seeds[sharedEdge.Item2];
-
-                // Hướng vuông góc với cạnh Delaunay
                 Vector2 edgeMid = (edgeA + edgeB) * 0.5f;
                 Vector2 edgeDir = (edgeB - edgeA).normalized;
                 Vector2 perpDir = new Vector2(-edgeDir.y, edgeDir.x);
 
-                // Đảm bảo hướng perpDir chỉ ra ngoài (ra xa circumcenter của tam giác còn lại)
-                // Tức là hướng từ edgeMid ra ngoài tam giác
-                var tri = triangles[triIdx]; // cần lưu lại triangles list
+                var tri = triangles[triIdx];
                 Vector2 oppositeVertex = Vector2.zero;
-                // Tìm đỉnh thứ 3 không thuộc cạnh biên
                 foreach (int vIdx in new[] { tri.a, tri.b, tri.c })
                 {
                     if (vIdx != sharedEdge.Item1 && vIdx != sharedEdge.Item2)
@@ -201,55 +202,159 @@ public class VoronoiGraph : MonoBehaviour
                         break;
                     }
                 }
-
-                // perpDir phải ngược chiều với (oppositeVertex - edgeMid)
                 if (Vector2.Dot(perpDir, oppositeVertex - edgeMid) > 0)
                     perpDir = -perpDir;
 
-                // Kéo dài đủ xa để clipping cắt lại
-                float extendLength = extendedLength; // có thể điều chỉnh
-                Vector2 farPoint = circumCenter + perpDir;
-
-                if (!IsPointInPolygon(farPoint, voronoiGraphPoints))
-                {
-                    continue;
-                }
-
-                farPoints.Add(circumCenter + perpDir * extendLength); // Lưu lại để debug
-                Segment seg = new Segment(circumCenter, circumCenter + perpDir * extendLength);
-                rawVoronoiSegments.Add(new RawVoronoiSegment(seg, sharedEdge));
-
-                rawVoronoiEdges.Add(new Segment(circumCenter, seg.end));
+                seg = new Segment(circumCenter, circumCenter + perpDir * extendedLength);
             }
+            else continue;
+
+            // Clip 1 lần duy nhất ở đây
+            var clipped = Voronoi.ClipSegmentByPolygon(seg, voronoiGraphPoints);
+            if (clipped.Count == 0) continue;
+
+            validPairs.Add(sharedEdge);
+            finalClippedEdges.AddRange(clipped);
+            rawVoronoiSegments.Add(new RawVoronoiSegment(seg, sharedEdge, clipped));
         }
 
-        HashSet<(int, int)> validPairs = new HashSet<(int, int)>();
+        foreach (var seg in finalClippedEdges)
+            voronoiEdges.Add((seg.start, seg.end));
 
-        List<Segment> finalClippedEdges = new List<Segment>();
+        // Delaunay edges chỉ vẽ những cặp hợp lệ
+        delaunayEdges.Clear();
+        foreach (var edge in edges)
+        {
+            if (!validPairs.Contains(edge)) continue;
+
+            Vector2 p1 = seeds[edge.Item1];
+            Vector2 p2 = seeds[edge.Item2];
+
+            // Lọc thêm: cạnh Delaunay phải nằm trong polygon
+            if (!IsSegmentInsidePolygon(p1, p2, voronoiGraphPoints))
+                continue;
+
+            delaunayEdges.Add((p1, p2));
+        }
+
+        BuildAndAssignCells(stableTriangles, rawVoronoiSegments);
+    }
+    void BuildAndAssignCells(List<Triangle> triangles, List<RawVoronoiSegment> rawVoronoiSegments)
+    {
+        int n = seeds.Count;
+        var cellPoints = new Dictionary<int, HashSet<Vector2>>();
+        for (int i = 0; i < n; i++)
+            cellPoints[i] = new HashSet<Vector2>(new Vector2EqualityComparer());
+
+        // 1. Chỉ thêm circumcenter nằm TRONG polygon
+        for (int t = 0; t < triangles.Count; t++)
+        {
+            Vector2 cc = triCenters[t];
+            if (!IsPointInPolygon(cc, voronoiGraphPoints)) continue; // ← FIX BUG 2
+
+            var tri = triangles[t];
+            cellPoints[tri.a].Add(cc);
+            cellPoints[tri.b].Add(cc);
+            cellPoints[tri.c].Add(cc);
+        }
+
+        // 2. Thêm endpoints của clipped segments (đã nằm trong polygon)
+        // Đồng thời ghi nhận điểm nào nằm trên biên polygon
+        var boundaryPointsPerCell = new Dictionary<int, List<Vector2>>();
+        for (int i = 0; i < n; i++)
+            boundaryPointsPerCell[i] = new List<Vector2>();
+
         foreach (var raw in rawVoronoiSegments)
         {
-            var clippedParts = Voronoi.ClipSegmentByPolygon(raw.segment, voronoiGraphPoints);
-            if (clippedParts.Count > 0)
+            int si = raw.seedPair.Item1;
+            int sj = raw.seedPair.Item2;
+
+            foreach (var seg in raw.clippedParts)
             {
-                validPairs.Add(raw.seedPair); // Đánh dấu cặp này hợp lệ
-                finalClippedEdges.AddRange(clippedParts);
+                cellPoints[si].Add(seg.start);
+                cellPoints[si].Add(seg.end);
+                cellPoints[sj].Add(seg.start);
+                cellPoints[sj].Add(seg.end);
+
+                // Ghi nhận điểm trên biên polygon
+                if (IsOnPolygonBoundary(seg.start, voronoiGraphPoints))
+                {
+                    boundaryPointsPerCell[si].Add(seg.start);
+                    boundaryPointsPerCell[sj].Add(seg.start);
+                }
+                if (IsOnPolygonBoundary(seg.end, voronoiGraphPoints))
+                {
+                    boundaryPointsPerCell[si].Add(seg.end);
+                    boundaryPointsPerCell[sj].Add(seg.end);
+                }
             }
-        }
-        foreach (var seg in finalClippedEdges)
-        {
-            voronoiEdges.Add((seg.start, seg.end));
         }
 
-        delaunayEdges.Clear();
-        foreach (var edge in edges) // edges là HashSet ban đầu
+        // 3. Thêm các đỉnh polygon boundary nằm trong cell ← FIX BUG 3
+        foreach (var polyVertex in voronoiGraphPoints)
         {
-            if (validPairs.Contains(edge))
+            // Tìm seed gần nhất với đỉnh polygon này
+            int closestSeed = -1;
+            float minDist = float.MaxValue;
+            for (int i = 0; i < n; i++)
             {
-                Vector3 p1 = seeds[edge.Item1];
-                Vector3 p2 = seeds[edge.Item2];
-                delaunayEdges.Add((p1, p2));
+                float d = Vector2.Distance(polyVertex, seeds[i]);
+                if (d < minDist) { minDist = d; closestSeed = i; }
             }
+            if (closestSeed >= 0)
+                cellPoints[closestSeed].Add(polyVertex);
         }
+
+        // 4. Sort theo góc và gán cho DynamicVoronoiPoint
+        for (int i = 0; i < n; i++)
+        {
+            var pts = cellPoints[i].ToList();
+            if (pts.Count < 3) continue;
+
+            Vector2 center = Vector2.zero;
+            foreach (var p in pts) center += p;
+            center /= pts.Count;
+
+            pts.Sort((a, b) =>
+            {
+                float angleA = Mathf.Atan2(a.y - center.y, a.x - center.x);
+                float angleB = Mathf.Atan2(b.y - center.y, b.x - center.x);
+                return angleA.CompareTo(angleB);
+            });
+
+            if (i < dynamicPoints.Count)
+                dynamicPoints[i].SetCell(pts, seeds[i]);
+        }
+    }
+
+    private bool IsOnPolygonBoundary(Vector2 point, List<Vector2> polygon, float tolerance = 1e-3f)
+    {
+        int n = polygon.Count;
+        for (int i = 0; i < n; i++)
+        {
+            Vector2 a = polygon[i];
+            Vector2 b = polygon[(i + 1) % n];
+            // Kiểm tra point có nằm trên đoạn a-b không
+            Vector2 ab = b - a;
+            Vector2 ap = point - a;
+            float t = Vector2.Dot(ap, ab) / Vector2.Dot(ab, ab);
+            if (t < -tolerance || t > 1 + tolerance) continue;
+            Vector2 proj = a + t * ab;
+            if (Vector2.Distance(point, proj) < tolerance)
+                return true;
+        }
+        return false;
+    }
+
+    private bool IsSegmentInsidePolygon(Vector2 p1, Vector2 p2, List<Vector2> polygon, int samples = 5)
+    {
+        for (int i = 0; i <= samples; i++)
+        {
+            float t = i / (float)samples;
+            if (!IsPointInPolygon(Vector2.Lerp(p1, p2, t), polygon))
+                return false;
+        }
+        return true;
     }
     #region Rendering
     void RendererGraphEdges(float width = 0.2f)
@@ -539,11 +644,14 @@ public class VoronoiGraph : MonoBehaviour
     public class RawVoronoiSegment
     {
         public Segment segment;
-        public (int, int) seedPair; // cặp seed (a,b) đã chuẩn hóa
-        public RawVoronoiSegment(Segment seg, (int, int) pair)
+        public (int, int) seedPair; //cặp seed (a,b) đã chuẩn hoá
+        public List<Segment> clippedParts; // lưu kết quả clip luôn, không clip lại
+
+        public RawVoronoiSegment(Segment seg, (int, int) pair, List<Segment> clipped)
         {
             segment = seg;
             seedPair = pair;
+            clippedParts = clipped;
         }
     }
 
@@ -813,4 +921,14 @@ public class VoronoiGraph : MonoBehaviour
             public override int GetHashCode() => a * 1000003 + b;
         }
     }
+}
+
+public class Vector2EqualityComparer : IEqualityComparer<Vector2>
+{
+    public bool Equals(Vector2 a, Vector2 b) =>
+        Mathf.Abs(a.x - b.x) < 1e-4f && Mathf.Abs(a.y - b.y) < 1e-4f;
+
+    public int GetHashCode(Vector2 v) =>
+        Mathf.RoundToInt(v.x * 100).GetHashCode() * 31 +
+        Mathf.RoundToInt(v.y * 100).GetHashCode();
 }
