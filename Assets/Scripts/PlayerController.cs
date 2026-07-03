@@ -95,6 +95,16 @@ public class PlayerController : MonoBehaviour
         RefreshCurrentStateName();
     }
 
+    void FixedUpdate()
+    {
+        if (followCamera == null || currentState == null)
+        {
+            return;
+        }
+
+        currentState.FixedUpdate(this);
+    }
+
     void LateUpdate()
     {
         if (followCamera == null || currentState == null)
@@ -434,9 +444,12 @@ public class PlayerController : MonoBehaviour
         public virtual void Exit(PlayerController controller)
         {
         }
+        public virtual void FixedUpdate(PlayerController controller)
+        {
+        }
 
         public abstract void Update(PlayerController controller);
-
+        
         public abstract void LateUpdate(PlayerController controller);
     }
 
@@ -499,6 +512,16 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        public override void FixedUpdate(PlayerController controller)
+        {
+            Rigidbody2D targetRigidbody = target != null ? target.GetComponent<Rigidbody2D>() : null;
+            if (targetRigidbody == null)
+            {
+                return;
+            }
+
+            targetRigidbody.linearVelocity = controller.ReadDirectionalInput();
+        }
         public override void LateUpdate(PlayerController controller)
         {
             if (target == null || !target.gameObject.activeInHierarchy)

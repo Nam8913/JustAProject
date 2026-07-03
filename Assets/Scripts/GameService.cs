@@ -7,7 +7,6 @@ public class GameService
     static GameService _gameService;
     static Camera _mainCamera;
     static PlayerInputActions _playerInputActions = new PlayerInputActions();
-    static BuildService _buildService = new BuildService();
 
     static Game _game;
     static Game_Play _gamePlay;
@@ -160,14 +159,28 @@ public class GameService
     {
         get
         {
-            return PlayUI.CraftWindow;
+            GameUI gameUI = Canvas.GetComponent<GameUI>();
+            if(gameUI == null)
+            {
+                Debug.LogError("GameUI component not found on Canvas.");
+                return null;
+            }
+            CraftWindow craftWindow = gameUI.GetWindowOfType<CraftWindow>() as CraftWindow;
+            return craftWindow;
         }
     }
     public static BuildWindow BuildWindow
     {
         get
         {
-            return PlayUI.BuildWindow;
+            GameUI gameUI = Canvas.GetComponent<GameUI>();
+            if(gameUI == null)
+            {
+                Debug.LogError("GameUI component not found on Canvas.");
+                return null;
+            }
+            BuildWindow buildWindow = gameUI.GetWindowOfType<BuildWindow>() as BuildWindow;
+            return buildWindow;
         }
     }
     
@@ -188,14 +201,6 @@ public class GameService
     }
 
     public NavService Navigation => NavService.Instance;
-
-    public static BuildService BuildService
-    {
-        get
-        {
-            return _buildService;
-        }
-    }
 
     public static PlayerInputActions PlayerInput => _playerInputActions;
 

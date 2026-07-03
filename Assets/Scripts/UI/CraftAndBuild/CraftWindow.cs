@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CraftWindow : MonoBehaviour
+public class CraftWindow : UIWindow
 {
     [Header("References")]
     [SerializeField] private GameObject content_categoryContent;
@@ -30,15 +30,26 @@ public class CraftWindow : MonoBehaviour
 
     public void ToggleSelf()
     {
-        this.gameObject.SetActive(!this.gameObject.activeSelf);
-        PlayUI.SetFocusAtWindow(this.GetComponent<RectTransform>());
+        if (gameObject.activeSelf)
+        {
+            GameUI.Instance.CloseWindow("mainPanel");
+        }
+        else
+        {
+            GameUI.Instance.OpenWindow<CraftWindow>("mainPanel", true);
+        }
+    }
+
+    private void Awake()
+    {
+        // Load recipes from the database
+        LoadRecipes();
     }
 
     private void Start()
     {
         //Setup cateogory UI
         holderInforText = infor.transform.parent.GetComponent<RectTransform>();
-        LoadRecipes();
         float currentWidthCategory = this.transform.Find("CategoryScrollView").GetComponent<RectTransform>().rect.width;
         GridLayoutGroup gridLayout = content_categoryContent.GetComponent<GridLayoutGroup>();
         gridLayout.cellSize = new Vector2(currentWidthCategory, gridLayout.cellSize.y);

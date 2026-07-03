@@ -83,6 +83,26 @@ public static class DropdownBinderDict
                     }
                 }
             )
+        },
+        {
+            "selectModeGamePlaying",
+            (
+                () => new List<string> { "Survival", "Apocalypse", "Hardcore", "Sandbox", "Creative", "Story", "Custom" },
+                (int index) =>
+                {
+                    Debug.Log("Selected gameplay mode index: " + index);
+                }
+            )
+        },
+        {
+            "selectFilterModeGamePlaying",
+            (
+                () => new List<string> { "All", "Survival", "Apocalypse", "Hardcore", "Sandbox", "Creative", "Story", "Custom" },
+                (int index) =>
+                {
+                    Debug.Log("Selected filter mode index: " + index);
+                }
+            )
         }
     };
 }

@@ -74,6 +74,9 @@ public class NewGameWindow : MonoBehaviour
                 DefineThing def = ThingHandler.CreateThingById("HumanDef");
                 def.transform.position = new Vector3(0, 0, -0.1f);
 
+                Rigidbody2D rb = def.gameObject.AddComponent<Rigidbody2D>();
+                rb.gravityScale = 0;
+
                 GameObject render = new GameObject("render");
                 render.transform.SetParent(def.gameObject.transform);
                 render.transform.localPosition = Vector3.zero;

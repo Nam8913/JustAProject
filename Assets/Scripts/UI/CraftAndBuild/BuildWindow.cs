@@ -3,13 +3,15 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BuildWindow : MonoBehaviour
+public class BuildWindow : UIWindow
 {
     [Header("References")]
     [SerializeField] private GameObject content_categoryContent;
     [SerializeField] private GameObject content_structureRecipesContent;
     [SerializeField] private Button buildButton;
     [SerializeField] private TMPro.TMP_Text infor;
+    [SerializeField] private GameObject holderListBuildModeButtons;
+    [SerializeField] private TMPro.TMP_Text labelBuildMode;
 
     [Header("Prefabs")]
     [SerializeField] private GameObject categoryPrefab;
@@ -23,15 +25,26 @@ public class BuildWindow : MonoBehaviour
 
     public void ToggleSelf()
     {
-        this.gameObject.SetActive(!this.gameObject.activeSelf);
-        PlayUI.SetFocusAtWindow(this.GetComponent<RectTransform>());
+        if (gameObject.activeSelf)
+        {
+            GameUI.Instance.CloseWindow("mainPanel");
+        }
+        else
+        {
+            GameUI.Instance.OpenWindow<BuildWindow>("mainPanel", true);
+        }
+    }
+
+    private void Awake()
+    {
+        // Load recipes from the database
+        LoadRecipes();
     }
 
     private void Start()
     {
         //Setup cateogory UI
         holderInforText = infor.transform.parent.GetComponent<RectTransform>();
-        LoadRecipes();
         float currentWidthCategory = this.transform.Find("CategoryScrollView").GetComponent<RectTransform>().rect.width;
         GridLayoutGroup gridLayout = content_categoryContent.GetComponent<GridLayoutGroup>();
         gridLayout.cellSize = new Vector2(currentWidthCategory, gridLayout.cellSize.y);
@@ -43,6 +56,24 @@ public class BuildWindow : MonoBehaviour
             Button button = categoryGO.GetComponent<Button>();
             button.onClick.AddListener(() => OnCategoryClicked(category));
         }
+
+        List<GameObject> buildModeButtons = new List<GameObject>();
+        foreach(Transform child in holderListBuildModeButtons.transform)
+        {
+            buildModeButtons.Add(child.gameObject);
+            Debug.Log($"Found build mode button: {child.gameObject.name}");
+            Button button = child.GetComponent<Button>();
+            if(button != null)
+            {
+                button.onClick.AddListener(() => OnBuildModeButtonClicked(button));
+            }
+            button.interactable = false; // Disable all buttons initially
+        }
+
+
+        
+        // Set default build mode to Single
+        SetSingleBuildMode();
     }
 
     private void OnCategoryClicked(string category)
@@ -65,6 +96,16 @@ public class BuildWindow : MonoBehaviour
             Button button = recipeGO.GetComponent<Button>();
             button.onClick.AddListener(() => OnRecipeClicked(recipe));
         }
+
+
+        foreach(Transform child in holderListBuildModeButtons.transform)
+        {
+            Button button = child.GetComponent<Button>();
+            if(button != null)
+            {
+                button.interactable = false; // Disable all buttons when a new category is selected
+            }
+        }
     }
 
     private void OnRecipeClicked(StructureRecipe recipe)
@@ -76,6 +117,34 @@ public class BuildWindow : MonoBehaviour
         currentSelectedRecipeId = recipe.Id;
         string inforText = GetInforTextForRecipe(recipe);
         DrawInforText(inforText);
+
+        if(IsEnoughResourcesForRecipe(recipe))
+        {
+            buildButton.interactable = true;
+            buildButton.onClick.RemoveAllListeners();
+            buildButton.onClick.AddListener(() => {
+                this.Hide(); // Close the build window before triggering build mode
+                BuildService.TriggerBuildMode();
+            });
+        }
+        else
+        {
+            buildButton.interactable = false;
+            buildButton.onClick.RemoveAllListeners();
+        }
+
+        // Enable all build mode buttons when a recipe is selected
+        foreach(Transform child in holderListBuildModeButtons.transform)
+        {
+            Button button = child.GetComponent<Button>();
+            if(button != null)
+            {
+                button.interactable = true; // Enable all buttons when a recipe is selected
+            }
+        }
+
+        // Set build mode to single by default when a recipe is selected
+        SetSingleBuildMode();
     }
 
     private void DrawInforText(string text)
@@ -117,6 +186,12 @@ public class BuildWindow : MonoBehaviour
         return text;
     }
 
+    public bool IsEnoughResourcesForRecipe(StructureRecipe recipe)
+    {
+        // DEV: For now, we will just return true. In the future, we will check the player's inventory to see if they have enough resources for the recipe.
+        return true;
+    }
+
     public void LoadRecipes()
     {
         structureRecipes = DatabaseThing.Store[typeof(StructureRecipe)].Values.Cast<StructureRecipe>().ToList();
@@ -125,4 +200,40 @@ public class BuildWindow : MonoBehaviour
             Debug.Log($"Loaded structure recipe: {recipe.Id}");
         }
     }
+
+    void OnBuildModeButtonClicked(Button button)
+    {
+        lock (buildModeLock)
+        {
+            string buttonName = button.gameObject.name;
+            if(System.Enum.TryParse(buttonName, out BuildService.BuildMode parsedMode))
+            {
+                Debug.Log($"Current Build Mode: {BuildService.CurrentBuildMode}, Selected Build Mode: {parsedMode}");
+                if(BuildService.CurrentBuildMode == parsedMode)
+                {
+                    SetSingleBuildMode();
+                }else
+                {
+                    if (labelBuildMode != null)
+                    {
+                        labelBuildMode.text = $"Mode: {parsedMode}";
+                    }
+                    BuildService.SetBuildMode(parsedMode);
+                }
+                Debug.Log($"Build Mode set to: {BuildService.CurrentBuildMode}");
+            }
+            
+        }
+    }
+
+    void SetSingleBuildMode()
+    {
+        if (labelBuildMode != null)
+        {
+            labelBuildMode.text = "Mode: Single";
+        }
+        BuildService.SetBuildMode(BuildService.BuildMode.Single);
+    }
+
+    readonly object buildModeLock = new object();
 }

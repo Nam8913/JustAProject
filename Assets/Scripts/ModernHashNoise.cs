@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ModernHashNoise
@@ -167,5 +168,59 @@ public class ModernHashNoise
             x + wx * warpStrength,
             y + wy * warpStrength,
             5);
+    }
+}
+
+public static class DeterministicRandom
+{
+    // Hash 64-bit đơn giản nhưng mạnh
+    public static ulong Hash(ulong x)
+    {
+        x = (x ^ (x >> 30)) * 0xBF58476D1CE4E5B9UL;
+        x = (x ^ (x >> 27)) * 0x94D049BB133111EBUL;
+        x = x ^ (x >> 31);
+        return x;
+    }
+    
+    // Sinh float [0,1] từ index
+    public static float NextFloat(int index, int seed)
+    {
+        ulong h = Hash((ulong)(index * 92837113 + seed * 16807));
+        return (h & 0xFFFFFF) / (float)0x1000000;
+    }
+
+
+
+    public static List<Vector2> GeneratePointsInsideBounds(int seed, int min, int max,
+    float xMin, float xMax, float yMin, float yMax)
+    {
+        List<Vector2> points = new List<Vector2>();
+        int count = Rand.SeededRange(min, max, seed);
+        float rangeX = xMax - xMin;
+        float rangeY = yMax - yMin;
+        for (int i = 0; i < count; i++)
+        {
+            points.Add(new Vector2(
+                xMin + NextFloat(i * 2, seed) * rangeX,
+                yMin + NextFloat(i * 2 + 1, seed) * rangeY
+            ));
+        }
+        return points;
+    }
+
+    public static List<Vector2> GeneratePointsInsideBounds(int seed, int count,
+    float xMin, float xMax, float yMin, float yMax)
+    {
+        List<Vector2> points = new List<Vector2>();
+        float rangeX = xMax - xMin;
+        float rangeY = yMax - yMin;
+        for (int i = 0; i < count; i++)
+        {
+            points.Add(new Vector2(
+                xMin + NextFloat(i * 2, seed) * rangeX,
+                yMin + NextFloat(i * 2 + 1, seed) * rangeY
+            ));
+        }
+        return points;
     }
 }

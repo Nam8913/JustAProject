@@ -6,10 +6,13 @@ public class DynamicVoronoiPoint : MonoBehaviour
     [SerializeField]
     VoronoiGraph graph;
     CircleCollider2D circleCollider;
-
     PolygonCollider2D polyCollider;
 
     [Header("Cell Info")]
+    [SerializeField]
+    [ReadOnly]
+    private float area;
+    [ReadOnly]
     public Vector2 seedPosition;
     public List<Vector2> cellPolygon = new List<Vector2>(); // các đỉnh của cell theo thứ tự
     public Color color;
@@ -66,6 +69,7 @@ public class DynamicVoronoiPoint : MonoBehaviour
     {
         cellPolygon = worldPolygon;
         seedPosition = seed;
+        area = SignedPolygonArea(cellPolygon);
 
         UpdateCollider();
     }
@@ -112,4 +116,44 @@ public class DynamicVoronoiPoint : MonoBehaviour
     {
         this.graph = test;
     }
+
+    /// <summary>
+    /// Tính diện tích đa giác bằng Shoelace formula.
+    /// Đỉnh có thể theo chiều CW hoặc CCW đều được (kết quả lấy abs).
+    /// </summary>
+    public static float PolygonArea(IList<Vector2> points)
+    {
+        int n = points.Count;
+        if (n < 3) return 0f;
+
+        float sum = 0f;
+        for (int i = 0; i < n; i++)
+        {
+            Vector2 p1 = points[i];
+            Vector2 p2 = points[(i + 1) % n]; // wrap về đỉnh đầu
+            sum += (p1.x * p2.y) - (p2.x * p1.y);
+        }
+
+        return Mathf.Abs(sum) * 0.5f;
+    }
+
+    /// <summary>
+    /// Trả về diện tích có dấu - dùng để biết chiều winding.
+    /// Dương = CCW (counter-clockwise), Âm = CW (clockwise)
+    /// </summary>
+    public static float SignedPolygonArea(IList<Vector2> points)
+    {
+        int n = points.Count;
+        float sum = 0f;
+        for (int i = 0; i < n; i++)
+        {
+            Vector2 p1 = points[i];
+            Vector2 p2 = points[(i + 1) % n];
+            sum += (p1.x * p2.y) - (p2.x * p1.y);
+        }
+        return sum * 0.5f;
+    }
+
+    public static bool IsClockwise(IList<Vector2> points)
+        => SignedPolygonArea(points) < 0f;
 }

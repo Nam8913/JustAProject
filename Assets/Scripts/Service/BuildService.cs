@@ -1,14 +1,22 @@
 using UnityEngine;
 
-public sealed class BuildService
+public static class BuildService
 {
-    private bool isBuildMode = false;
-    public BuildService()
+    private static BuildMode currentBuildMode = BuildMode.Single;
+    private static bool isBuildMode = false;
+    static BuildService()
     {
         isBuildMode = false;
     }
 
-    public void TriggerBuildMode()
+    public static BuildMode CurrentBuildMode => currentBuildMode;
+
+    public static void SetBuildMode(BuildMode mode)
+    {
+        currentBuildMode = mode;
+    }
+
+    public static void TriggerBuildMode()
     {
         isBuildMode = true;
         #if UNITY_EDITOR
@@ -16,7 +24,7 @@ public sealed class BuildService
         #endif
     }
 
-    public void ExitBuildMode()
+    public static void ExitBuildMode()
     {
         isBuildMode = false;
         #if UNITY_EDITOR
@@ -24,7 +32,7 @@ public sealed class BuildService
         #endif
     }
 
-    private bool IsBuildableAtPosition(Vector3 position)
+    private static bool IsBuildableAtPosition(Vector3 position)
     {
         
         RaycastHit2D hit = Physics2D.Raycast(position, Vector2.down, 0.05f);
@@ -37,7 +45,7 @@ public sealed class BuildService
         return true;
     }
 
-    public bool IsBuildableAtTile(Vector3 pos)
+    public static bool IsBuildableAtTile(Vector3 pos)
     {
         Vector2 tilePos = new Vector2(Mathf.Floor(pos.x) + 0.5f, Mathf.Floor(pos.y) + 0.5f);
         if(!IsBuildableAtPosition(pos))
@@ -63,5 +71,14 @@ public sealed class BuildService
         }
 
         return true;
+    }
+
+    public enum BuildMode
+    {
+        Single,
+        Free,
+        Line,
+        Rectangle,
+        Circle,
     }
 }

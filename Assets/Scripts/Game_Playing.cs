@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -33,6 +34,8 @@ public class Game_Play : Game
 
         // GameService.Ins.SetFocusObject(player.gameObject);
         //ShowInventoryGUI.Instance.SetTargetToShow(player);
+
+        
     }
 
     // Update is called once per frame
