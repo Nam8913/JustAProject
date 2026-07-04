@@ -43,6 +43,8 @@ public class BuildWindow : UIWindow
 
     private void Start()
     {
+        buildButton.interactable = false; // Disable build button initially
+        
         //Setup cateogory UI
         holderInforText = infor.transform.parent.GetComponent<RectTransform>();
         float currentWidthCategory = this.transform.Find("CategoryScrollView").GetComponent<RectTransform>().rect.width;
@@ -74,6 +76,16 @@ public class BuildWindow : UIWindow
         
         // Set default build mode to Single
         SetSingleBuildMode();
+    }
+
+    void OnEnable()
+    {
+        
+    }
+
+    void OnDisable()
+    {
+        
     }
 
     private void OnCategoryClicked(string category)
@@ -124,7 +136,14 @@ public class BuildWindow : UIWindow
             buildButton.onClick.RemoveAllListeners();
             buildButton.onClick.AddListener(() => {
                 this.Hide(); // Close the build window before triggering build mode
-                BuildService.TriggerBuildMode();
+                BuildUtility.TriggerBuildMode();
+                Define selectedStructure = GetDefineStructureRecipe(recipe.result);
+                if(selectedStructure == null)
+                {
+                    Debug.LogError($"No Define found for recipe {recipe.result}. Cannot set selected structure.");
+                    return;
+                }
+                BuildUtility.SetSelectedStructure(selectedStructure);
             });
         }
         else
@@ -206,10 +225,10 @@ public class BuildWindow : UIWindow
         lock (buildModeLock)
         {
             string buttonName = button.gameObject.name;
-            if(System.Enum.TryParse(buttonName, out BuildService.BuildMode parsedMode))
+            if(System.Enum.TryParse(buttonName, out BuildUtility.BuildMode parsedMode))
             {
-                Debug.Log($"Current Build Mode: {BuildService.CurrentBuildMode}, Selected Build Mode: {parsedMode}");
-                if(BuildService.CurrentBuildMode == parsedMode)
+                Debug.Log($"Current Build Mode: {BuildUtility.CurrentBuildMode}, Selected Build Mode: {parsedMode}");
+                if(BuildUtility.CurrentBuildMode == parsedMode)
                 {
                     SetSingleBuildMode();
                 }else
@@ -218,9 +237,9 @@ public class BuildWindow : UIWindow
                     {
                         labelBuildMode.text = $"Mode: {parsedMode}";
                     }
-                    BuildService.SetBuildMode(parsedMode);
+                    BuildUtility.SetBuildMode(parsedMode);
                 }
-                Debug.Log($"Build Mode set to: {BuildService.CurrentBuildMode}");
+                Debug.Log($"Build Mode set to: {BuildUtility.CurrentBuildMode}");
             }
             
         }
@@ -232,7 +251,22 @@ public class BuildWindow : UIWindow
         {
             labelBuildMode.text = "Mode: Single";
         }
-        BuildService.SetBuildMode(BuildService.BuildMode.Single);
+        BuildUtility.SetBuildMode(BuildUtility.BuildMode.Single);
+    }
+
+    Define GetDefineStructureRecipe(string recipeId)
+    {
+        if(DatabaseThing.Store.TryGetValue(typeof(Define), out var defineDict))
+        {
+            if(defineDict.TryGetValue(recipeId, out var recipeObj))
+            {
+                return recipeObj as Define;
+            }
+        }else
+        {
+            Debug.LogError($"No recipes found in DatabaseThing.Store for type {typeof(Define)}");
+        }
+        return null;
     }
 
     readonly object buildModeLock = new object();

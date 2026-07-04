@@ -5,6 +5,12 @@ using UnityEngine.InputSystem;
 public class Game_Play : Game
 {
     World world;
+    HandlePlayerInput playerInputHandler;
+    BuildGhostController ghostController;
+
+    [Header("Build Mode Settings")]
+    [SerializeField] private GameObject structurePrefab; // Assign in inspector or will use placeholder
+
     public override void Start()
     {
         base.Start();
@@ -20,22 +26,54 @@ public class Game_Play : Game
             GameService.SetWorldHandler(new GameObject("WorldHandler").AddComponent<WorldHandler>());
         }
 
-         
+        CreatePlayingHolder();
+        // Initialize structure pool for build mode
+        InitializeStructurePool();
 
-        //DefineThing player = ThingHandler.CreateThingById("HumanDef");
+        // Setup build mode handlers
+        ghostController = this.gameObject.AddComponent<BuildGhostController>();
+        playerInputHandler = this.gameObject.AddComponent<HandlePlayerInput>();
+    }
 
-        // GameObject sprite = new GameObject("PlayerSprite");
-        // sprite.transform.position = new Vector3(0, 0, -1);
-        // sprite.transform.localScale = new Vector3(0.3f, 0.3f, 1);
-        // sprite.transform.SetParent(player.transform);
+    private void CreatePlayingHolder()
+    {
+       HolderManager.CreateNewHolderObject(HolderManager.StructureHolderName);
+    }
 
-        // SpriteRenderer spriteRenderer = sprite.AddComponent<SpriteRenderer>();
-        // spriteRenderer.sprite = LocalRefDefaultRS.GetSpriteByName("Circle");
+    private void InitializeStructurePool()
+    {
+        GameObject prefab = structurePrefab;
 
-        // GameService.Ins.SetFocusObject(player.gameObject);
-        //ShowInventoryGUI.Instance.SetTargetToShow(player);
+        // If no prefab assigned, create a simple placeholder at runtime
+        if (prefab == null)
+        {
+            prefab = new GameObject("StructurePlaceholder", typeof(SpriteRenderer));
+            SpriteRenderer renderer = prefab.GetComponent<SpriteRenderer>();
+            
+            // Try to load a fallback sprite from Resources
+            Sprite fallback = LocalRefDefaultRS.GetSpriteByName("Square");
+            if (fallback != null)
+            {
+                renderer.sprite = fallback;
+            }
+            else
+            {
+                // Create a simple white square texture at runtime
+                Texture2D tex = new Texture2D(32, 32);
+                Color[] pixels = new Color[32 * 32];
+                for (int i = 0; i < pixels.Length; i++)
+                    pixels[i] = Color.white;
+                tex.SetPixels(pixels);
+                tex.Apply();
+                renderer.sprite = Sprite.Create(tex, new Rect(0, 0, 32, 32), new Vector2(0.5f, 0.5f), 32);
+            }
 
-        
+            prefab.SetActive(false);
+            prefab.transform.position = Vector3.zero;
+        }
+
+        // Initialize the object pool with 50 pre-allocated objects
+        PoolManager.CreateNewPool("Structure", prefab, 50);
     }
 
     // Update is called once per frame

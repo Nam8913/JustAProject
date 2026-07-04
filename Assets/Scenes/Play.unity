@@ -4500,6 +4500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cef346aea2eeea459dd225d9614883d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game_Play
+  structurePrefab: {fileID: 0}
 --- !u!114 &757398828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8362,7 +8363,7 @@ GameObject:
   - component: {fileID: 1391432440}
   - component: {fileID: 1391432441}
   m_Layer: 5
-  m_Name: InventoryGUI
+  m_Name: InventoryGUI-NotSupportYet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8451,7 +8452,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1494915286}
-  - component: {fileID: 1494915287}
   m_Layer: 5
   m_Name: Pages
   m_TagString: Untagged
@@ -8480,24 +8480,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1494915287
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1494915285}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75d37d8cf13caa247b49792a3fe387df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PagesUtilityUI
-  craftWindow: {fileID: 1071969104}
-  buildWindow: {fileID: 1983527051}
-  showBlueprintButton: {fileID: 1732161867}
-  craftWindowButton: {fileID: 1380702067}
-  buildWindowButton: {fileID: 484643910}
-  focusWindow: {fileID: 0}
 --- !u!1 &1528774654
 GameObject:
   m_ObjectHideFlags: 0

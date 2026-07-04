@@ -16,6 +16,8 @@ public abstract class Game : MonoBehaviour
     public virtual void Start()
     {
         GameService.PlayerInput.Enable();
+        PoolManager.CreatePoolManager();
+        HolderManager.CreateHolderManager();
     }
 
     // Update is called once per frame

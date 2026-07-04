@@ -24,4 +24,29 @@
         </li>
     </components>
     </StructureRecipe>
+    <!-- Test -->
+    <StructureRecipe> 
+    <Id>chest_structureRecipe</Id>
+    <category>generic</category>
+    <result>chest</result>
+    <timeCraft>2</timeCraft>
+    <components>
+        <li>
+        <Options>
+            <li>
+            <thingId>log</thingId>
+            <quantity>3</quantity>
+            </li>
+        </Options>
+        </li>
+        <li>
+        <Options>
+            <li>
+            <thingId>stone</thingId>
+            <quantity>2</quantity>
+            </li>
+        </Options>
+        </li>
+    </components>
+    </StructureRecipe>
 </Data>
