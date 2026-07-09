@@ -11,5 +11,6 @@ public class Define : BuildableData
     public float volume = 1f;
     public float length = 1f;
     public bool destroyable = true;
-
+    
+    public GraphicData graphicData;
 }

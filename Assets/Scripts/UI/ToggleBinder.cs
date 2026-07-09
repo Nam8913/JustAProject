@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -56,7 +59,9 @@ public static class ToggleBinderDict
             (
                 () => {
                     bool value = GameService.Settings.IsDevMode();
+                    #if DEBUG_LOG_FLAG && false
                     Debug.Log("Getting dev mode value: " + value);
+                    #endif
                     return value; 
                 },
                 (value) => GameService.Settings.SetDevMode(value)
@@ -67,7 +72,9 @@ public static class ToggleBinderDict
             (
                 () => {
                     bool value = GameService.Settings.IsFullScreen();
+                    #if DEBUG_LOG_FLAG && false
                     Debug.Log("Getting fullscreen value:" + value);
+                    #endif
                     return value; 
                 },
                 (value) => GameService.Settings.SetFullScreen(value)
@@ -78,7 +85,9 @@ public static class ToggleBinderDict
             (
                 () => {
                     bool value = GameService.Settings.IsRunInBackground();
+                    #if DEBUG_LOG_FLAG && false
                     Debug.Log("Getting run in background value: " + value);
+                    #endif
                     return value; 
                 },
                 (value) => GameService.Settings.SetRunInBackgroundable(value)

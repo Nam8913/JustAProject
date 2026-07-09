@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -112,14 +115,11 @@ public class ShowInventoryGUI : MonoBehaviour
         lastTargetTilePos = new Vector2Int(int.MinValue, int.MinValue);
     }
 
-    // void OnDisable()
-    // {
-        
-    // }
-
     public void SetTargetToShow(DefineThing target)
     {
+        #if DEBUG_LOG_FLAG && false
         Debug.Log($"ShowInventoryGUI SetTargetToShow: {target}");
+        #endif
         targetToShow = target;
         
         RefreshAll();

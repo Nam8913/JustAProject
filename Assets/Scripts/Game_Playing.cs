@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -85,7 +88,9 @@ public class Game_Play : Game
             Vector2 playerPos = GameService.Ins.GetFocusObject().transform.position;
             Tile tile = GameService.GetWorldHandler().GetChunk(playerPos).GetTileAtWorldPosition(playerPos);
             tile.GroundContainer.TryAddItem("log",1); 
+            #if DEBUG_LOG_FLAG && false
             Debug.Log("Added log to tile at (0,0)");
+            #endif
         }
     }
 

@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 namespace ModContent.XmlExtendedAttribute
 {
     using System.Xml;
@@ -27,7 +30,9 @@ namespace ModContent.XmlExtendedAttribute
             typeOfGameObjectTarget = split[0].Trim();
             Id = split[1].Trim();
 
+            #if DEBUG_LOG_FLAG && false
             Debug.Log($"Parsed GameObjectTarget attribute with Type: {typeOfGameObjectTarget} and Id: {Id}.");
+            #endif
             ThingHandler.AddThingMappingById(Id, typeOfGameObjectTarget);
         }
     }

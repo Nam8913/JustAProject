@@ -4,6 +4,16 @@
         <Id>chest</Id>
         <label>Chest</label>
         <destroyable>true</destroyable>
+        <graphicData Class="SingleGraphicData">
+            <metaData>
+                <path>wood_chest</path>
+                <pixelsPerUnit>500</pixelsPerUnit>
+                <pivot>0.5, 0.5</pivot>
+                <startPos>0, 0</startPos>
+                <size>500, 500</size>
+                <border>0, 0, 0, 0</border>
+            </metaData>
+        </graphicData>
         <compsProps>
             <li Class="Buildable_CompProperties">
                 <rotatable>false</rotatable>
@@ -11,7 +21,7 @@
                 <repairable>false</repairable>
             </li>
             <li Class="TestProp">
-                <compClass>TestHelperComp</compClass>
+                <compClass>TestComp</compClass>
                 <testFloat>123.45</testFloat>
             </li>
             <li Class="ContainerProperties">

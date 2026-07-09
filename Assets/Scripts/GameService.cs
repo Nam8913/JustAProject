@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -61,7 +64,9 @@ public class GameService
     // This method should be called when the scene changes to re-initialize necessary components
     public void InitializeWhenChangeScene()
     {
+        #if DEBUG_LOG_FLAG && false
         Debug.Log("Initializing GameService for new scene...");
+        #endif
         _mainCamera = Camera.main;
         
         

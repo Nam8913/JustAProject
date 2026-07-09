@@ -108,9 +108,13 @@ public class CompPropertiesDrawer : PropertyDrawer
 
     private static string GetCompClassDisplayName(SerializedProperty property)
     {
-        if (property.managedReferenceValue is CompProperties compProperties && compProperties.compClass != null)
+        // managedReferenceValue chỉ hoạt động với [SerializeReference]
+        if (property.propertyType == SerializedPropertyType.ManagedReference)
         {
-            return compProperties.compClass.ToString();
+            if (property.managedReferenceValue is CompProperties compProperties && compProperties.compClass != null)
+            {
+                return compProperties.compClass.ToString();
+            }
         }
 
         return "null";

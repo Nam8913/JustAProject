@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -50,7 +53,9 @@ public class ShowObjectSection : MonoBehaviour
                 float buttonH = gridLayoutGroup.cellSize.y + gridLayoutGroup.spacing.y;
                 height += buttonH; // Add spacing for new row
                 
+                #if DEBUG_LOG_FLAG && false
                 Debug.Log($"new Height: {buttonH}");
+                #endif
             }
         }
         Resize_Height(height);
@@ -72,7 +77,9 @@ public class ShowObjectSection : MonoBehaviour
 
     public void OnToggleValueChanged(bool isOn)
     {
+        #if DEBUG_LOG_FLAG && false
         Debug.Log($"Toggle value changed: {isOn}");
+        #endif
         if(isOn)
         {
             listButton.SetActive(true);
@@ -87,7 +94,9 @@ public class ShowObjectSection : MonoBehaviour
 
     private void OnButtonClick(string section, string value)
     {
+        #if DEBUG_LOG_FLAG && false
         Debug.Log($"Button clicked: {value} section: {section}");
+        #endif
         ShowObjectPage.SelectedObjectToShowById(section, value);
     }
 

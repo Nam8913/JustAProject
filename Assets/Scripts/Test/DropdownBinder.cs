@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +25,12 @@ public class DropdownBinder : MonoBehaviour
         {
             dropdown.ClearOptions();
             List<string> options = dropdownData.Item1();
-            options.ForEach(option => Debug.Log("Adding dropdown option: " + option));
+            options.ForEach(option => 
+            {
+                #if DEBUG_LOG_FLAG && false
+                Debug.Log("Adding dropdown option: " + option);
+                #endif
+            });
             dropdown.AddOptions(options);
             dropdown.onValueChanged.AddListener(OnValueChanged);
         }
@@ -34,7 +42,9 @@ public class DropdownBinder : MonoBehaviour
 
     private void OnValueChanged(int value)
     {
+        #if DEBUG_LOG_FLAG && false
         Debug.Log("Selected dropdown value: " + value);
+        #endif
         // Here you would add the actual logic to handle the dropdown value change
         if (DropdownBinderDict.dropdownKeyToActionMap.TryGetValue(key, out var dropdownData))
         {
@@ -53,7 +63,9 @@ public static class DropdownBinderDict
                 () => GameService.Settings.showAvailableResolutions().ToList(), 
                 (int index) =>
                 {
+                    #if DEBUG_LOG_FLAG && false
                     Debug.Log("Selected resolution index: " + index);
+                    #endif
                 }
             )
         },
@@ -90,7 +102,9 @@ public static class DropdownBinderDict
                 () => new List<string> { "Survival", "Apocalypse", "Hardcore", "Sandbox", "Creative", "Story", "Custom" },
                 (int index) =>
                 {
+                    #if DEBUG_LOG_FLAG && false
                     Debug.Log("Selected gameplay mode index: " + index);
+                    #endif
                 }
             )
         },
@@ -100,7 +114,9 @@ public static class DropdownBinderDict
                 () => new List<string> { "All", "Survival", "Apocalypse", "Hardcore", "Sandbox", "Creative", "Story", "Custom" },
                 (int index) =>
                 {
+                    #if DEBUG_LOG_FLAG && false
                     Debug.Log("Selected filter mode index: " + index);
+                    #endif
                 }
             )
         }

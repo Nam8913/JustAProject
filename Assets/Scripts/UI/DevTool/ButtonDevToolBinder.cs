@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,7 +32,9 @@ public class ButtonDevToolBinder : MonoBehaviour
             Debug.LogError("ButtonDevToolBinder: Key is not set. Please set the key for this button.");
             return;
         }
+        #if DEBUG_LOG_FLAG && false
         Debug.Log($"ButtonDevToolBinder: Button with key {key} clicked.");
+        #endif
         DevToolWindow.Ins.SetActivePageByName(key);
     }
 }

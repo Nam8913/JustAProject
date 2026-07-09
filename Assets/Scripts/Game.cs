@@ -1,10 +1,15 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using UnityEngine;
 
 public abstract class Game : MonoBehaviour
 {
     private void Awake()
     { 
+        #if DEBUG_LOG_FLAG && false
         Debug.Log("Game Awake" + this.GetType().Name);
+        #endif
         if(!isGlobalInitialized)
         {
             isGlobalInitialized = true;

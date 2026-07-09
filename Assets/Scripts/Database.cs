@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +10,8 @@ public static class DatabaseThing
     private static Dictionary<string, System.Type> getTypeById = new Dictionary<string, System.Type>();
     private static Dictionary<System.Type, Dictionary<string, object>> typeDataStore = new Dictionary<System.Type, Dictionary<string, object>>();
 
+    // Lưu ID và packageId tương ứng để truy xuất nhanh, dùng ID để lấy packageId khi cần
+    private static Dictionary<string, string> getPackageIdById = new Dictionary<string, string>();
     public static IReadOnlyDictionary<System.Type, Dictionary<string, object>> Store => typeDataStore;
 
     public static void AddData(string key, object data, bool overwrite = false)
@@ -54,7 +59,9 @@ public static class DatabaseThing
         }
         typeDataStore[typeof(T)].Add(key, data);
         getTypeById[key] = typeof(T);
+        #if DEBUG_LOG_FLAG && false && false
         Debug.Log($"Added data of type {typeof(T).Name} with key {key} to the database.");
+        #endif
     }
 
     public static void RemoveData<T>(string key)
@@ -76,6 +83,26 @@ public static class DatabaseThing
         {
             getTypeById.Remove(key);
         }
+    }
+
+    public static void SetIdWithPackageId(string id, string packageId)
+    {
+        if(getPackageIdById.ContainsKey(id))
+        {
+            Debug.LogError($"ID {id} is already associated with a package ID.");
+            return;
+        }
+        getPackageIdById[id] = packageId;
+    }
+
+    public static string GetPackageIdById(string id)
+    {
+        if(getPackageIdById.TryGetValue(id, out var packageId))
+        {
+            return packageId;
+        }
+        Debug.LogError($"No package ID found for ID {id}.");
+        return null;
     }
 
     public static object GetData(string key)

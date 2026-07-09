@@ -1,3 +1,7 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -37,7 +41,8 @@ public class BuildGhostController : MonoBehaviour
 
     void Start()
     {
-        PoolManager.CreateNewPool(tagPool, CreateGhostRenderer(), 50);
+        GameObject ghostRendererPrefab = CreateGhostRenderer();
+        PoolManager.CreateNewPool(tagPool, ghostRendererPrefab, 50);
     }
 
     private void Update()
@@ -80,11 +85,14 @@ public class BuildGhostController : MonoBehaviour
         Define selected = BuildUtility.GetSelectedStructure();
         if (selected != null)
         {
-            // TODO: Load proper sprite from define data
+            //Load proper sprite from define data
+            _ghostRenderer.sprite = GetSpriteForSelectedStructure(selected);
         }
 
         _ghostObject.SetActive(true);
+        #if DEBUG_LOG_FLAG && false
         Debug.Log("BuildGhostController activated.");
+        #endif
     }
 
     /// <summary>
@@ -108,7 +116,9 @@ public class BuildGhostController : MonoBehaviour
         // Clear all drag ghosts
         ClearDragGhosts();
 
+        #if DEBUG_LOG_FLAG && false
         Debug.Log("BuildGhostController deactivated.");
+        #endif
     }
 
     /// <summary>
@@ -176,7 +186,9 @@ public class BuildGhostController : MonoBehaviour
         {
             // If dragging, place all positions in the shape
             List<GameObject> placed = BuildUtility.PlaceAllStructures();
+            #if DEBUG_LOG_FLAG && false
             Debug.Log($"Placed {placed.Count} structures.");
+            #endif
             OnDragEnd();
         }
         else
@@ -190,7 +202,9 @@ public class BuildGhostController : MonoBehaviour
             if (BuildUtility.IsPlacementValid(placePos))
             {
                 GameObject placedStructure = BuildUtility.PlaceStructure(placePos);
+                #if DEBUG_LOG_FLAG && false
                 Debug.Log($"Placed structure at {placePos}");
+                #endif
             }
             else
             {
@@ -282,14 +296,82 @@ public class BuildGhostController : MonoBehaviour
 
     private Vector2 GetMouseWorldPosition()
     {
-        // if (_mainCamera == null || Mouse.current == null)
-        //     return Vector2.zero;
-
-        // Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
-        // mouseScreenPos.z = -_mainCamera.transform.position.z; // Distance from camera
-        // Vector3 worldPos = _mainCamera.ScreenToWorldPoint(mouseScreenPos);
-        // return new Vector2(worldPos.x, worldPos.y);
         return PlayerInput.MousePosition;
+    }
+
+    private Sprite GetSpriteForSelectedStructure(Define selected)
+    {
+        if (selected == null)
+        {
+            Debug.LogError("Selected structure is null. Cannot get sprite.");
+            return null;
+        }
+
+        Sprite sprite = null;
+
+        if(selected.graphicData is not null && !string.IsNullOrEmpty(selected.Id))
+        {
+            if(selected.graphicData is SingleGraphicData singleGraphic)
+            {
+                sprite = Asset<Sprite>.Get($"{DatabaseThing.GetPackageIdById(selected.Id)}:{singleGraphic.metaData.path}");
+                if(sprite == null)
+                {
+                    Texture2D texture = Asset<Texture2D>.Get($"{DatabaseThing.GetPackageIdById(selected.Id)}:{singleGraphic.metaData.path}");
+                    if(texture != null)
+                    {
+                        sprite = Sprite.Create(texture, new Rect(singleGraphic.metaData.startPos.x, singleGraphic.metaData.startPos.y, singleGraphic.metaData.size.x, singleGraphic.metaData.size.y), singleGraphic.metaData.pivot, singleGraphic.metaData.pixelsPerUnit);
+                        if(!Asset<Sprite>.Register($"{DatabaseThing.GetPackageIdById(selected.Id)}:{singleGraphic.metaData.path}", sprite, false))
+                        {
+                            Debug.LogWarning($"Failed to register sprite for {selected.Id} at path: {singleGraphic.metaData.path}");
+                        }
+                    }else
+                    {
+                        Debug.LogError($"Failed to get texture for {selected.Id} at path: {singleGraphic.metaData.path}");
+                    }
+                }
+                return sprite;
+
+            }else if(selected.graphicData is MultiGraphicData multiGraphic)
+            {
+                // For simplicity, return the first sprite in the list
+                if(multiGraphic.metaData != null && multiGraphic.metaData.Count > 0)
+                {
+                    var firstMeta = multiGraphic.metaData[0];
+                    sprite = Asset<Sprite>.Get($"{DatabaseThing.GetPackageIdById(selected.Id)}:{firstMeta.path}");
+                    if(sprite == null)
+                    {
+                        Texture2D texture = Asset<Texture2D>.Get($"{DatabaseThing.GetPackageIdById(selected.Id)}:{firstMeta.path}");
+                        if(texture != null)
+                        {
+                            sprite = Sprite.Create(texture, new Rect(firstMeta.startPos.x, firstMeta.startPos.y, firstMeta.size.x, firstMeta.size.y), firstMeta.pivot, firstMeta.pixelsPerUnit);
+                            if(!Asset<Sprite>.Register($"{DatabaseThing.GetPackageIdById(selected.Id)}:{firstMeta.path}", sprite, false))
+                            {
+                                Debug.LogWarning($"Failed to register sprite for {selected.Id} at path: {firstMeta.path}");
+                            }
+                        }else
+                        {
+                            Debug.LogError($"Failed to get texture for {selected.Id} at path: {firstMeta.path}");
+                        }
+                    }
+                    return sprite;
+                }
+            }else
+            {
+                Debug.LogError($"GraphicData for {selected.Id} is neither SingleGraphicData nor MultiGraphicData.");
+            }
+        }
+
+        Debug.LogError(string.Concat(
+            $"Failed to get sprite for selected structure with ID: {selected.Id}",
+            "\n Is GraphicData null? ", selected.graphicData == null,
+            "\n Is GraphicData SingleGraphicData? ", selected.graphicData is SingleGraphicData,
+            "\n Is GraphicData MultiGraphicData? ", selected.graphicData is MultiGraphicData,
+            "\n Selected structure ID: ", selected.Id,
+            "\n Selected structure package ID: ", DatabaseThing.GetPackageIdById(selected.Id),
+            "\n Selected structure graphicData: ", selected.graphicData?.ToString() ?? "null"
+        ));
+
+        return null;
     }
 
     private GameObject CreateGhostRenderer()
@@ -319,5 +401,16 @@ public class BuildGhostController : MonoBehaviour
         ghostRendererObj.SetActive(false);
 
         return ghostRendererObj;
+    }
+
+    public void RotateCurrentStructure()
+    {
+        if (!_isActive) return;
+
+        if(!BuildUtility.IsDragging)
+        {
+            BuildUtility.RotateCurrentStructure(_ghostObject);
+            // TODO: Update ghost sprite if rotation affects it, now we assume the sprite is square and rotation doesn't change its appearance
+        }
     }
 }

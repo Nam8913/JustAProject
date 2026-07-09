@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -65,7 +68,9 @@ public class HandlePlayerInput : MonoBehaviour
             if (ghostController != null && !ghostController.IsActive)
             {
                 ghostController.ActivateGhost();
+                #if DEBUG_LOG_FLAG && false
                 Debug.Log("HandlePlayerInput: Build mode detected, ghost activated.");
+                #endif
             }
         }
         else if (!isBuildModeNow && _wasBuildModeActive)
@@ -74,7 +79,9 @@ public class HandlePlayerInput : MonoBehaviour
             if (ghostController != null && ghostController.IsActive)
             {
                 ghostController.DeactivateGhost();
+                #if DEBUG_LOG_FLAG && false
                 Debug.Log("HandlePlayerInput: Build mode ended, ghost deactivated.");
+                #endif
             }
         }
 
@@ -105,6 +112,11 @@ public class HandlePlayerInput : MonoBehaviour
                 CancelDrag();
             }
             return;
+        }
+
+        if(Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame)
+        {
+            RotateStructure();
         }
 
         // Left mouse button handling
@@ -190,6 +202,14 @@ public class HandlePlayerInput : MonoBehaviour
         if (ghostController != null)
         {
             ghostController.OnDragCancel();
+        }
+    }
+
+    private void RotateStructure()
+    {
+        if (ghostController != null)
+        {
+            ghostController.RotateCurrentStructure();
         }
     }
 

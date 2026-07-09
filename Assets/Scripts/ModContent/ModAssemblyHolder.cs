@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +16,6 @@ public class ModAssemblyHolder
     {
         if(!Directory.Exists(assemblyFolderPath))
         {
-            Debug.LogWarning($"Assembly folder not found at path: {assemblyFolderPath}");
             return;
         }
         string[] assemblyFiles = Directory.GetFiles(assemblyFolderPath, "*.dll", SearchOption.AllDirectories);
@@ -45,7 +47,9 @@ public class ModAssemblyHolder
             {
                 loadedAssemblies.Add(asm);
                 TypeUtils.LoadTypesCachedFromAssembly(asm);
+                #if DEBUG_LOG_FLAG && false
                 Debug.Log($"Loaded assembly: {asm.GetName().Name} from file: {assemblyFile}");
+                #endif
             }
             else
             {

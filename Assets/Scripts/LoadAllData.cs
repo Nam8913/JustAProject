@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,7 +30,9 @@ public static class LoadAllData
             ModsConfig.BuildModList();
             foreach(var mod in ModsConfig.EnabledModsInLoadOrder)
             {
+                #if DEBUG_LOG_FLAG && false
                 Debug.Log($"Loading data from mod: {mod.Meta.modName} ({mod.Meta.packageId})");
+                #endif
                 mod.LoadModContent();
             }
         }

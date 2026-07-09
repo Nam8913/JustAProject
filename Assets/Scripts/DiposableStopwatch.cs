@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using System;
 using System.Diagnostics;
 using UnityEngine;
@@ -16,6 +19,8 @@ public class DisposableStopwatch : IDisposable
     public void Dispose()
     {
         stopwatch.Stop();
+        #if DEBUG_LOG_FLAG && false
         UnityEngine.Debug.Log($"{str}: Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
+        #endif
     } 
 }

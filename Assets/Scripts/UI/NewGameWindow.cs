@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -50,7 +53,9 @@ public class NewGameWindow : MonoBehaviour
         
         int seedValue = string.IsNullOrEmpty(seed) ? Random.Range(int.MinValue, int.MaxValue) : seed.GetHashCode();
 
+        #if DEBUG_LOG_FLAG && false
         Debug.Log($"Creating new world with name: {worldName} and seed: {seedValue}");
+        #endif
         
 
         World newWorld = new World(worldName, seedValue);

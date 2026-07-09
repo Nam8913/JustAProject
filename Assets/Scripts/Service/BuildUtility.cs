@@ -1,3 +1,7 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +14,7 @@ public static class BuildUtility
     private static Define currentSelectedStructure;
     private static Vector2 dragStartPosition;
     private static Vector2 dragEndPosition;
+    private static Quaternion currentRotation = Quaternion.identity;
 
     static BuildUtility()
     {
@@ -47,7 +52,8 @@ public static class BuildUtility
     {
         isBuildMode = true;
         isDragging = false;
-#if UNITY_EDITOR
+        currentRotation = Quaternion.identity; // Reset rotation when entering build mode
+#if DEBUG_LOG_FLAG && false
         Debug.Log("Entered Build Mode");
 #endif
     }
@@ -56,7 +62,8 @@ public static class BuildUtility
     {
         isBuildMode = false;
         isDragging = false;
-#if UNITY_EDITOR
+        currentRotation = Quaternion.identity; // Reset rotation when exiting build mode
+#if DEBUG_LOG_FLAG && false
         Debug.Log("Exited Build Mode");
 #endif
         UnsetSelectedStructure();
@@ -167,6 +174,7 @@ public static class BuildUtility
         if (structureObj != null)
         {
             structureObj.transform.position = new Vector3(position.x, position.y, 0);
+            structureObj.transform.rotation = currentRotation; // Apply the current rotation to the placed structure
             // Configure the structure object with the selected structure's data
             SpriteRenderer renderer = structureObj.GetComponent<SpriteRenderer>();
             if (renderer != null)
@@ -178,6 +186,33 @@ public static class BuildUtility
 
             BoxCollider2D collider2D = structureObj.AddComponent<BoxCollider2D>();
             collider2D.isTrigger = false;
+        
+            Define define = GetSelectedStructure();
+            DefineThing defineThing = ThingHandler.DeloymentThingToObject(define, structureObj);
+
+            Sprite sprite = null;
+            if(define != null)
+            {
+                if(define.graphicData is SingleGraphicData singleGraphicData)
+                {
+                    sprite = Asset<Sprite>.Get($"{defineThing.ModPackageId}:{singleGraphicData.metaData.path}");
+                }else if(define.graphicData is MultiGraphicData multiGraphicData)
+                {
+                    sprite = Asset<Sprite>.Get($"{defineThing.ModPackageId}:{multiGraphicData.metaData[0].path}");
+                }else
+                {
+                    Debug.LogError($"GraphicData type not supported for structure: {define?.name}");
+                }
+            }
+            
+            
+           
+            if(sprite == null)
+            {
+                Debug.LogWarning($"Sprite not found for structure: {define?.name}");
+            }
+            Debug.Log($"Placing structure: {define?.name} with sprite: {sprite?.name} at position: {position}");
+            renderer.sprite = sprite;
         }
         return structureObj;
     }
@@ -329,6 +364,12 @@ public static class BuildUtility
     }
     return positions;
 }
+
+    public static void RotateCurrentStructure(GameObject _ghostObject)
+    {
+        _ghostObject.transform.Rotate(0, 0, -90); // Rotate the ghost object by -90 degrees
+        currentRotation = _ghostObject.transform.rotation; // Store the new rotation
+    }
 
     #endregion
 

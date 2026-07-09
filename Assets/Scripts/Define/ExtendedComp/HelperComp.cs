@@ -5,6 +5,8 @@ public abstract class EntitiesComp
     public DefineThing owner;
     public CompProperties props;
 
+    public Define Def => owner.def;
+
     public virtual void Init()
     {
         

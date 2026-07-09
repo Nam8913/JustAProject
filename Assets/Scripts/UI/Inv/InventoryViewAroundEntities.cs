@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -189,7 +192,9 @@ public class InventoryViewAroundEntities : MonoBehaviour, IInventoryView
 
     private void CallbackOnContainerChanged()
     {
+        #if DEBUG_LOG_FLAG && false
         Debug.Log("Container changed, refreshing item container UI.");
+        #endif
         ClearItemContainerViews();
         TryGetSelectedContainer(out Container container);
         if (container == null)

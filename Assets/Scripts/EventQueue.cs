@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,7 +16,9 @@ public static class EventQueue
         if(queue.Count > 0)
         {
             EventQueueItem item = queue.Dequeue();
+            #if DEBUG_LOG_FLAG && false
             Debug.Log($"Processing event: {item.name}");
+            #endif
             item.action?.Invoke();
         }
     }

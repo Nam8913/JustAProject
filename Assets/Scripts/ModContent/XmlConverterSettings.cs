@@ -78,6 +78,13 @@ public class XmlConverterSettings
                 { typeof(byte), new ByteXmlConverter() },
                 { typeof(char), new CharXmlConverter() },
                 { typeof(uint), new UInt32XmlConverter() },
+                // { typeof(ulong), new UInt64XmlConverter() },
+                // { typeof(ushort), new UInt16XmlConverter() },
+                // { typeof(sbyte), new SByteXmlConverter() },
+                // { typeof(decimal), new DecimalXmlConverter() },
+                { typeof(UnityEngine.Vector2), new UnityEngineVector2Converter() },
+                { typeof(UnityEngine.Vector3), new UnityEngineVector3Converter() },
+                { typeof(UnityEngine.Vector4), new UnityEngineVector4Converter() },
                 { typeof(System.Type), new TypeXmlConverter() }
             }
     };

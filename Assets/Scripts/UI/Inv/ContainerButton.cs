@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -118,7 +121,9 @@ public class ContainerButton : MonoBehaviour
             return;
         }
 
+        #if DEBUG_LOG_FLAG && false
         Debug.Log($"Clicked container button with owner {owner.name}");
+        #endif
         //InventoryViewAroundEntities.SetSelectedContainerButton(this);
         ui.GetSelectedContainer(this);
     }

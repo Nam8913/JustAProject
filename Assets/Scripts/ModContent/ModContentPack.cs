@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,18 +21,22 @@ namespace ModContent
         private void LoadTexture(ModMetaData metadata, bool isOfficial)
         {
             string texturesPath = Path.Combine(metadata.Root.FullName, FilePathHandler.GetNameFolderByType.TryGetValue(typeof(Texture2D), out string folderName) ? folderName : "Textures");
+            #if DEBUG_LOG_FLAG && false
             Debug.Log($"Loading textures from path: {texturesPath}");
+            #endif
             //Load textures from all directories under texturesPath
             if(Directory.Exists(texturesPath))
             {
                 IEnumerable<string> files = Directory.EnumerateFiles(texturesPath,"*",SearchOption.AllDirectories)
                 .Where(file => imageExtensions.Contains(Path.GetExtension(file).ToLowerInvariant()));
+                #if DEBUG_LOG_FLAG && false
                 Debug.Log($"Found {files.Count()} texture files in mod: {metadata.Meta.modName}");
+                #endif
+                if(files.Count() > 0) textures = new ContentHolder<Texture2D>();
                 foreach(var file in files)
                 {
                     string relativePath = Path.GetRelativePath(texturesPath, file);
                     string key = Path.ChangeExtension(relativePath, null).Replace(Path.DirectorySeparatorChar, '/');
-                    key = isOfficial ? $"Official/{key}" : $"Mods/{metadata.Meta.packageId}/{key}";
                     byte[] fileData = File.ReadAllBytes(file);
                     Texture2D texture = new Texture2D(2, 2);
                     if(texture.LoadImage(fileData))
@@ -43,7 +50,9 @@ namespace ModContent
                     if(texture != null)
                     {
                         textures.AddContent(key, texture);
+                        #if DEBUG_LOG_FLAG && false
                         Debug.Log($"Loaded texture: {key} from mod: {metadata.Meta.modName}");
+                        #endif
                     }
                 }
             }else
@@ -121,13 +130,15 @@ namespace ModContent
                                 methodInfo.GetParameters()[2].ParameterType == typeof(bool));
                         var genericAddMethod = addMethod.MakeGenericMethod(type);
                         genericAddMethod.Invoke(null, new object[] { raw.Id, value, false });
+                        
+                        DatabaseThing.SetIdWithPackageId(raw.Id, metadata.Meta.packageId);
                     }
                 }
             }
         }
 
         private ModAssemblyHolder assemblyHolder = new ModAssemblyHolder();
-        private ContentHolder<Texture2D> textures = new ContentHolder<Texture2D>();
+        public ContentHolder<Texture2D> textures;
 
         const string DataFolderName = "Data";
         const string AssemblyFolderName = "Assembly";

@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using UnityEngine;
 
 public class Creature : DefineThing
@@ -48,8 +51,10 @@ public class Creature : DefineThing
     public override void ConfigError()
     {
         base.ConfigError();
+        #if DEBUG_LOG_FLAG && false
         Debug.Log(statsHolder.DebugString());
         Debug.Log(traitsHolder.DebugString());
+        #endif
         // Additional error checks for Creature can be added here
     }
 }

@@ -18,15 +18,25 @@ public class LocalRefDefaultRS : MonoBehaviour
         }
         isInitialized= true;
         
-        foreach(var item in listSpriteRef)
+        if(listSpriteRef != null && listSpriteRef.Count > 0)
         {
-            dictSprite.Add(item.name, item);
+           foreach(var item in listSpriteRef)
+            {
+                dictSprite.Add(item.name, item);
+            Asset<Sprite>.Register(item.name, item);
+            }
         }
+        
 
-        foreach(var item in listMaterialRef)
+        if(listMaterialRef != null && listMaterialRef.Count > 0)
         {
-            dictMaterial.Add(item.name, item);
+            foreach(var item in listMaterialRef)
+            {
+                dictMaterial.Add(item.name, item);
+                Asset<Material>.Register(item.name, item);
+            }
         }
+        
     }
 
     public static Sprite GetSpriteByName(string name)

@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -32,7 +35,9 @@ public class DevToolWindow : MonoBehaviour
     {
         if(InputSystem.GetDevice<Keyboard>().escapeKey.wasPressedThisFrame)
         {
+            #if DEBUG_LOG_FLAG && false
             Debug.Log("Escape key pressed. Closing DevToolWindow.");
+            #endif
             gameObject.SetActive(false);
         }
     }
@@ -50,7 +55,9 @@ public class DevToolWindow : MonoBehaviour
 
         if(pageDict.TryGetValue(pageName, out GameObject page))
         {
+            #if DEBUG_LOG_FLAG && false
             Debug.Log($"Activating page: {pageName}");
+            #endif
             currentActivePageName = page.gameObject.name;
             page.SetActive(true);
         }else

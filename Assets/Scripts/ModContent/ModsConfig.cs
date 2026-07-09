@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,13 +20,7 @@ namespace ModContent
                 CreateDefaultConfig(configPath);
             }
             data = XmlLoader.LoadFromXml<ModsConfigData>(configPath);
-            if(data != null)
-            {
-                foreach(var mod in data.activeMods)
-                {
-                    Debug.Log($"Active mod from config: {mod}");
-                }
-            }else
+            if(data == null)
             {
                 Debug.LogError("Failed to load mods config data, try to create a new one.");
                 File.Delete(configPath);
@@ -40,6 +37,16 @@ namespace ModContent
                     }
                 };
             }
+
+            #if DEBUG_LOG_FLAG && false
+            if(data != null)
+            {
+                foreach(var mod in data.activeMods)
+                {
+                    Debug.Log($"Active mod from config: {mod}");
+                }
+            }
+            #endif
         }
 
         public static void CreateDefaultConfig(string path)

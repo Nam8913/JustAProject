@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +17,8 @@ public class TestToggle : MonoBehaviour
 
     public virtual void OnToggleChanged(bool isOn)
     {
+        #if DEBUG_LOG_FLAG && false
         Debug.Log("Toggle is: " + isOn);
+        #endif
     }
 }

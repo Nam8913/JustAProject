@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -140,7 +143,9 @@ public class CraftWindow : UIWindow
         recipes = DatabaseThing.Store[typeof(Recipe)].Values.Cast<Recipe>().ToList();
         foreach(var recipe in recipes)
         {
+            #if DEBUG_LOG_FLAG && false
             Debug.Log($"Loaded recipe: {recipe.Id}");
+            #endif
         }
     }
 

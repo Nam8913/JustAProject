@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -24,17 +27,22 @@ namespace ModContent
             meta = XmlLoader.LoadFromXml<ModMetaDataInternal>(infoFilePath);
             if(meta != null)
             {
+                #if DEBUG_LOG_FLAG && false && false
+                Debug.Log($"Loaded mod metadata from {infoFilePath}");
                 Debug.Log(meta.packageId);
                 Debug.Log(meta.modName);
                 Debug.Log(meta.version);
                 Debug.Log(meta.description);
+                #endif
             }
         }
 
         public void LoadModContent()
         {
+            ModAssets modAssets = new ModAssets(this);
             modContentPack = new ModContentPack();
             modContentPack.LoadContent(this,isOfficial);
+            modAssets.LoadContentFromModPackToAssets();
         }
 
         private DirectoryInfo root;

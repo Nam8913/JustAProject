@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#define DEBUG_LOG_FLAG
+#endif
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -63,7 +66,9 @@ public class BuildWindow : UIWindow
         foreach(Transform child in holderListBuildModeButtons.transform)
         {
             buildModeButtons.Add(child.gameObject);
+            #if DEBUG_LOG_FLAG && false && false
             Debug.Log($"Found build mode button: {child.gameObject.name}");
+            #endif
             Button button = child.GetComponent<Button>();
             if(button != null)
             {
@@ -216,7 +221,9 @@ public class BuildWindow : UIWindow
         structureRecipes = DatabaseThing.Store[typeof(StructureRecipe)].Values.Cast<StructureRecipe>().ToList();
         foreach(var recipe in structureRecipes)
         {
+            #if DEBUG_LOG_FLAG && false
             Debug.Log($"Loaded structure recipe: {recipe.Id}");
+            #endif
         }
     }
 
@@ -227,7 +234,9 @@ public class BuildWindow : UIWindow
             string buttonName = button.gameObject.name;
             if(System.Enum.TryParse(buttonName, out BuildUtility.BuildMode parsedMode))
             {
+                #if DEBUG_LOG_FLAG && false
                 Debug.Log($"Current Build Mode: {BuildUtility.CurrentBuildMode}, Selected Build Mode: {parsedMode}");
+                #endif
                 if(BuildUtility.CurrentBuildMode == parsedMode)
                 {
                     SetSingleBuildMode();
@@ -239,7 +248,9 @@ public class BuildWindow : UIWindow
                     }
                     BuildUtility.SetBuildMode(parsedMode);
                 }
+                #if DEBUG_LOG_FLAG && false
                 Debug.Log($"Build Mode set to: {BuildUtility.CurrentBuildMode}");
+                #endif
             }
             
         }
