@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Data>
+    <!-- Wooden Weapons -->
+    <Define>
+        <Id>wooden_sword</Id>
+        <label>Wooden Sword</label>
+        <description>A basic wooden training sword</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>4</volume>
+        <mass>3</mass>
+        <length>0.7</length>
+        <compsProps>
+            <li Class="Weapon_CompProperties">
+                <damage>8</damage>
+                <attackSpeed>1.0</attackSpeed>
+                <range>1.5</range>
+                <weaponType>melee</weaponType>
+                <criticalChance>0.05</criticalChance>
+                <criticalMultiplier>1.5</criticalMultiplier>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>wooden_spear</Id>
+        <label>Wooden Spear</label>
+        <description>A sharpened wooden spear</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>5</volume>
+        <mass>3</mass>
+        <length>1.5</length>
+        <compsProps>
+            <li Class="Weapon_CompProperties">
+                <damage>10</damage>
+                <attackSpeed>0.8</attackSpeed>
+                <range>2.0</range>
+                <weaponType>melee</weaponType>
+                <criticalChance>0.08</criticalChance>
+                <criticalMultiplier>1.8</criticalMultiplier>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Stone Weapons -->
+    <Define>
+        <Id>stone_sword</Id>
+        <label>Stone Sword</label>
+        <description>A sword with a stone blade</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>5</volume>
+        <mass>5</mass>
+        <length>0.7</length>
+        <compsProps>
+            <li Class="Weapon_CompProperties">
+                <damage>14</damage>
+                <attackSpeed>0.9</attackSpeed>
+                <range>1.5</range>
+                <weaponType>melee</weaponType>
+                <criticalChance>0.06</criticalChance>
+                <criticalMultiplier>1.6</criticalMultiplier>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>stone_spear</Id>
+        <label>Stone Spear</label>
+        <description>A spear with a stone tip</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>5</volume>
+        <mass>5</mass>
+        <length>1.5</length>
+        <compsProps>
+            <li Class="Weapon_CompProperties">
+                <damage>16</damage>
+                <attackSpeed>0.7</attackSpeed>
+                <range>2.0</range>
+                <weaponType>melee</weaponType>
+                <criticalChance>0.08</criticalChance>
+                <criticalMultiplier>1.8</criticalMultiplier>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Iron Weapons -->
+    <Define>
+        <Id>iron_sword</Id>
+        <label>Iron Sword</label>
+        <description>A sturdy iron sword</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>5</volume>
+        <mass>6</mass>
+        <length>0.8</length>
+        <compsProps>
+            <li Class="Weapon_CompProperties">
+                <damage>22</damage>
+                <attackSpeed>1.0</attackSpeed>
+                <range>1.6</range>
+                <weaponType>melee</weaponType>
+                <criticalChance>0.08</criticalChance>
+                <criticalMultiplier>2.0</criticalMultiplier>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>iron_spear</Id>
+        <label>Iron Spear</label>
+        <description>An iron-tipped spear</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>5</volume>
+        <mass>6</mass>
+        <length>1.6</length>
+        <compsProps>
+            <li Class="Weapon_CompProperties">
+                <damage>20</damage>
+                <attackSpeed>0.8</attackSpeed>
+                <range>2.2</range>
+                <weaponType>melee</weaponType>
+                <criticalChance>0.10</criticalChance>
+                <criticalMultiplier>2.0</criticalMultiplier>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>iron_battleaxe</Id>
+        <label>Iron Battleaxe</label>
+        <description>A heavy iron battleaxe</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>8</volume>
+        <mass>8</mass>
+        <length>0.9</length>
+        <compsProps>
+            <li Class="Weapon_CompProperties">
+                <damage>30</damage>
+                <attackSpeed>0.6</attackSpeed>
+                <range>1.4</range>
+                <weaponType>melee</weaponType>
+                <criticalChance>0.12</criticalChance>
+                <criticalMultiplier>2.5</criticalMultiplier>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Copper Weapons -->
+    <Define>
+        <Id>copper_sword</Id>
+        <label>Copper Sword</label>
+        <description>A copper-bladed sword</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>5</volume>
+        <mass>5</mass>
+        <length>0.7</length>
+        <compsProps>
+            <li Class="Weapon_CompProperties">
+                <damage>16</damage>
+                <attackSpeed>0.95</attackSpeed>
+                <range>1.5</range>
+                <weaponType>melee</weaponType>
+                <criticalChance>0.07</criticalChance>
+                <criticalMultiplier>1.7</criticalMultiplier>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Obsidian Weapons -->
+    <Define>
+        <Id>obsidian_dagger</Id>
+        <label>Obsidian Dagger</label>
+        <description>A sharp obsidian dagger</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>2</volume>
+        <mass>2</mass>
+        <length>0.3</length>
+        <compsProps>
+            <li Class="Weapon_CompProperties">
+                <damage>18</damage>
+                <attackSpeed>1.5</attackSpeed>
+                <range>1.0</range>
+                <weaponType>melee</weaponType>
+                <criticalChance>0.15</criticalChance>
+                <criticalMultiplier>2.5</criticalMultiplier>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Bows -->
+    <Define>
+        <Id>wooden_bow</Id>
+        <label>Wooden Bow</label>
+        <description>A basic wooden bow</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>6</volume>
+        <mass>2</mass>
+        <length>1.2</length>
+        <compsProps>
+            <li Class="Weapon_CompProperties">
+                <damage>12</damage>
+                <attackSpeed>0.5</attackSpeed>
+                <range>15</range>
+                <weaponType>ranged</weaponType>
+                <criticalChance>0.10</criticalChance>
+                <criticalMultiplier>2.0</criticalMultiplier>
+            </li>
+            <li Class="ProvideQualities_CompProperties">
+                <toolqualities>
+                    <li>
+                        <qualityId>tool_bow</qualityId>
+                        <level>1</level>
+                    </li>
+                </toolqualities>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>composite_bow</Id>
+        <label>Composite Bow</label>
+        <description>A stronger composite bow</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>6</volume>
+        <mass>3</mass>
+        <length>1.1</length>
+        <compsProps>
+            <li Class="Weapon_CompProperties">
+                <damage>20</damage>
+                <attackSpeed>0.6</attackSpeed>
+                <range>18</range>
+                <weaponType>ranged</weaponType>
+                <criticalChance>0.12</criticalChance>
+                <criticalMultiplier>2.2</criticalMultiplier>
+            </li>
+            <li Class="ProvideQualities_CompProperties">
+                <toolqualities>
+                    <li>
+                        <qualityId>tool_bow</qualityId>
+                        <level>2</level>
+                    </li>
+                </toolqualities>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Ammo -->
+    <Define>
+        <Id>wooden_arrow</Id>
+        <label>Wooden Arrow</label>
+        <description>A basic wooden arrow</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>100</maxStackCount>
+        <volume>1</volume>
+        <mass>0.2</mass>
+        <length>0.6</length>
+    </Define>
+    
+    <Define>
+        <Id>stone_arrow</Id>
+        <label>Stone Arrow</label>
+        <description>An arrow with a stone tip</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>100</maxStackCount>
+        <volume>1</volume>
+        <mass>0.3</mass>
+        <length>0.6</length>
+    </Define>
+    
+    <Define>
+        <Id>iron_arrow</Id>
+        <label>Iron Arrow</label>
+        <description>An arrow with an iron tip</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>100</maxStackCount>
+        <volume>1</volume>
+        <mass>0.3</mass>
+        <length>0.6</length>
+    </Define>
+    
+    <Define>
+        <Id>obsidian_arrow</Id>
+        <label>Obsidian Arrow</label>
+        <description>An arrow with an obsidian tip</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>100</maxStackCount>
+        <volume>1</volume>
+        <mass>0.3</mass>
+        <length>0.6</length>
+    </Define>
+</Data>

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Data>
+    <!-- Wood Products -->
+    <Define>
+        <Id>plank</Id>
+        <label>Plank</label>
+        <description>Processed wood plank</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>50</maxStackCount>
+        <volume>8</volume>
+        <mass>4</mass>
+        <length>1.2</length>
+    </Define>
+    
+    <Define>
+        <Id>stick</Id>
+        <label>Stick</label>
+        <description>Thin wooden stick</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>100</maxStackCount>
+        <volume>1</volume>
+        <mass>0.5</mass>
+        <length>0.8</length>
+    </Define>
+    
+    <Define>
+        <Id>charcoal</Id>
+        <label>Charcoal</label>
+        <description>Burned wood used as fuel</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>50</maxStackCount>
+        <volume>4</volume>
+        <mass>3</mass>
+        <length>0.3</length>
+        <compsProps>
+            <li Class="Fuel_CompProperties">
+                <fuelAmount>15</fuelAmount>
+                <burnTime>25</burnTime>
+                <heatOutput>1.2</heatOutput>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>paper</Id>
+        <label>Paper</label>
+        <description>Thin paper for writing</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>100</maxStackCount>
+        <volume>1</volume>
+        <mass>0.1</mass>
+        <length>0.3</length>
+    </Define>
+    
+    <Define>
+        <Id>rope</Id>
+        <label>Rope</label>
+        <description>Strong fiber rope</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>30</maxStackCount>
+        <volume>3</volume>
+        <mass>2</mass>
+        <length>2</length>
+    </Define>
+    
+    <Define>
+        <Id>cloth</Id>
+        <label>Cloth</label>
+        <description>Woven fabric from fiber</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>50</maxStackCount>
+        <volume>3</volume>
+        <mass>1</mass>
+        <length>0.5</length>
+    </Define>
+    
+    <!-- Metal Products -->
+    <Define>
+        <Id>iron_ingot</Id>
+        <label>Iron Ingot</label>
+        <description>Smelted iron bar</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>30</maxStackCount>
+        <volume>5</volume>
+        <mass>10</mass>
+        <length>0.6</length>
+    </Define>
+    
+    <Define>
+        <Id>copper_ingot</Id>
+        <label>Copper Ingot</label>
+        <description>Smelted copper bar</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>30</maxStackCount>
+        <volume>5</volume>
+        <mass>9</mass>
+        <length>0.6</length>
+    </Define>
+    
+    <Define>
+        <Id>gold_ingot</Id>
+        <label>Gold Ingot</label>
+        <description>Smelted gold bar</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>20</maxStackCount>
+        <volume>5</volume>
+        <mass>12</mass>
+        <length>0.6</length>
+    </Define>
+    
+    <Define>
+        <Id>iron_rod</Id>
+        <label>Iron Rod</label>
+        <description>Iron rod for construction</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>30</maxStackCount>
+        <volume>3</volume>
+        <mass>8</mass>
+        <length>1.5</length>
+    </Define>
+    
+    <Define>
+        <Id>chain</Id>
+        <label>Chain</label>
+        <description>Iron chain links</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>20</maxStackCount>
+        <volume>4</volume>
+        <mass>6</mass>
+        <length>1</length>
+    </Define>
+    
+    <Define>
+        <Id>nails</Id>
+        <label>Nails</label>
+        <description>Iron nails for construction</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>100</maxStackCount>
+        <volume>1</volume>
+        <mass>2</mass>
+        <length>0.1</length>
+    </Define>
+    
+    <Define>
+        <Id>hinge</Id>
+        <label>Hinge</label>
+        <description>Metal hinge for doors</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>50</maxStackCount>
+        <volume>2</volume>
+        <mass>3</mass>
+        <length>0.15</length>
+    </Define>
+    
+    <Define>
+        <Id>handle</Id>
+        <label>Handle</label>
+        <description>Tool handle made of wood</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>50</maxStackCount>
+        <volume>2</volume>
+        <mass>1</mass>
+        <length>0.4</length>
+    </Define>
+    
+    <!-- Bricks & Glass -->
+    <Define>
+        <Id>brick</Id>
+        <label>Brick</label>
+        <description>Fired clay brick</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>50</maxStackCount>
+        <volume>6</volume>
+        <mass>8</mass>
+        <length>0.3</length>
+    </Define>
+    
+    <Define>
+        <Id>glass</Id>
+        <label>Glass</label>
+        <description>Melted sand into glass</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>30</maxStackCount>
+        <volume>4</volume>
+        <mass>5</mass>
+        <length>0.4</length>
+    </Define>
+    
+    <!-- Food Processing -->
+    <Define>
+        <Id>flour</Id>
+        <label>Flour</label>
+        <description>Ground wheat into flour</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>50</maxStackCount>
+        <volume>3</volume>
+        <mass>2</mass>
+        <length>0.3</length>
+    </Define>
+    
+    <Define>
+        <Id>salt</Id>
+        <label>Salt</label>
+        <description>Preserving salt</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>50</maxStackCount>
+        <volume>2</volume>
+        <mass>3</mass>
+        <length>0.2</length>
+    </Define>
+    
+    <Define>
+        <Id>sugar</Id>
+        <label>Sugar</label>
+        <description>Sweet sugar from cane</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>50</maxStackCount>
+        <volume>2</volume>
+        <mass>2</mass>
+        <length>0.2</length>
+    </Define>
+    
+    <!-- Animal Products -->
+    <Define>
+        <Id>raw_hide</Id>
+        <label>Raw Hide</label>
+        <description>Untreated animal hide</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>20</maxStackCount>
+        <volume>5</volume>
+        <mass>4</mass>
+        <length>0.8</length>
+    </Define>
+    
+    <Define>
+        <Id>wool</Id>
+        <label>Wool</label>
+        <description>Soft wool from sheep</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>30</maxStackCount>
+        <volume>4</volume>
+        <mass>1</mass>
+        <length>0.4</length>
+    </Define>
+    
+    <Define>
+        <Id>feather_bundle</Id>
+        <label>Feather Bundle</label>
+        <description>Bundled feathers for arrows</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>50</maxStackCount>
+        <volume>2</volume>
+        <mass>0.5</mass>
+        <length>0.3</length>
+    </Define>
+</Data>

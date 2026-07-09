@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Data>
+    <!-- Raw Resources - Wood -->
+    <Define>
+        <Id>wood</Id>
+        <label>Wood</label>
+        <description>Raw wood harvested from trees</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>50</maxStackCount>
+        <volume>10</volume>
+        <mass>5</mass>
+        <length>1</length>
+    </Define>
+    
+    <!-- Raw Resources - Stone -->
+    <Define>
+        <Id>stone</Id>
+        <label>Stone</label>
+        <description>Raw stone mined from rocks</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>50</maxStackCount>
+        <volume>8</volume>
+        <mass>10</mass>
+        <length>0.5</length>
+    </Define>
+    
+    <!-- Raw Resources - Ores -->
+    <Define>
+        <Id>iron_ore</Id>
+        <label>Iron Ore</label>
+        <description>Raw iron ore mined from deposits</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>30</maxStackCount>
+        <volume>6</volume>
+        <mass>12</mass>
+        <length>0.4</length>
+    </Define>
+    
+    <Define>
+        <Id>copper_ore</Id>
+        <label>Copper Ore</label>
+        <description>Raw copper ore mined from deposits</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>30</maxStackCount>
+        <volume>6</volume>
+        <mass>11</mass>
+        <length>0.4</length>
+    </Define>
+    
+    <Define>
+        <Id>gold_ore</Id>
+        <label>Gold Ore</label>
+        <description>Raw gold ore mined from rare deposits</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>20</maxStackCount>
+        <volume>5</volume>
+        <mass>15</mass>
+        <length>0.3</length>
+    </Define>
+    
+    <Define>
+        <Id>coal</Id>
+        <label>Coal</label>
+        <description>Coal used as fuel</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>50</maxStackCount>
+        <volume>4</volume>
+        <mass>6</mass>
+        <length>0.3</length>
+        <compsProps>
+            <li Class="Fuel_CompProperties">
+                <fuelAmount>20</fuelAmount>
+                <burnTime>30</burnTime>
+                <heatOutput>1.5</heatOutput>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Raw Resources - Fiber & Plant -->
+    <Define>
+        <Id>fiber</Id>
+        <label>Fiber</label>
+        <description>Plant fiber gathered from bushes</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>100</maxStackCount>
+        <volume>2</volume>
+        <mass>1</mass>
+        <length>0.5</length>
+    </Define>
+    
+    <Define>
+        <Id>clay</Id>
+        <label>Clay</label>
+        <description>Wet clay gathered from riverbanks</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>30</maxStackCount>
+        <volume>6</volume>
+        <mass>8</mass>
+        <length>0.3</length>
+    </Define>
+    
+    <Define>
+        <Id>sand</Id>
+        <label>Sand</label>
+        <description>Fine sand gathered from beaches</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>50</maxStackCount>
+        <volume>4</volume>
+        <mass>6</mass>
+        <length>0.2</length>
+    </Define>
+    
+    <!-- Raw Resources - Animal -->
+    <Define>
+        <Id>leather</Id>
+        <label>Leather</label>
+        <description>Animal hide tanned into leather</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>30</maxStackCount>
+        <volume>3</volume>
+        <mass>2</mass>
+        <length>0.5</length>
+    </Define>
+    
+    <Define>
+        <Id>bone</Id>
+        <label>Bone</label>
+        <description>Bones from animals</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>50</maxStackCount>
+        <volume>3</volume>
+        <mass>3</mass>
+        <length>0.4</length>
+    </Define>
+    
+    <Define>
+        <Id>feather</Id>
+        <label>Feather</label>
+        <description>Light feathers from birds</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>100</maxStackCount>
+        <volume>1</volume>
+        <mass>0.1</mass>
+        <length>0.2</length>
+    </Define>
+    
+    <Define>
+        <Id>flint</Id>
+        <label>Flint</label>
+        <description>Sharp flint for starting fires</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>50</maxStackCount>
+        <volume>2</volume>
+        <mass>3</mass>
+        <length>0.2</length>
+    </Define>
+    
+    <Define>
+        <Id>pearl</Id>
+        <label>Pearl</label>
+        <description>Rare pearl from oysters</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>20</maxStackCount>
+        <volume>1</volume>
+        <mass>0.5</mass>
+        <length>0.1</length>
+    </Define>
+    
+    <Define>
+        <Id>obsidian</Id>
+        <label>Obsidian</label>
+        <description>Volcanic glass, very hard and sharp</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>20</maxStackCount>
+        <volume>4</volume>
+        <mass>8</mass>
+        <length>0.3</length>
+    </Define>
+    
+    <!-- Raw Resources - Gems -->
+    <Define>
+        <Id>emerald</Id>
+        <label>Emerald</label>
+        <description>Rare green gemstone</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>10</maxStackCount>
+        <volume>1</volume>
+        <mass>2</mass>
+        <length>0.1</length>
+    </Define>
+    
+    <Define>
+        <Id>ruby</Id>
+        <label>Ruby</label>
+        <description>Rare red gemstone</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>10</maxStackCount>
+        <volume>1</volume>
+        <mass>2</mass>
+        <length>0.1</length>
+    </Define>
+    
+    <Define>
+        <Id>sapphire</Id>
+        <label>Sapphire</label>
+        <description>Rare blue gemstone</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>10</maxStackCount>
+        <volume>1</volume>
+        <mass>2</mass>
+        <length>0.1</length>
+    </Define>
+</Data>

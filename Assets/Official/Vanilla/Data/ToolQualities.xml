@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Data>
+    <!-- Existing tool qualities -->
     <ToolQualities>
         <Id>tool_hammer</Id>
         <label>Hammer Tool Quality</label>
@@ -27,5 +28,35 @@
     <ToolQualities>
         <Id>tool_cut</Id>
         <label>Cut Tool Quality</label>
+    </ToolQualities>
+    
+    <!-- New tool qualities for open world -->
+    <ToolQualities>
+        <Id>tool_pickaxe</Id>
+        <label>Pickaxe Tool Quality</label>
+    </ToolQualities>
+    <ToolQualities>
+        <Id>tool_shovel</Id>
+        <label>Shovel Tool Quality</label>
+    </ToolQualities>
+    <ToolQualities>
+        <Id>tool_sword</Id>
+        <label>Sword Tool Quality</label>
+    </ToolQualities>
+    <ToolQualities>
+        <Id>tool_crafting</Id>
+        <label>Crafting Tool Quality</label>
+    </ToolQualities>
+    <ToolQualities>
+        <Id>tool_fishing</Id>
+        <label>Fishing Tool Quality</label>
+    </ToolQualities>
+    <ToolQualities>
+        <Id>tool_hoe</Id>
+        <label>Hoe Tool Quality</label>
+    </ToolQualities>
+    <ToolQualities>
+        <Id>tool_bow</Id>
+        <label>Bow Tool Quality</label>
     </ToolQualities>
 </Data>

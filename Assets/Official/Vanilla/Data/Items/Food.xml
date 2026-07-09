@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Data>
+    <!-- Raw Meat -->
+    <Define>
+        <Id>raw_meat</Id>
+        <label>Raw Meat</label>
+        <description>Uncooked meat from animals</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>20</maxStackCount>
+        <volume>4</volume>
+        <mass>3</mass>
+        <length>0.3</length>
+        <compsProps>
+            <li Class="Consumable_CompProperties">
+                <healAmount>5</healAmount>
+                <hungerAmount>10</hungerAmount>
+                <thirstAmount>0</thirstAmount>
+                <duration>0</duration>
+            </li>
+            <li Class="Fuel_CompProperties">
+                <fuelAmount>5</fuelAmount>
+                <burnTime>10</burnTime>
+                <heatOutput>0.5</heatOutput>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>cooked_meat</Id>
+        <label>Cooked Meat</label>
+        <description>Properly cooked meat</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>20</maxStackCount>
+        <volume>4</volume>
+        <mass>3</mass>
+        <length>0.3</length>
+        <compsProps>
+            <li Class="Consumable_CompProperties">
+                <healAmount>15</healAmount>
+                <hungerAmount>25</hungerAmount>
+                <thirstAmount>0</thirstAmount>
+                <duration>0</duration>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Fish -->
+    <Define>
+        <Id>raw_fish</Id>
+        <label>Raw Fish</label>
+        <description>Freshly caught fish</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>20</maxStackCount>
+        <volume>3</volume>
+        <mass>2</mass>
+        <length>0.4</length>
+        <compsProps>
+            <li Class="Consumable_CompProperties">
+                <healAmount>3</healAmount>
+                <hungerAmount>8</hungerAmount>
+                <thirstAmount>0</thirstAmount>
+                <duration>0</duration>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>cooked_fish</Id>
+        <label>Cooked Fish</label>
+        <description>Properly cooked fish</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>20</maxStackCount>
+        <volume>3</volume>
+        <mass>2</mass>
+        <length>0.4</length>
+        <compsProps>
+            <li Class="Consumable_CompProperties">
+                <healAmount>12</healAmount>
+                <hungerAmount>20</hungerAmount>
+                <thirstAmount>0</thirstAmount>
+                <duration>0</duration>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Bread & Grains -->
+    <Define>
+        <Id>bread</Id>
+        <label>Bread</label>
+        <description>Freshly baked bread</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>20</maxStackCount>
+        <volume>3</volume>
+        <mass>1</mass>
+        <length>0.25</length>
+        <compsProps>
+            <li Class="Consumable_CompProperties">
+                <healAmount>8</healAmount>
+                <hungerAmount>15</hungerAmount>
+                <thirstAmount>0</thirstAmount>
+                <duration>0</duration>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>wheat</Id>
+        <label>Wheat</label>
+        <description>Harvested wheat</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>50</maxStackCount>
+        <volume>2</volume>
+        <mass>0.5</mass>
+        <length>0.4</length>
+        <compsProps>
+            <li Class="Consumable_CompProperties">
+                <healAmount>2</healAmount>
+                <hungerAmount>5</hungerAmount>
+                <thirstAmount>0</thirstAmount>
+                <duration>0</duration>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Fruits & Vegetables -->
+    <Define>
+        <Id>apple</Id>
+        <label>Apple</label>
+        <description>A fresh apple</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>30</maxStackCount>
+        <volume>1</volume>
+        <mass>0.2</mass>
+        <length>0.1</length>
+        <compsProps>
+            <li Class="Consumable_CompProperties">
+                <healAmount>5</healAmount>
+                <hungerAmount>8</hungerAmount>
+                <thirstAmount>3</thirstAmount>
+                <duration>0</duration>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>carrot</Id>
+        <label>Carrot</label>
+        <description>A fresh carrot</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>30</maxStackCount>
+        <volume>1</volume>
+        <mass>0.15</mass>
+        <length>0.15</length>
+        <compsProps>
+            <li Class="Consumable_CompProperties">
+                <healAmount>4</healAmount>
+                <hungerAmount>7</hungerAmount>
+                <thirstAmount>2</thirstAmount>
+                <duration>0</duration>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>potato</Id>
+        <label>Potato</label>
+        <description>A raw potato</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>30</maxStackCount>
+        <volume>2</volume>
+        <mass>0.3</mass>
+        <length>0.12</length>
+        <compsProps>
+            <li Class="Consumable_CompProperties">
+                <healAmount>3</healAmount>
+                <hungerAmount>10</hungerAmount>
+                <thirstAmount>1</thirstAmount>
+                <duration>0</duration>
+            </li>
+            <li Class="Fuel_CompProperties">
+                <fuelAmount>3</fuelAmount>
+                <burnTime>8</burnTime>
+                <heatOutput>0.3</heatOutput>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>baked_potato</Id>
+        <label>Baked Potato</label>
+        <description>A warm baked potato</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>20</maxStackCount>
+        <volume>2</volume>
+        <mass>0.3</mass>
+        <length>0.12</length>
+        <compsProps>
+            <li Class="Consumable_CompProperties">
+                <healAmount>8</healAmount>
+                <hungerAmount>18</hungerAmount>
+                <thirstAmount>1</thirstAmount>
+                <duration>0</duration>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>mushroom</Id>
+        <label>Mushroom</label>
+        <description>A wild mushroom</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>30</maxStackCount>
+        <volume>1</volume>
+        <mass>0.1</mass>
+        <length>0.08</length>
+        <compsProps>
+            <li Class="Consumable_CompProperties">
+                <healAmount>3</healAmount>
+                <hungerAmount>5</hungerAmount>
+                <thirstAmount>1</thirstAmount>
+                <duration>0</duration>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>cooked_mushroom</Id>
+        <label>Cooked Mushroom</label>
+        <description>A cooked mushroom</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>20</maxStackCount>
+        <volume>1</volume>
+        <mass>0.1</mass>
+        <length>0.08</length>
+        <compsProps>
+            <li Class="Consumable_CompProperties">
+                <healAmount>6</healAmount>
+                <hungerAmount>10</hungerAmount>
+                <thirstAmount>1</thirstAmount>
+                <duration>0</duration>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Drinks -->
+    <Define>
+        <Id>water_bottle</Id>
+        <label>Water Bottle</label>
+        <description>A bottle of clean water</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>10</maxStackCount>
+        <volume>2</volume>
+        <mass>1</mass>
+        <length>0.25</length>
+        <compsProps>
+            <li Class="Consumable_CompProperties">
+                <healAmount>0</healAmount>
+                <hungerAmount>0</hungerAmount>
+                <thirstAmount>30</thirstAmount>
+                <duration>0</duration>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>ale</Id>
+        <label>Ale</label>
+        <description>A mug of ale</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>10</maxStackCount>
+        <volume>2</volume>
+        <mass>1</mass>
+        <length>0.2</length>
+        <compsProps>
+            <li Class="Consumable_CompProperties">
+                <healAmount>5</healAmount>
+                <hungerAmount>5</hungerAmount>
+                <thirstAmount>15</thirstAmount>
+                <duration>0</duration>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>soup</Id>
+        <label>Soup</label>
+        <description>A warm bowl of soup</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>10</maxStackCount>
+        <volume>3</volume>
+        <mass>2</mass>
+        <length>0.2</length>
+        <compsProps>
+            <li Class="Consumable_CompProperties">
+                <healAmount>15</healAmount>
+                <hungerAmount>20</hungerAmount>
+                <thirstAmount>25</thirstAmount>
+                <duration>0</duration>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>wine</Id>
+        <label>Wine</label>
+        <description>A bottle of wine</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>10</maxStackCount>
+        <volume>3</volume>
+        <mass>2</mass>
+        <length>0.3</length>
+        <compsProps>
+            <li Class="Consumable_CompProperties">
+                <healAmount>10</healAmount>
+                <hungerAmount>3</hungerAmount>
+                <thirstAmount>20</thirstAmount>
+                <duration>0</duration>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Prepared Meals -->
+    <Define>
+        <Id>stew</Id>
+        <label>Stew</label>
+        <description>A hearty meat stew</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>10</maxStackCount>
+        <volume>4</volume>
+        <mass>3</mass>
+        <length>0.25</length>
+        <compsProps>
+            <li Class="Consumable_CompProperties">
+                <healAmount>25</healAmount>
+                <hungerAmount>35</hungerAmount>
+                <thirstAmount>15</thirstAmount>
+                <duration>0</duration>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>roasted_vegetables</Id>
+        <label>Roasted Vegetables</label>
+        <description>A plate of roasted vegetables</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>10</maxStackCount>
+        <volume>3</volume>
+        <mass>2</mass>
+        <length>0.2</length>
+        <compsProps>
+            <li Class="Consumable_CompProperties">
+                <healAmount>15</healAmount>
+                <hungerAmount>25</hungerAmount>
+                <thirstAmount>5</thirstAmount>
+                <duration>0</duration>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Seeds -->
+    <Define>
+        <Id>wheat_seeds</Id>
+        <label>Wheat Seeds</label>
+        <description>Seeds for growing wheat</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>100</maxStackCount>
+        <volume>1</volume>
+        <mass>0.1</mass>
+        <length>0.05</length>
+    </Define>
+    
+    <Define>
+        <Id>potato_seeds</Id>
+        <label>Potato Seeds</label>
+        <description>Seed potatoes for growing</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>100</maxStackCount>
+        <volume>1</volume>
+        <mass>0.2</mass>
+        <length>0.08</length>
+    </Define>
+    
+    <Define>
+        <Id>carrot_seeds</Id>
+        <label>Carrot Seeds</label>
+        <description>Seeds for growing carrots</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>100</maxStackCount>
+        <volume>1</volume>
+        <mass>0.05</mass>
+        <length>0.03</length>
+    </Define>
+    
+    <Define>
+        <Id>cotton_seeds</Id>
+        <label>Cotton Seeds</label>
+        <description>Seeds for growing cotton</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>100</maxStackCount>
+        <volume>1</volume>
+        <mass>0.05</mass>
+        <length>0.03</length>
+    </Define>
+</Data>

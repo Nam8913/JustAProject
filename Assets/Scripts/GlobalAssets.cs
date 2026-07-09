@@ -69,6 +69,10 @@ public static class GlobalAssets
             return null;
         }
     }
+
+    public static Sprite GetSquareSprite => Asset<Sprite>.Get("Square");
+    public static Sprite GetCircleSprite => Asset<Sprite>.Get("Circle");
+    public static Texture2D GetMissingTexture => Asset<Texture2D>.Get("debugempty");
 }
 
 public static class Asset<T>

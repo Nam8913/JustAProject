@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Data>
-    <Define GameObjectTarget = "Creature:HumanDef">
+    <Define GameObjectTarget = "Creature">
         <Id>HumanDef</Id>
         <compsProps>
             <li Class="ContainerProperties">

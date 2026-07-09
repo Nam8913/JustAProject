@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Data>
+    <!-- Basic Furniture -->
+    <Define>
+        <Id>wood_table</Id>
+        <label>Wood Table</label>
+        <description>A simple wood table</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>5</maxStackCount>
+        <volume>12</volume>
+        <mass>8</mass>
+        <length>1.5</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>true</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>2, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>false</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>true</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>wood_chair</Id>
+        <label>Wood Chair</label>
+        <description>A simple wood chair</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>10</maxStackCount>
+        <volume>5</volume>
+        <mass>3</mass>
+        <length>0.8</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>true</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>false</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>true</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>wood_bed</Id>
+        <label>Wood Bed</label>
+        <description>A simple wood bed</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>3</maxStackCount>
+        <volume>20</volume>
+        <mass>15</mass>
+        <length>2</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>true</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>2, 3</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>false</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>true</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Storage -->
+    <Define GameObjectTarget = "Thing">
+        <Id>chest</Id>
+        <label>Chest</label>
+        <description>A wooden storage chest</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>3</maxStackCount>
+        <volume>15</volume>
+        <mass>10</mass>
+        <length>1</length>
+        <graphicData Class="SingleGraphicData">
+            <metaData>
+                <path>wood_chest</path>
+                <pixelsPerUnit>500</pixelsPerUnit>
+                <pivot>0.5, 0.5</pivot>
+                <startPos>0, 0</startPos>
+                <size>500, 500</size>
+                <border>0, 0, 0, 0</border>
+            </metaData>
+        </graphicData>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>false</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>false</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>false</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+            <li Class="ContainerProperties">
+                <maxWeight>200</maxWeight>
+                <maxVolume>200</maxVolume>
+                <maxLength>100</maxLength>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>large_chest</Id>
+        <label>Large Chest</label>
+        <description>A large wooden storage chest</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>2</maxStackCount>
+        <volume>25</volume>
+        <mass>15</mass>
+        <length>1.5</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>false</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>2, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>false</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>false</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+            <li Class="ContainerProperties">
+                <maxWeight>500</maxWeight>
+                <maxVolume>500</maxVolume>
+                <maxLength>100</maxLength>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>barrel</Id>
+        <label>Barrel</label>
+        <description>A wooden barrel for storage</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>5</maxStackCount>
+        <volume>12</volume>
+        <mass>8</mass>
+        <length>0.8</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>false</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>false</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>false</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+            <li Class="ContainerProperties">
+                <maxWeight>150</maxWeight>
+                <maxVolume>150</maxVolume>
+                <maxLength>100</maxLength>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Crafting Stations -->
+    <Define>
+        <Id>workbench</Id>
+        <label>Workbench</label>
+        <description>A crafting workbench</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>2</maxStackCount>
+        <volume>20</volume>
+        <mass>15</mass>
+        <length>1.5</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>true</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>2, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>false</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>true</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+            <li Class="ContainerProperties">
+                <maxWeight>100</maxWeight>
+                <maxVolume>100</maxVolume>
+                <maxLength>100</maxLength>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>furnace</Id>
+        <label>Furnace</label>
+        <description>A stone furnace for smelting</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>30</volume>
+        <mass>40</mass>
+        <length>1.2</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>false</rotatable>
+                <uninstallable>false</uninstallable>
+                <repairable>true</repairable>
+                <size>2, 2</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>true</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>false</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+            <li Class="ContainerProperties">
+                <maxWeight>200</maxWeight>
+                <maxVolume>200</maxVolume>
+                <maxLength>100</maxLength>
+            </li>
+            <li Class="LightSource_CompProperties">
+                <intensity>2</intensity>
+                <range>4</range>
+                <lightColor>1, 0.6, 0.2</lightColor>
+                <requiresFuel>true</requiresFuel>
+                <fuelConsumptionRate>0.05</fuelConsumptionRate>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>anvil</Id>
+        <label>Anvil</label>
+        <description>A metalworking anvil</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>15</volume>
+        <mass>30</mass>
+        <length>0.6</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>false</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>true</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>false</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>loom</Id>
+        <label>Loom</label>
+        <description>A weaving loom</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>18</volume>
+        <mass>12</mass>
+        <length>1.8</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>true</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>2, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>false</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>true</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>campfire</Id>
+        <label>Campfire</label>
+        <description>A campfire for cooking and warmth</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>3</maxStackCount>
+        <volume>8</volume>
+        <mass>5</mass>
+        <length>0.8</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>false</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>false</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>false</requiresFoundation>
+                <snapToGrid>false</snapToGrid>
+                <placementRange>4</placementRange>
+                <canRotate>false</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+            <li Class="LightSource_CompProperties">
+                <intensity>1.5</intensity>
+                <range>5</range>
+                <lightColor>1, 0.7, 0.3</lightColor>
+                <requiresFuel>true</requiresFuel>
+                <fuelConsumptionRate>0.1</fuelConsumptionRate>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Lighting -->
+    <Define>
+        <Id>torch</Id>
+        <label>Torch</label>
+        <description>A simple torch for light</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>20</maxStackCount>
+        <volume>2</volume>
+        <mass>1</mass>
+        <length>0.4</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>true</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>false</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>true</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>true</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+            <li Class="LightSource_CompProperties">
+                <intensity>1</intensity>
+                <range>4</range>
+                <lightColor>1, 0.8, 0.5</lightColor>
+                <requiresFuel>true</requiresFuel>
+                <fuelConsumptionRate>0.15</fuelConsumptionRate>
+            </li>
+            <li Class="Fuel_CompProperties">
+                <fuelAmount>5</fuelAmount>
+                <burnTime>15</burnTime>
+                <heatOutput>0.3</heatOutput>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>lantern</Id>
+        <label>Lantern</label>
+        <description>A portable lantern</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>10</maxStackCount>
+        <volume>3</volume>
+        <mass>2</mass>
+        <length>0.25</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>true</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>false</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>true</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+            <li Class="LightSource_CompProperties">
+                <intensity>0.8</intensity>
+                <range>3</range>
+                <lightColor>1, 0.9, 0.7</lightColor>
+                <requiresFuel>true</requiresFuel>
+                <fuelConsumptionRate>0.08</fuelConsumptionRate>
+            </li>
+        </compsProps>
+    </Define>
+</Data>

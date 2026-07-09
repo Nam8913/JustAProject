@@ -3,20 +3,57 @@ using System.IO;
 using System.Xml;
 using UnityEngine;
 using ModContent.XmlConverter;
+using ModContent.XmlExtendedAttribute;
 using System.Collections.Generic;
+using System.Reflection;
 
+/// <summary>
+/// Static class để deserialize XML thành C# objects.
+/// Hỗ trợ: primitive types, classes, structs, collections (List<T>), polymorphism.
+/// 
+/// Features:
+/// - Auto type resolution từ XML Class attribute
+/// - Attribute processing (GameObjectTarget, Class, Condition)
+/// - Nested object deserialization
+/// - Collection support (List<T>)
+/// - Error handling với configurable logging
+/// </summary>
 public static class XmlLoader
 {
+    /// <summary>
+    /// State key cho condition result từ ConditionalAttributeProcessor.
+    /// </summary>
+    private const string StateKeyConditionResult = ConditionalAttributeProcessor.StateKeyConditionResult;
+
+    /// <summary>
+    /// Cached MethodInfo cho DeserializeFromXml (tránh reflection lookup mỗi lần).
+    /// </summary>
+    private static readonly MethodInfo _deserializeMethod = typeof(XmlLoader)
+        .GetMethod("DeserializeFromXml", BindingFlags.Public | BindingFlags.Static);
+
+    /// <summary>
+    /// Cache generic method theo elementType (key = elementType, value = MethodInfo).
+    /// </summary>
+    private static readonly Dictionary<Type, MethodInfo> _genericDeserializeCache = new Dictionary<Type, MethodInfo>();
+
+    /// <summary>
+    /// Cache generic method cho List.Add theo elementType.
+    /// </summary>
+    private static readonly Dictionary<Type, MethodInfo> _listAddMethodCache = new Dictionary<Type, MethodInfo>();
+
+    /// <summary>
+    /// Đọc file XML và deserialize thành object type T.
+    /// </summary>
     public static T LoadFromXml<T>(string path)
     {
-        if(!File.Exists(path))
+        if (!File.Exists(path))
         {
             Debug.LogError($"File not found at path: {path}");
             return default;
         }
 
         string xmlContent = File.ReadAllText(path);
-        if(string.IsNullOrEmpty(xmlContent))
+        if (string.IsNullOrEmpty(xmlContent))
         {
             Debug.LogError($"File at path {path} is empty.");
             return default;
@@ -25,48 +62,63 @@ public static class XmlLoader
         return ObjectFromXmlContent<T>(xmlContent);
     }
 
+    /// <summary>
+    /// Deserialize từ XML string thành object type T.
+    /// </summary>
     public static T ObjectFromXmlContent<T>(string xmlContent)
     {
         XmlDocument doc = new XmlDocument();
+        doc.XmlResolver = null;  // Fix #1: Disable external entity resolution (XXE protection)
         doc.LoadXml(xmlContent);
         XmlNode root = doc.DocumentElement;
         return DeserializeFromXml<T>(root, XmlConverterSettings.Default);
     }
 
-    public static T DeserializeFromXml<T>(XmlNode root ,XmlConverterSettings settings = null,bool isRecursive = false)
+    /// <summary>
+    /// Deserialize XmlNode thành object type T.
+    /// Đây là method chính, được gọi đệ quy cho nested objects.
+    /// </summary>
+    /// <param name="root">XmlNode cần deserialize</param>
+    /// <param name="settings">Cấu hình (converters, processors, etc.)</param>
+    /// <param name="isRecursive">true nếu đang gọi đệ quy (internal use)</param>
+    public static T DeserializeFromXml<T>(XmlNode root, XmlConverterSettings settings = null, bool isRecursive = false)
     {
-        if(settings == null)
+        if (settings == null)
         {
             settings = XmlConverterSettings.Default;
         }
+
         T obj = default(T);
         System.Type type = typeof(T);
 
         bool hasChildNodes = root.HasChildNodes;
-        bool hasAttributes = root.Attributes != null && root.Attributes.Count > 0;
         int childNodeCount = root.ChildNodes.Count;
 
-        if(hasAttributes)
+        // Fix #2: Process attributes và lưu state (thay vì gọi Processor + CheckCondition riêng)
+        var attributeState = ProcessAttributesAndGetState(root, settings);
+
+        // Fix #2 + #6: Kiểm tra condition từ state (không đọc attribute trực tiếp)
+        if (!CheckConditionFromState(attributeState))
         {
-            settings.HandlerAttribute(root);
+            return obj;
         }
 
-        // If the node has exactly one child and that child is a text node, we can directly assign the value to the object if it's a simple type (like string, int, etc.)
-        if(hasChildNodes && childNodeCount == 1 && root.FirstChild.NodeType == XmlNodeType.Text)
+        // Xử lý primitive type: <MyField>value</MyField>
+        if (hasChildNodes && childNodeCount == 1 && root.FirstChild.NodeType == XmlNodeType.Text)
         {
-            if(type == typeof(string))
+            if (type == typeof(string))
             {
                 return (T)((object)root.FirstChild.Value);
             }
-            //object convertedValue = Convert.ChangeType(root.FirstChild.Value, type);
+
             object convertedValue = GetObjectFromString<T>(root.FirstChild.Value, settings, root);
             return (T)convertedValue;
         }
 
-        if(hasChildNodes && childNodeCount == 1 && root.FirstChild.NodeType == XmlNodeType.CDATA)
+        // Xử lý CDATA: <![CDATA[content]]>
+        if (hasChildNodes && childNodeCount == 1 && root.FirstChild.NodeType == XmlNodeType.CDATA)
         {
-            
-            if(type != typeof(string))
+            if (type != typeof(string))
             {
                 Debug.LogError($"Cannot assign CDATA value to type {type.FullName}. Expected string.");
                 return default;
@@ -74,148 +126,308 @@ public static class XmlLoader
             return (T)((object)root.FirstChild.Value);
         }
 
+        // Xác định type thực tế từ Class attribute (nếu có)
         bool isClassOrStruct = TypeUtils.IsClass(type) || TypeUtils.IsStruct(type);
-        Type type2 = isClassOrStruct ? GetTypeClassFromXmlNode(root,type) : type;
-        Type type3 = Nullable.GetUnderlyingType(type2) ?? type2;
-        
-        if(!isClassOrStruct)
+        Type resolvedType = isClassOrStruct ? GetTypeClassFromXmlNode(root, settings, type) : type;
+        Type underlyingType = Nullable.GetUnderlyingType(resolvedType) ?? resolvedType;
+
+        if (!isClassOrStruct)
         {
             return obj;
         }
 
-        if(TypeUtils.IsCollection(type3))
+        // Xử lý collection (List<T>)
+        if (TypeUtils.IsCollection(underlyingType))
         {
-            if(TypeUtils.IsList(type3))
+            if (TypeUtils.IsList(underlyingType))
             {
-                Type elementType = type3.GetGenericArguments()[0];
-                var listType = typeof(List<>).MakeGenericType(elementType);
-                var listInstance = Activator.CreateInstance(listType);
-                var addMethod = listType.GetMethod("Add");
-
-                foreach(XmlNode child in root.ChildNodes)
-                {
-                    if(child.NodeType != XmlNodeType.Element)
-                    {
-                        continue;
-                    }
-
-                    if(child.Name != "li")
-                    {
-                        Debug.LogWarning($"Unexpected XML node name '{child.Name}' in collection. Expected '<li>'. Skipping node.");
-                        continue;
-                    }
-
-                    var method = typeof(XmlLoader).GetMethod("DeserializeFromXml", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-                    var genericMethod = method.MakeGenericMethod(elementType);
-                    object elementValue = genericMethod.Invoke(null, new object[] { child, settings, true });
-                    addMethod.Invoke(listInstance, new object[] { elementValue });
-                }
-
-                return (T)listInstance;
+                return DeserializeList<T>(root, underlyingType, settings);
             }
             else
             {
-                Debug.LogError($"Collection type {type3.FullName} is not supported. Only List<T> is supported.");
+                Debug.LogError($"Collection type {underlyingType.FullName} is not supported. Only List<T> is supported.");
                 return default;
             }
         }
-        
+
+        // Fix #3: Tạo instance với exception handling đúng
+        if (!typeof(T).IsAssignableFrom(underlyingType))
+        {
+            Debug.LogError(
+                $"Type {underlyingType.FullName} is not assignable to {typeof(T).FullName}. " +
+                $"Cannot create instance.");
+            return default;
+        }
+
         try
         {
-            obj = (T)Activator.CreateInstance(type3);
-        }catch(InvalidCastException ex)
-        {
-            throw new InvalidCastException($"Failed to create instance of type {type3.FullName}. Ensure it has a parameterless constructor. Original error: {ex.Message} \n {ex.StackTrace}", ex);
+            obj = (T)Activator.CreateInstance(underlyingType);
         }
-        if(hasChildNodes)
+        catch (MissingMethodException)
         {
-            foreach(XmlNode child in root.ChildNodes)
-            {
-                if(child.NodeType != XmlNodeType.Element)
-                {
-                    continue;
-                }
-
-                string fieldName = child.Name;
-                var fieldInfo = type3.GetField(fieldName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                if(fieldInfo == null)
-                {
-                    if(settings.IgnoreExtraFields)
-                    {
-                        Debug.LogWarning($"Field {fieldName} not found in type {type3.FullName}. Ignoring extra field.");
-                        continue;
-                    }
-                    else
-                    {
-                        Debug.LogError($"Field {fieldName} not found in type {type3.FullName}.");
-                        continue;
-                    }
-                }
-
-                Type fieldType = fieldInfo.FieldType;
-                var method = typeof(XmlLoader).GetMethod("DeserializeFromXml", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-                var genericMethod = method.MakeGenericMethod(fieldType);
-                object fieldValue = genericMethod.Invoke(null, new object[] { child, settings, true });
-                fieldInfo.SetValue(obj, fieldValue);
-            }
+            Debug.LogError(
+                $"Type {underlyingType.FullName} has no parameterless constructor.");
+            return default;
         }
-            
-        
+        catch (TargetInvocationException ex)
+        {
+            Debug.LogError(
+                $"Constructor of {underlyingType.FullName} threw exception: " +
+                $"{ex.InnerException?.Message ?? ex.Message}");
+            return default;
+        }
+        catch (MethodAccessException)
+        {
+            Debug.LogError(
+                $"No access to constructor of {underlyingType.FullName}.");
+            return default;
+        }
+
+        // Deserialize các child nodes thành fields
+        if (hasChildNodes)
+        {
+            DeserializeFields(obj, root, underlyingType, settings);
+        }
+
+        // Post-process: gọi PostProcessAll SAU KHI object tạo xong
+        if (attributeState.Count > 0)
+        {
+            settings.AttributeProcessorRegistry.PostProcessAll(root, settings, attributeState, obj);
+        }
+
         return obj;
     }
 
-    private static Type GetTypeClassFromXmlNode(XmlNode root, Type defaultType = null)
+    /// <summary>
+    /// Deserialize List<T> từ XML node.
+    /// </summary>
+    private static T DeserializeList<T>(XmlNode root, Type listType, XmlConverterSettings settings)
     {
+        Type elementType = listType.GetGenericArguments()[0];
+
+        // Fix #4: Tạo instance từ CHÍNH listType (hỗ trợ subclass như MyIntList : List<int>)
+        var listInstance = Activator.CreateInstance(listType);
+
+        // Fix #5: Cache Add method theo elementType
+        if (!_listAddMethodCache.TryGetValue(elementType, out var addMethod))
+        {
+            addMethod = listType.GetMethod("Add");
+            _listAddMethodCache[elementType] = addMethod;
+        }
+
+        foreach (XmlNode child in root.ChildNodes)
+        {
+            if (child.NodeType != XmlNodeType.Element)
+            {
+                continue;
+            }
+
+            if (child.Name != "li")
+            {
+                Debug.LogWarning(
+                    $"Unexpected XML node name '{child.Name}' in collection. " +
+                    $"Expected '<li>'. Skipping node.");
+                continue;
+            }
+
+            // Fix #5: Dùng cached generic method
+            var genericMethod = GetCachedDeserializeMethod(elementType);
+            object elementValue = genericMethod.Invoke(null, new object[] { child, settings, true });
+            addMethod.Invoke(listInstance, new object[] { elementValue });
+        }
+
+        return (T)listInstance;
+    }
+
+    /// <summary>
+    /// Deserialize các child nodes thành fields của object.
+    /// </summary>
+    private static void DeserializeFields(object obj, XmlNode root, Type type, XmlConverterSettings settings)
+    {
+        foreach (XmlNode child in root.ChildNodes)
+        {
+            if (child.NodeType != XmlNodeType.Element)
+            {
+                continue;
+            }
+
+            string fieldName = child.Name;
+
+            // Tìm field (hỗ trợ case-insensitive nếu được bật)
+            var fieldInfo = FindField(type, fieldName, settings);
+            if (fieldInfo == null)
+            {
+                if (settings.IgnoreExtraFields)
+                {
+                    Debug.LogWarning(
+                        $"Field '{fieldName}' not found in type {type.FullName}. Ignoring extra field.");
+                }
+                else
+                {
+                    Debug.LogError(
+                        $"Field '{fieldName}' not found in type {type.FullName}.");
+                }
+                continue;
+            }
+
+            Type fieldType = fieldInfo.FieldType;
+
+            // Fix #5: Dùng cached generic method
+            var genericMethod = GetCachedDeserializeMethod(fieldType);
+            object fieldValue = genericMethod.Invoke(null, new object[] { child, settings, true });
+            fieldInfo.SetValue(obj, fieldValue);
+        }
+    }
+
+    /// <summary>
+    /// Lấy cached generic method cho DeserializeFromXml.
+    /// </summary>
+    private static MethodInfo GetCachedDeserializeMethod(Type elementType)
+    {
+        if (!_genericDeserializeCache.TryGetValue(elementType, out var genericMethod))
+        {
+            genericMethod = _deserializeMethod.MakeGenericMethod(elementType);
+            _genericDeserializeCache[elementType] = genericMethod;
+        }
+        return genericMethod;
+    }
+
+    /// <summary>
+    /// Tìm field theo tên, hỗ trợ case-insensitive.
+    /// </summary>
+    private static System.Reflection.FieldInfo FindField(Type type, string fieldName, XmlConverterSettings settings)
+    {
+        // Thử exact match trước
+        var fieldInfo = type.GetField(
+            fieldName,
+            System.Reflection.BindingFlags.Public |
+            System.Reflection.BindingFlags.NonPublic |
+            System.Reflection.BindingFlags.Instance);
+
+        if (fieldInfo != null)
+        {
+            return fieldInfo;
+        }
+
+        // Nếu bật case-insensitive, thử so sánh không phân biệt hoa/thường
+        if (settings.CaseInsensitiveFieldMatching)
+        {
+            var fields = type.GetFields(
+                System.Reflection.BindingFlags.Public |
+                System.Reflection.BindingFlags.NonPublic |
+                System.Reflection.BindingFlags.Instance);
+
+            foreach (var field in fields)
+            {
+                if (string.Equals(field.Name, fieldName, System.StringComparison.OrdinalIgnoreCase))
+                {
+                    return field;
+                }
+            }
+        }
+
+        return null;
+    }
+    
+    /// <summary>
+    /// Lấy type thực tế từ Class attribute trong XML node.
+    ///
+    /// Lưu ý: Class attribute có special handling built-in, KHÔNG dùng ClassAttributeProcessor.
+    /// Lý do: Type resolution cần xảy ra TRƯỚC khi tạo instance, nên phải xử lý trực tiếp.
+    /// </summary>
+    private static Type GetTypeClassFromXmlNode(XmlNode root, XmlConverterSettings settings, Type defaultType = null)
+    {
+        // Đọc trực tiếp Class attribute (special handling, không qua processor)
         XmlAttribute xmlAttribute = root.Attributes["Class"];
-        if(xmlAttribute != null)
+        if (xmlAttribute != null)
         {
             string typeName = xmlAttribute.Value;
             Type foundType = TypeUtils.TryGetType(typeName);
-            if(foundType != null)
+            if (foundType != null)
             {
                 return foundType;
             }
             else
             {
-                Debug.LogError($"Type specified in XML not found: {typeName}. Falling back to expected type: {defaultType.FullName}");
+                Debug.LogError(
+                    $"Type specified in XML not found: {typeName}. " +
+                    $"Falling back to expected type: {defaultType?.FullName ?? "null"}");
                 return defaultType;
             }
         }
-        
+
         return defaultType;
     }
 
-    private static object GetObjectFromString<T>(String value, XmlConverterSettings settings, XmlNode contextNode = null)
+    /// <summary>
+    /// Fix #2 + #6: Kiểm tra condition từ attributeState (không đọc attribute trực tiếp).
+    /// </summary>
+    private static bool CheckConditionFromState(Dictionary<string, object> attributeState)
     {
-        if(settings.TryGetConverter(typeof(T), out XmlConverter converter))
+        if (!attributeState.TryGetValue(StateKeyConditionResult, out object result))
         {
-            if(!converter.canRead)
+            return true; // Không có condition = luôn true
+        }
+
+        if (result is bool shouldProcess)
+        {
+            return shouldProcess;
+        }
+
+        // Fallback: coi như true
+        return true;
+    }
+
+    // Fix #2: Xử lý attributes và lưu state để CheckCondition dùng sau
+    private static Dictionary<string, object> ProcessAttributesAndGetState(XmlNode root, XmlConverterSettings settings)
+    {
+        var state = new Dictionary<string, object>();
+        if (root.Attributes != null && root.Attributes.Count > 0)
+        {
+            settings.AttributeProcessorRegistry.ProcessAttributes(root, settings, state);
+        }
+        return state;
+    }
+
+    /// <summary>
+    /// Convert string value thành object type T using registered converters.
+    /// </summary>
+    private static object GetObjectFromString<T>(string value, XmlConverterSettings settings, XmlNode contextNode = null)
+    {
+        if (settings.TryGetConverter(typeof(T), out XmlConverter converter))
+        {
+            if (!converter.canRead)
             {
                 return value;
             }
 
             object result = converter.fromXML(value);
-            if(result == null)
+            if (result == null)
             {
                 return default(T);
             }
 
-            if(result is T typedResult)
+            if (result is T typedResult)
             {
                 return typedResult;
             }
 
-            throw new InvalidCastException($"Converter for type {typeof(T).FullName} returned incompatible value of type {result.GetType().FullName}.");
+            throw new InvalidCastException(
+                $"Converter for type {typeof(T).FullName} returned incompatible value of type {result.GetType().FullName}.");
         }
         else
         {
-            if(contextNode != null)
+            if (contextNode != null)
             {
-                Debug.LogError($"No converter registered for type {typeof(T).FullName} at XML node '{contextNode.Name}'. Value: '{value}'");
+                Debug.LogError(
+                    $"No converter registered for type {typeof(T).FullName} " +
+                    $"at XML node '{contextNode.Name}'. Value: '{value}'");
             }
             else
             {
-                Debug.LogError($"No converter registered for type {typeof(T).FullName}. Value string parse error: '{value}'");
+                Debug.LogError(
+                    $"No converter registered for type {typeof(T).FullName}. " +
+                    $"Value string parse error: '{value}'");
             }
             return default(T);
         }

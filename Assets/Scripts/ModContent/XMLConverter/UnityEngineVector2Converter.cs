@@ -31,4 +31,34 @@ namespace ModContent.XmlConverter
             return type == typeof(UnityEngine.Vector2);
         }
     }
+
+    public sealed class UnityEngineVector2IntConverter : XmlConverter
+    {
+        public override string toXML(object value)
+        {
+            if (value == null) return "0";
+            if (value is UnityEngine.Vector2Int v)
+            {
+                return $"{v.x}, {v.y}";
+            }
+            throw new System.Exception($"Value is not of type Vector2Int: {value}");
+        }
+
+        public override object fromXML(string xml)
+        {
+            string[] parts = xml.Split(',');
+            if (parts.Length == 2 &&
+                int.TryParse(parts[0].Trim(), out int x) &&
+                int.TryParse(parts[1].Trim(), out int y))
+            {
+                return new UnityEngine.Vector2Int(x, y);
+            }
+            throw new System.Exception($"Invalid Vector2Int value: {xml}");
+        }
+
+        public override bool CanConvert(System.Type type)
+        {
+            return type == typeof(UnityEngine.Vector2Int);
+        }
+    }
 }

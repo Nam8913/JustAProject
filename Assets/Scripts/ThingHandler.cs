@@ -112,7 +112,6 @@ public static class ThingHandler
             System.Type comp = compProp.compClass;
             if(comp == null)
             {
-                Debug.LogError($"Comp class of compProp [{compProp.GetType().Name}] is not specified in definition for thing with id {define.Id}. Make sure the compClass is specified.");
                 continue;
             }
             bool flag1 = comp != null;

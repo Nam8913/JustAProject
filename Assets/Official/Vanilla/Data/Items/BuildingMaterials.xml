@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Data>
+    <!-- Wood Building -->
+    <Define>
+        <Id>wood_wall</Id>
+        <label>Wood Wall</label>
+        <description>A basic wood wall section</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>20</maxStackCount>
+        <volume>15</volume>
+        <mass>10</mass>
+        <length>2</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>true</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>false</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>4</placementRange>
+                <canRotate>true</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>wood_floor</Id>
+        <label>Wood Floor</label>
+        <description>A wood floor tile</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>30</maxStackCount>
+        <volume>12</volume>
+        <mass>8</mass>
+        <length>2</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>false</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>false</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>4</placementRange>
+                <canRotate>false</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>wood_door</Id>
+        <label>Wood Door</label>
+        <description>A simple wood door</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>10</maxStackCount>
+        <volume>10</volume>
+        <mass>8</mass>
+        <length>2</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>true</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 2</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>true</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>true</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>wood_fence</Id>
+        <label>Wood Fence</label>
+        <description>A wood fence section</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>30</maxStackCount>
+        <volume>8</volume>
+        <mass>5</mass>
+        <length>2</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>true</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>false</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>5</placementRange>
+                <canRotate>true</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>wood_roof</Id>
+        <label>Wood Roof</label>
+        <description>A wood roof section</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>20</maxStackCount>
+        <volume>14</volume>
+        <mass>9</mass>
+        <length>2</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>true</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>true</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>true</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>wood_window</Id>
+        <label>Wood Window</label>
+        <description>A wood frame window</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>15</maxStackCount>
+        <volume>8</volume>
+        <mass>6</mass>
+        <length>1.5</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>false</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>true</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>false</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Stone Building -->
+    <Define>
+        <Id>stone_wall</Id>
+        <label>Stone Wall</label>
+        <description>A sturdy stone wall section</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>15</maxStackCount>
+        <volume>20</volume>
+        <mass>25</mass>
+        <length>2</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>true</rotatable>
+                <uninstallable>false</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>true</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>true</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>stone_floor</Id>
+        <label>Stone Floor</label>
+        <description>A stone floor tile</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>20</maxStackCount>
+        <volume>18</volume>
+        <mass>22</mass>
+        <length>2</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>false</rotatable>
+                <uninstallable>false</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>true</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>false</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>stone_door</Id>
+        <label>Stone Door</label>
+        <description>A heavy stone door</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>5</maxStackCount>
+        <volume>15</volume>
+        <mass>20</mass>
+        <length>2</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>true</rotatable>
+                <uninstallable>false</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 2</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>true</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>true</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>stone_window</Id>
+        <label>Stone Window</label>
+        <description>A stone frame window</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>10</maxStackCount>
+        <volume>10</volume>
+        <mass>12</mass>
+        <length>1.5</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>false</rotatable>
+                <uninstallable>false</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>true</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>false</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Glass Window -->
+    <Define>
+        <Id>glass_window</Id>
+        <label>Glass Window</label>
+        <description>A glass window pane</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>15</maxStackCount>
+        <volume>6</volume>
+        <mass>5</mass>
+        <length>1.2</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>false</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>false</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>true</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>false</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Foundation -->
+    <Define>
+        <Id>stone_foundation</Id>
+        <label>Stone Foundation</label>
+        <description>A stone foundation block</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>10</maxStackCount>
+        <volume>25</volume>
+        <mass>30</mass>
+        <length>2</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>false</rotatable>
+                <uninstallable>false</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>false</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>4</placementRange>
+                <canRotate>false</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>wood_foundation</Id>
+        <label>Wood Foundation</label>
+        <description>A wood foundation block</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>15</maxStackCount>
+        <volume>18</volume>
+        <mass>12</mass>
+        <length>2</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>false</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>false</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>4</placementRange>
+                <canRotate>false</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Stairs & Ladders -->
+    <Define>
+        <Id>wood_stairs</Id>
+        <label>Wood Stairs</label>
+        <description>Wood staircase section</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>10</maxStackCount>
+        <volume>15</volume>
+        <mass>10</mass>
+        <length>2.5</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>true</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 1</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>true</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>true</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>rope_ladder</Id>
+        <label>Rope Ladder</label>
+        <description>A simple rope ladder</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>10</maxStackCount>
+        <volume>4</volume>
+        <mass>3</mass>
+        <length>3</length>
+        <compsProps>
+            <li Class="Buildable_CompProperties">
+                <rotatable>true</rotatable>
+                <uninstallable>true</uninstallable>
+                <repairable>true</repairable>
+                <size>1, 2</size>
+            </li>
+            <li Class="Placeable_CompProperties">
+                <requiresFoundation>true</requiresFoundation>
+                <snapToGrid>true</snapToGrid>
+                <placementRange>3</placementRange>
+                <canRotate>true</canRotate>
+                <destroyOnRemove>true</destroyOnRemove>
+            </li>
+        </compsProps>
+    </Define>
+</Data>

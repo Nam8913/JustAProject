@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Data>
+    <!-- Leather Armor -->
+    <Define>
+        <Id>leather_helmet</Id>
+        <label>Leather Helmet</label>
+        <description>A basic leather helmet</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>4</volume>
+        <mass>2</mass>
+        <length>0.3</length>
+        <compsProps>
+            <li Class="Armor_CompProperties">
+                <defense>5</defense>
+                <armorSlot>head</armorSlot>
+                <durability>50</durability>
+                <weight>2</weight>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>leather_chestplate</Id>
+        <label>Leather Chestplate</label>
+        <description>A basic leather chestplate</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>8</volume>
+        <mass>5</mass>
+        <length>0.5</length>
+        <compsProps>
+            <li Class="Armor_CompProperties">
+                <defense>10</defense>
+                <armorSlot>chest</armorSlot>
+                <durability>60</durability>
+                <weight>5</weight>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>leather_leggings</Id>
+        <label>Leather Leggings</label>
+        <description>Leather leggings</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>6</volume>
+        <mass>4</mass>
+        <length>0.6</length>
+        <compsProps>
+            <li Class="Armor_CompProperties">
+                <defense>8</defense>
+                <armorSlot>legs</armorSlot>
+                <durability>55</durability>
+                <weight>4</weight>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>leather_boots</Id>
+        <label>Leather Boots</label>
+        <description>Leather boots</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>4</volume>
+        <mass>3</mass>
+        <length>0.4</length>
+        <compsProps>
+            <li Class="Armor_CompProperties">
+                <defense>4</defense>
+                <armorSlot>feet</armorSlot>
+                <durability>45</durability>
+                <weight>3</weight>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Iron Armor -->
+    <Define>
+        <Id>iron_helmet</Id>
+        <label>Iron Helmet</label>
+        <description>A sturdy iron helmet</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>5</volume>
+        <mass>5</mass>
+        <length>0.3</length>
+        <compsProps>
+            <li Class="Armor_CompProperties">
+                <defense>12</defense>
+                <armorSlot>head</armorSlot>
+                <durability>100</durability>
+                <weight>5</weight>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>iron_chestplate</Id>
+        <label>Iron Chestplate</label>
+        <description>A sturdy iron chestplate</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>10</volume>
+        <mass>10</mass>
+        <length>0.5</length>
+        <compsProps>
+            <li Class="Armor_CompProperties">
+                <defense>20</defense>
+                <armorSlot>chest</armorSlot>
+                <durability>120</durability>
+                <weight>10</weight>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>iron_leggings</Id>
+        <label>Iron Leggings</label>
+        <description>Iron leggings</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>8</volume>
+        <mass>8</mass>
+        <length>0.6</length>
+        <compsProps>
+            <li Class="Armor_CompProperties">
+                <defense>16</defense>
+                <armorSlot>legs</armorSlot>
+                <durability>110</durability>
+                <weight>8</weight>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>iron_boots</Id>
+        <label>Iron Boots</label>
+        <description>Iron boots</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>5</volume>
+        <mass>6</mass>
+        <length>0.4</length>
+        <compsProps>
+            <li Class="Armor_CompProperties">
+                <defense>10</defense>
+                <armorSlot>feet</armorSlot>
+                <durability>90</durability>
+                <weight>6</weight>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Copper Armor -->
+    <Define>
+        <Id>copper_helmet</Id>
+        <label>Copper Helmet</label>
+        <description>A copper helmet</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>5</volume>
+        <mass>4</mass>
+        <length>0.3</length>
+        <compsProps>
+            <li Class="Armor_CompProperties">
+                <defense>8</defense>
+                <armorSlot>head</armorSlot>
+                <durability>80</durability>
+                <weight>4</weight>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>copper_chestplate</Id>
+        <label>Copper Chestplate</label>
+        <description>A copper chestplate</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>9</volume>
+        <mass>8</mass>
+        <length>0.5</length>
+        <compsProps>
+            <li Class="Armor_CompProperties">
+                <defense>14</defense>
+                <armorSlot>chest</armorSlot>
+                <durability>90</durability>
+                <weight>8</weight>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>copper_leggings</Id>
+        <label>Copper Leggings</label>
+        <description>Copper leggings</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>7</volume>
+        <mass>6</mass>
+        <length>0.6</length>
+        <compsProps>
+            <li Class="Armor_CompProperties">
+                <defense>11</defense>
+                <armorSlot>legs</armorSlot>
+                <durability>85</durability>
+                <weight>6</weight>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>copper_boots</Id>
+        <label>Copper Boots</label>
+        <description>Copper boots</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>4</volume>
+        <mass>5</mass>
+        <length>0.4</length>
+        <compsProps>
+            <li Class="Armor_CompProperties">
+                <defense>7</defense>
+                <armorSlot>feet</armorSlot>
+                <durability>75</durability>
+                <weight>5</weight>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <!-- Shields -->
+    <Define>
+        <Id>wooden_shield</Id>
+        <label>Wooden Shield</label>
+        <description>A basic wooden shield</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>8</volume>
+        <mass>5</mass>
+        <length>0.6</length>
+        <compsProps>
+            <li Class="Armor_CompProperties">
+                <defense>8</defense>
+                <armorSlot>shield</armorSlot>
+                <durability>60</durability>
+                <weight>5</weight>
+            </li>
+        </compsProps>
+    </Define>
+    
+    <Define>
+        <Id>iron_shield</Id>
+        <label>Iron Shield</label>
+        <description>A sturdy iron shield</description>
+        <destroyable>true</destroyable>
+        <maxStackCount>1</maxStackCount>
+        <volume>10</volume>
+        <mass>8</mass>
+        <length>0.7</length>
+        <compsProps>
+            <li Class="Armor_CompProperties">
+                <defense>15</defense>
+                <armorSlot>shield</armorSlot>
+                <durability>100</durability>
+                <weight>8</weight>
+            </li>
+        </compsProps>
+    </Define>
+</Data>
