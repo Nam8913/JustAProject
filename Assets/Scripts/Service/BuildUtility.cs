@@ -199,9 +199,6 @@ public static class BuildUtility
                 }else if(define.graphicData is MultiGraphicData multiGraphicData)
                 {
                     sprite = Asset<Sprite>.Get($"{defineThing.ModPackageId}:{multiGraphicData.metaData[0].path}");
-                }else
-                {
-                    Debug.LogError($"GraphicData type not supported for structure: {define?.name}");
                 }
             }
             
@@ -212,7 +209,15 @@ public static class BuildUtility
                 Debug.LogWarning($"Sprite not found for structure: {define?.name}");
             }
             Debug.Log($"Placing structure: {define?.name} with sprite: {sprite?.name} at position: {position}");
-            renderer.sprite = sprite;
+
+            if(defineThing != null)
+            {
+                renderer.sprite = sprite;
+            }else
+            {
+                renderer.sprite = GlobalAssets.GetMissingTexture;
+            }
+            
         }
         return structureObj;
     }

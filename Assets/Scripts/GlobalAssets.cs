@@ -12,36 +12,46 @@ public static class GlobalAssets
         modAssetMapping = new Dictionary<string, ModContent.ModAssets>();
     }
     private static Dictionary<string, ModContent.ModAssets> modAssetMapping;
-    private static List<System.Type> registeredTypes;
+    private static HashSet<System.Type> registeredTypes;
     private static void GetInformationFromAssetTypes()
     {
         foreach (var type in registeredTypes)
-    {
-        // Lấy số lượng assets của type này thông qua reflection
-        var assetsProperty = typeof(Asset<>)
-            .MakeGenericType(type)
-            .GetProperty("Assets", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-        
-        var assets = assetsProperty?.GetValue(null);
-        var countProperty = assets?.GetType().GetProperty("Count");
-        int count = countProperty != null ? (int)countProperty.GetValue(assets) : 0;
-
-        #if DEBUG_LOG_FLAG && false
-        Debug.Log($"Registered Type: {type.FullName} - Asset Count: {count}");
-        #endif
-    }
-
-    }
-
-    public static List<System.Type> RegisteredTypes
-    {
-        get
         {
-            if (registeredTypes == null)
-            {
-                registeredTypes = new List<System.Type>();
-            }
-            return registeredTypes;
+            // Lấy số lượng assets của type này thông qua reflection
+            var assetsProperty = typeof(Asset<>)
+                .MakeGenericType(type)
+                .GetProperty("Assets", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+            
+            var assets = assetsProperty?.GetValue(null);
+            var countProperty = assets?.GetType().GetProperty("Count");
+            int count = countProperty != null ? (int)countProperty.GetValue(assets) : 0;
+
+            #if DEBUG_LOG_FLAG && false
+            Debug.Log($"Registered Type: {type.FullName} - Asset Count: {count}");
+            #endif
+        }
+    }
+
+    public static IReadOnlyCollection<System.Type> RegisteredTypes => registeredTypes;
+
+    public static bool IsTypeCollectionRegistered(System.Type type)
+    {
+        return registeredTypes.Contains(type);
+    }
+
+    public static void AddRegisteredType(System.Type type)
+    {
+        if (!registeredTypes.Contains(type))
+        {
+            registeredTypes.Add(type);
+        }
+    }
+
+    public static void RemoveRegisteredType(System.Type type)
+    {
+        if (registeredTypes.Contains(type))
+        {
+            registeredTypes.Remove(type);
         }
     }
 
@@ -72,20 +82,24 @@ public static class GlobalAssets
 
     public static Sprite GetSquareSprite => Asset<Sprite>.Get("Square");
     public static Sprite GetCircleSprite => Asset<Sprite>.Get("Circle");
-    public static Texture2D GetMissingTexture => Asset<Texture2D>.Get("debugempty");
+    public static Sprite GetMissingTexture => Asset<Sprite>.Get("debugempty_0");
 }
 
 public static class Asset<T>
 {
-    private static Dictionary<string, T> assets = new Dictionary<string, T>();
+    static Asset()
+    {
+        assets = new Dictionary<string, T>();
+    }
+    private static Dictionary<string, T> assets;
 
     public static IReadOnlyDictionary<string, T> Assets => assets;
 
     public static bool Register(string id, T asset, bool overwrite = false)
     {
-        if(!GlobalAssets.RegisteredTypes.Contains(typeof(T)))
+        if(!GlobalAssets.IsTypeCollectionRegistered(typeof(T)))
         {
-            GlobalAssets.RegisteredTypes.Add(typeof(T));
+            GlobalAssets.AddRegisteredType(typeof(T));
         }
 
         if (!assets.ContainsKey(id))
@@ -115,7 +129,7 @@ public static class Asset<T>
             assets.Remove(id);
             if(assets.Count == 0)
             {
-                GlobalAssets.RegisteredTypes.Remove(typeof(T));
+                GlobalAssets.RemoveRegisteredType(typeof(T));
             }
         }
         else

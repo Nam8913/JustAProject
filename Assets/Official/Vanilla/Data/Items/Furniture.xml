@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Data>
     <!-- Basic Furniture -->
-    <Define>
+    <Define GameObjectTarget = "Thing">
         <Id>wood_table</Id>
         <label>Wood Table</label>
         <description>A simple wood table</description>
@@ -27,7 +27,7 @@
         </compsProps>
     </Define>
     
-    <Define>
+    <Define GameObjectTarget = "Thing">
         <Id>wood_chair</Id>
         <label>Wood Chair</label>
         <description>A simple wood chair</description>
@@ -53,7 +53,7 @@
         </compsProps>
     </Define>
     
-    <Define>
+    <Define GameObjectTarget = "Thing">
         <Id>wood_bed</Id>
         <label>Wood Bed</label>
         <description>A simple wood bed</description>
@@ -121,7 +121,7 @@
         </compsProps>
     </Define>
     
-    <Define>
+    <Define GameObjectTarget = "Thing">
         <Id>large_chest</Id>
         <label>Large Chest</label>
         <description>A large wooden storage chest</description>
@@ -152,7 +152,7 @@
         </compsProps>
     </Define>
     
-    <Define>
+    <Define GameObjectTarget = "Thing">
         <Id>barrel</Id>
         <label>Barrel</label>
         <description>A wooden barrel for storage</description>
@@ -184,7 +184,7 @@
     </Define>
     
     <!-- Crafting Stations -->
-    <Define>
+    <Define GameObjectTarget = "Thing">
         <Id>workbench</Id>
         <label>Workbench</label>
         <description>A crafting workbench</description>
@@ -215,7 +215,7 @@
         </compsProps>
     </Define>
     
-    <Define>
+    <Define GameObjectTarget = "Thing">
         <Id>furnace</Id>
         <label>Furnace</label>
         <description>A stone furnace for smelting</description>
@@ -253,7 +253,7 @@
         </compsProps>
     </Define>
     
-    <Define>
+    <Define GameObjectTarget = "Thing">
         <Id>anvil</Id>
         <label>Anvil</label>
         <description>A metalworking anvil</description>
@@ -279,7 +279,7 @@
         </compsProps>
     </Define>
     
-    <Define>
+    <Define GameObjectTarget = "Thing">
         <Id>loom</Id>
         <label>Loom</label>
         <description>A weaving loom</description>
@@ -305,7 +305,7 @@
         </compsProps>
     </Define>
     
-    <Define>
+    <Define GameObjectTarget = "Thing">
         <Id>campfire</Id>
         <label>Campfire</label>
         <description>A campfire for cooking and warmth</description>

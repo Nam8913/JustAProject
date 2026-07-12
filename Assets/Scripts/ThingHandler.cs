@@ -95,7 +95,13 @@ public static class ThingHandler
 
     public static DefineThing DeloymentThingToObject(Define define, GameObject targetObject)
     {
-        string typeName = getThingById[define.Id];
+        getThingById.TryGetValue(define.Id, out var typeName);
+        if(string.IsNullOrEmpty(typeName))
+        {
+            Debug.LogError($"No mapping found for id: {define.Id}");
+            return null;
+        }
+
         System.Type typeOfDifineThing = System.Type.GetType(typeName);
         if (typeOfDifineThing == null)
         {

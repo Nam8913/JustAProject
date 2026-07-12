@@ -35,6 +35,8 @@ namespace ModContent
 
         public T GetAsset<T>(string id)
         {
+            id = modMetaData.Meta.packageId + ":" + id;
+
             T rs = default(T);
             try
             {
@@ -60,6 +62,7 @@ namespace ModContent
 
         public T RegisterAsset<T>(string id, T asset, bool overwrite = false)
         {
+            id = modMetaData.Meta.packageId + ":" + id;
             Asset<T>.Register(id, asset, overwrite);
             return asset;
         }

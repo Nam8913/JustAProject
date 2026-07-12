@@ -4,7 +4,6 @@ using UnityEngine;
 public class LocalRefDefaultRS : MonoBehaviour
 {
     [SerializeField] private List<Sprite> listSpriteRef = new List<Sprite>();
-    [SerializeField] private List<Texture2D> listTextureRef = new List<Texture2D>();
     [SerializeField] private List<Material> listMaterialRef = new List<Material>();
     private static Dictionary<string, Sprite> dictSprite = new Dictionary<string, Sprite>();
     private static Dictionary<string, Material> dictMaterial = new Dictionary<string, Material>();
@@ -24,14 +23,6 @@ public class LocalRefDefaultRS : MonoBehaviour
             {
                 dictSprite.Add(item.name, item);
             Asset<Sprite>.Register(item.name, item);
-            }
-        }
-
-        if(listTextureRef != null && listTextureRef.Count > 0)
-        {
-            foreach(var item in listTextureRef)
-            {
-                Asset<Texture2D>.Register(item.name, item);
             }
         }
         
