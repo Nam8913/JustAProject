@@ -156,7 +156,10 @@ public class XmlConverterSettings
             { typeof(UnityEngine.Vector3Int), new UnityEngineVector3IntConverter() },
 
             // System types
-            { typeof(System.Type), new TypeXmlConverter() }
+            { typeof(System.Type), new TypeXmlConverter() },
+
+            // Enum types (chỉ dùng cho serialize, deserialize dùng DeserializeEnum<T>)
+            { typeof(System.Enum), new EnumXmlConverter() }
         }
     };
 

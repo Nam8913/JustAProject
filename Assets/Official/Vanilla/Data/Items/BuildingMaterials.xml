@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Data>
     <!-- Wood Building -->
-    <Define>
+    <Define GameObjectTarget = "Building">
         <Id>wood_wall</Id>
         <label>Wood Wall</label>
         <description>A basic wood wall section</description>
@@ -10,6 +10,340 @@
         <volume>15</volume>
         <mass>10</mass>
         <length>2</length>
+        <graphicData Class="AtlasGraphicData">
+            <atlasPath>tilemapGrid</atlasPath>
+            <metaData>
+                <li>
+                    <direction>Right|Bottom|BottomRight</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>0, 0</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Left|Right|BottomLeft|Bottom|BottomRight</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>16, 0</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Left|BottomLeft|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>32, 0</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>48, 0</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>TopLeft|Top|TopRight|Left|Right|BottomLeft|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>64, 0</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>TopLeft|Top|TopRight|Left|Right|Bottom|BottomRight</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>80, 0</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|Left|Right|BottomLeft|Bottom|BottomRight</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>96, 0</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|TopRight|Right|Bottom|BottomRight</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>0, 16</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>TopLeft|Top|TopRight|Left|Right|BottomLeft|Bottom|BottomRight</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>16, 16</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>TopLeft|Top|Left|BottomLeft|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>32, 16</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>48, 16</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>TopLeft|Top|Left|Right|BottomLeft|Bottom|BottomRight</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>64, 16</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|TopRight|Left|Right|BottomLeft|Bottom|BottomRight</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>80, 16</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>TopLeft|Top|Left|Right|BottomLeft|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>96, 16</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|TopRight|Right</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>0, 32</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>TopLeft|Top|TopRight|Left|Right</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>16, 32</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>TopLeft|Top|Left</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>32, 32</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>48, 32</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|Left|Right|BottomLeft|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>64, 32</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>TopLeft|Top|Left|Right|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>80, 32</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>TopLeft|Top|TopRight|Left|Right|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>96, 32</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Right</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>0, 48</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Left|Right</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>16, 48</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Left</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>32, 48</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>None</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>48, 48</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|Left|Right|Bottom|BottomRight</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>64, 48</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|TopRight|Left|Right|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>80, 48</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|TopRight|Left|Right|Bottom|BottomRight</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>96, 48</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Left|Right|BottomLeft|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>0, 64</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Left|Right|Bottom|BottomRight</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>16, 64</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|TopRight|Right|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>32, 64</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>TopLeft|Top|Left|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>48, 64</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Right|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>64, 64</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Left|Right|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>80, 64</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Left|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>96, 64</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>TopLeft|Top|Left|Right</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>0, 80</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|TopRight|Left|Right</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>16, 80</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|Right|Bottom|BottomRight</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>32, 80</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|Left|BottomLeft|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>48, 80</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|Right|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>64, 80</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|Left|Right|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>80, 80</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|Left|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>96, 80</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>TopLeft|Top|Left|Right|Bottom|BottomRight</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>32, 96</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|TopRight|Left|Right|BottomLeft|Bottom</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>48, 96</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|Right</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>64, 96</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|Left|Right</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>80, 96</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+                <li>
+                    <direction>Top|Left</direction>
+                    <pivot>0.5, 0.5</pivot>
+                    <startPos>96, 96</startPos>
+                    <size>12, 12</size>
+                    <pixelsPerUnit>12</pixelsPerUnit>
+                </li>
+            </metaData>
+        </graphicData>
         <compsProps>
             <li Class="Buildable_CompProperties">
                 <rotatable>true</rotatable>

@@ -10,72 +10,74 @@ namespace ModContent
 {
     public sealed class ModContentPack
     {
-        public void LoadContent(ModMetaData metadata,bool isOfficial = false)
+        private ModAssemblyHolder assemblyHolder = new ModAssemblyHolder();
+        public ContentHolder<Texture2D> textures;
+        private Dictionary<string, Define> defines = new Dictionary<string, Define>();
+
+        public void LoadContent(ModMetaData metadata, bool isOfficial = false)
         {
             assemblyHolder.LoadAssembly(Path.Combine(metadata.Root.FullName, AssemblyFolderName));
 
             LoadTexture(metadata, isOfficial);
             LoadData(metadata);
-            PostProcessGraphicData(metadata, isOfficial);
         }
 
         private void LoadTexture(ModMetaData metadata, bool isOfficial)
         {
             string texturesPath = Path.Combine(metadata.Root.FullName, FilePathHandler.GetNameFolderByType.TryGetValue(typeof(Texture2D), out string folderName) ? folderName : "Textures");
-            #if DEBUG_LOG_FLAG && false
+#if DEBUG_LOG_FLAG && false
             Debug.Log($"Loading textures from path: {texturesPath}");
-            #endif
+#endif
             //Load textures from all directories under texturesPath
-            if(Directory.Exists(texturesPath))
+            if (!Directory.Exists(texturesPath))
             {
-                IEnumerable<string> files = Directory.EnumerateFiles(texturesPath,"*",SearchOption.AllDirectories)
-                .Where(file => imageExtensions.Contains(Path.GetExtension(file).ToLowerInvariant()));
-                #if DEBUG_LOG_FLAG && false
-                Debug.Log($"Found {files.Count()} texture files in mod: {metadata.Meta.modName}");
-                #endif
-                if(files.Count() > 0) textures = new ContentHolder<Texture2D>();
-                foreach(var file in files)
+                return;
+            }
+
+            IEnumerable<string> files = Directory.EnumerateFiles(texturesPath, "*", SearchOption.AllDirectories)
+            .Where(file => imageExtensions.Contains(Path.GetExtension(file).ToLowerInvariant()));
+#if DEBUG_LOG_FLAG && false
+            Debug.Log($"Found {files.Count()} texture files in mod: {metadata.Meta.modName}");
+#endif
+            if (files.Count() > 0) textures = new ContentHolder<Texture2D>();
+            foreach (var file in files)
+            {
+                string relativePath = Path.GetRelativePath(texturesPath, file);
+                string key = Path.ChangeExtension(relativePath, null).Replace(Path.DirectorySeparatorChar, '/');
+                byte[] fileData = File.ReadAllBytes(file);
+                Texture2D texture = new Texture2D(2, 2);
+                if (texture.LoadImage(fileData))
                 {
-                    string relativePath = Path.GetRelativePath(texturesPath, file);
-                    string key = Path.ChangeExtension(relativePath, null).Replace(Path.DirectorySeparatorChar, '/');
-                    byte[] fileData = File.ReadAllBytes(file);
-                    Texture2D texture = new Texture2D(2, 2);
-                    if(texture.LoadImage(fileData))
-                    {
-                        texture.name = key;
-                    }
-                    else
-                    {
-                        Debug.LogError($"Failed to load texture at path: {file}");
-                    }
-                    if(texture != null)
-                    {
-                        textures.AddContent(key, texture);
-                        #if DEBUG_LOG_FLAG && false
-                        Debug.Log($"Loaded texture: {key} from mod: {metadata.Meta.modName}");
-                        #endif
-                    }
+                    texture.name = key;
                 }
-            }else
-            {
-                Debug.LogWarning($"Textures folder not found for mod: {metadata.Meta.modName} at path: {texturesPath}");
+                else
+                {
+                    Debug.LogError($"Failed to load texture at path: {file}");
+                }
+                if (texture != null)
+                {
+                    textures.AddContent(key, texture);
+#if DEBUG_LOG_FLAG && false
+                    Debug.Log($"Loaded texture: {key} from mod: {metadata.Meta.modName}");
+#endif
+                }
             }
         }
 
         private void LoadData(ModMetaData metadata)
         {
             string dataPath = Path.Combine(metadata.Root.FullName, DataFolderName);
-            if(!Directory.Exists(dataPath))
+            if (!Directory.Exists(dataPath))
             {
                 return;
             }
 
             //Load data from all directories under dataPath
-            IEnumerable<string> files = Directory.EnumerateFiles(dataPath,"*.xml",SearchOption.AllDirectories);
-            foreach(var file in files)
+            IEnumerable<string> files = Directory.EnumerateFiles(dataPath, "*.xml", SearchOption.AllDirectories);
+            foreach (var file in files)
             {
                 string content = File.ReadAllText(file);
-                if(string.IsNullOrEmpty(content))
+                if (string.IsNullOrEmpty(content))
                 {
                     Debug.LogWarning($"XML file at path {file} is empty. Skipping.");
                     continue;
@@ -83,38 +85,38 @@ namespace ModContent
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(content);
                 XmlNode root = doc.DocumentElement;
-                if(root.Name != "Data")
+                if (root.Name != "Data")
                 {
                     Debug.LogWarning($"Root node of XML file {file} is not 'Data'.");
                 }
-                if(root != null && root.HasChildNodes)
+                if (root != null && root.HasChildNodes)
                 {
-                    foreach(XmlNode node in root.ChildNodes)
+                    foreach (XmlNode node in root.ChildNodes)
                     {
-                        if(node.NodeType != XmlNodeType.Element)
+                        if (node.NodeType != XmlNodeType.Element)
                         {
                             continue;
                         }
                         System.Type type = TypeUtils.GetAllTypes().FirstOrDefault(t => t.Name == node.Name);
-                        if(type == null)
+                        if (type == null)
                         {
                             Debug.LogError($"Type {node.Name} not found for XML node in file {file}.At node: {node.OuterXml}");
                             continue;
                         }
-                        
+
                         var method = typeof(XmlLoader).GetMethod("DeserializeFromXml", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
                         var genericMethod = method.MakeGenericMethod(type);
                         object value = genericMethod.Invoke(null, new object[] { node, null, false });
 
                         RawData raw = value as RawData;
 
-                        if(raw == null)
+                        if (raw == null)
                         {
                             Debug.LogError($"Deserialized object from XML node is not of type RawData in file {file}. At node: {node.OuterXml}");
                             continue;
                         }
 
-                        if(string.IsNullOrEmpty(raw.Id))
+                        if (string.IsNullOrEmpty(raw.Id))
                         {
                             Debug.LogError($"RawData object deserialized from XML node has null or empty Id in file {file}. At node: {node.OuterXml}");
                             continue;
@@ -131,36 +133,32 @@ namespace ModContent
                                 methodInfo.GetParameters()[2].ParameterType == typeof(bool));
                         var genericAddMethod = addMethod.MakeGenericMethod(type);
                         genericAddMethod.Invoke(null, new object[] { raw.Id, value, false });
-                        
+
                         DatabaseThing.SetIdWithPackageId(raw.Id, metadata.Meta.packageId);
 
-                        if(value is Define define)
+                        if (value is Define define)
                         {
-                            if(string.IsNullOrEmpty(define.Id))
+                            if (string.IsNullOrEmpty(define.Id))
                             {
                                 continue;
                             }
                             defines.TryAdd(define.Id, define);
-                            
+
                         }
                     }
                 }
             }
         }
 
-        private ModAssemblyHolder assemblyHolder = new ModAssemblyHolder();
-        public ContentHolder<Texture2D> textures;
-        private Dictionary<string, Define> defines = new Dictionary<string, Define>();
-
         /// <summary>
         /// Post-process: convert GraphicData → Sprite và register vào Asset<Sprite>.
         /// Chạy SAU KHI load xong textures và data.
         /// </summary>
-        private void PostProcessGraphicData(ModMetaData metadata, bool isOfficial)
+        public void PostProcessGraphicData(ModMetaData metadata, bool isOfficial)
         {
             if (textures == null) return;
 
-            string prefix = $"{metadata.Meta.packageId}:";
+
 
             if (defines == null) return;
 
@@ -168,33 +166,35 @@ namespace ModContent
             {
                 if (kvp.Value is not Define define) continue;
                 if (define.graphicData == null) continue;
-
                 try
                 {
-                    
+
                     if (GraphicData.Is(define.graphicData, out SingleGraphicData singleGraphic))
                     {
                         ModAssets modAssets = GlobalAssets.GetModAssets(metadata.Meta.packageId);
-                        Sprite sprite = modAssets.GetAsset<Sprite>(prefix + singleGraphic.metaData.path);
-                        if(sprite == null)
+                        modAssets.TryGetAsset($"{singleGraphic.metaData.path}", out Sprite sprite);
+                        if (sprite == null)
                         {
-                            Texture2D texture = modAssets.GetAsset<Texture2D>(prefix + singleGraphic.metaData.path);
-                            if(texture == null)
+                            modAssets.TryGetAsset($"{singleGraphic.metaData.path}", out Texture2D texture);
+                            if (texture == null)
                             {
-                                Debug.LogError($"Texture not found for path: {prefix + singleGraphic.metaData.path} in mod: {metadata.Meta.modName} by request create graphicData by Def id: {define.Id} and type: {define.GetType().Name}");
+                                Debug.LogError($"Texture not found for path: {singleGraphic.metaData.path} in mod: {metadata.Meta.modName} by request create graphicData by Def id: {define.Id} and type: {define.GetType().Name}");
                                 sprite = GlobalAssets.GetMissingTexture;
                             }
                             else
                             {
+                                texture.wrapMode = singleGraphic.metaData.wrapMode;
+                                texture.filterMode = singleGraphic.metaData.filterMode;
                                 sprite = Sprite.Create(texture, new Rect(singleGraphic.metaData.startPos.x, singleGraphic.metaData.startPos.y, singleGraphic.metaData.size.x, singleGraphic.metaData.size.y), singleGraphic.metaData.pivot, singleGraphic.metaData.pixelsPerUnit, singleGraphic.metaData.extrude, singleGraphic.metaData.spriteMeshType, singleGraphic.metaData.border, singleGraphic.metaData.generateFallbackPhysicsShape);
                             }
-                            
+
                             if (sprite != null)
                             {
-                                Asset<Sprite>.Register(prefix + singleGraphic.metaData.path, sprite, false);
-                                #if DEBUG_LOG_FLAG && false
-                                Debug.Log($"Registered sprite asset with id: {prefix + singleGraphic.metaData.path} from mod: {metadata.Meta.modName}");
-                                #endif
+                                modAssets.TryRegisterAsset($"{singleGraphic.metaData.path}", sprite, false);
+                                //Asset<Sprite>.Register($"{singleGraphic.metaData.path}", sprite, false);
+#if DEBUG_LOG_FLAG && false
+                                Debug.Log($"Registered sprite asset with id: {metadata.Meta.packageId}:{singleGraphic.metaData.path} from mod: {metadata.Meta.modName}");
+#endif
                             }
                             else
                             {
@@ -203,113 +203,116 @@ namespace ModContent
                         }
                         continue;
                     }
-                    else
+                    else if (GraphicData.Is(define.graphicData, out MultiGraphicData multiGraphic))
                     {
-                        
-                        if (GraphicData.Is(define.graphicData, out MultiGraphicData multiGraphic))
+                        List<GraphicMetaData> getGraphic = new List<GraphicMetaData>();
+                        if (multiGraphic.metaData != null)
                         {
-                            List<GraphicMetaData> getGraphic = new List<GraphicMetaData>();
-                            if (multiGraphic.metaData != null)
-                            {
-                                getGraphic.AddRange(multiGraphic.metaData);
-                            }
-
-                            foreach(var graphicMeta in getGraphic)
-                            {
-                                if(graphicMeta == null || string.IsNullOrEmpty(graphicMeta.path)) continue;
-
-                                ModAssets modAssets = GlobalAssets.GetModAssets(metadata.Meta.packageId);
-                                Sprite sprite = modAssets.GetAsset<Sprite>(prefix + graphicMeta.path);
-                                if(sprite == null)
-                                {
-                                    Texture2D texture = modAssets.GetAsset<Texture2D>(prefix + graphicMeta.path);
-                                    if(texture == null)
-                                    {
-                                        Debug.LogError($"Texture not found for path: {prefix + graphicMeta.path} in mod: {metadata.Meta.modName} by request create graphicData by Def id: {define.Id} and type: {define.GetType().Name}");
-                                        sprite = GlobalAssets.GetMissingTexture;
-                                    }
-                                    else
-                                    {
-                                        sprite = Sprite.Create(texture, new Rect(graphicMeta.startPos.x, graphicMeta.startPos.y, graphicMeta.size.x, graphicMeta.size.y), graphicMeta.pivot, graphicMeta.pixelsPerUnit, graphicMeta.extrude, graphicMeta.spriteMeshType, graphicMeta.border, graphicMeta.generateFallbackPhysicsShape);
-                                    }
-                                    
-                                    if (sprite != null)
-                                    {
-                                        Asset<Sprite>.Register(prefix + graphicMeta.path, sprite, false);
-                                        #if DEBUG_LOG_FLAG && false
-                                        Debug.Log($"Registered sprite asset with id: {prefix + graphicMeta.path} from mod: {metadata.Meta.modName}");
-                                        #endif
-                                    }
-                                    else
-                                    {
-                                        Debug.LogError($"Failed to build sprite for '{define.Id}' with path '{graphicMeta.path}' in mod: {metadata.Meta.modName}");
-                                    }
-                                }
-                            }
+                            getGraphic.AddRange(multiGraphic.metaData);
                         }
-                        else if (GraphicData.Is(define.graphicData, out AtlasGraphicData atlasGraphic))
+
+                        foreach (var graphicMeta in getGraphic)
                         {
-                            string atlasPath = atlasGraphic.atlasPath;
-                            if(string.IsNullOrEmpty(atlasGraphic.atlasPath))
-                            {
-                                Debug.LogError($"AtlasGraphicData has null or empty atlasPath for {define.GetType().Name} with ID: {define.Id}");
-                                if(atlasGraphic.metaData == null)
-                                {
-                                    Debug.LogError($"AtlasGraphicData has null metaData for {define.GetType().Name} with ID: {define.Id}");
-                                    continue;
-                                }else if(atlasGraphic.metaData.Count == 0)
-                                {
-                                    Debug.LogError($"AtlasGraphicData has empty metaData for {define.GetType().Name} with ID: {define.Id}");
-                                    continue;
-                                }
-                                else if(string.IsNullOrEmpty(atlasGraphic.metaData.First().path))
-                                {
-                                    Debug.LogError($"AtlasGraphicData has null or empty path for {define.GetType().Name} with ID: {define.Id}");
-                                    continue;
-                                }
-                                atlasPath = atlasGraphic.metaData.First().path;
-                            }
+                            if (graphicMeta == null || string.IsNullOrEmpty(graphicMeta.path)) continue;
 
-                            List<GraphicMetaData> getGraphic = new List<GraphicMetaData>();
-                            if (atlasGraphic.metaData != null)
-                            {
-                                getGraphic.AddRange(atlasGraphic.metaData);
-                            }
                             ModAssets modAssets = GlobalAssets.GetModAssets(metadata.Meta.packageId);
-                            foreach(var graphicMeta in getGraphic)
+                            modAssets.TryGetAsset($"{graphicMeta.path}", out Sprite sprite);
+                            if (sprite == null)
                             {
-                                if(graphicMeta == null) continue;
-
-                                Sprite sprite = modAssets.GetAsset<Sprite>(prefix + graphicMeta.path);
-                                if(sprite == null)
+                                modAssets.TryGetAsset($"{graphicMeta.path}", out Texture2D texture);
+                                if (texture == null)
                                 {
-                                    Texture2D texture = modAssets.GetAsset<Texture2D>(prefix + graphicMeta.path);
-                                    if(texture == null)
-                                    {
-                                        Debug.LogError($"Texture not found for path: {prefix + graphicMeta.path} in mod: {metadata.Meta.modName} by request create graphicData by Def id: {define.Id} and type: {define.GetType().Name}");
-                                        sprite = GlobalAssets.GetMissingTexture;
-                                    }
-                                    else
-                                    {
-                                        sprite = Sprite.Create(texture, new Rect(graphicMeta.startPos.x, graphicMeta.startPos.y, graphicMeta.size.x, graphicMeta.size.y), graphicMeta.pivot, graphicMeta.pixelsPerUnit, graphicMeta.extrude, graphicMeta.spriteMeshType, graphicMeta.border, graphicMeta.generateFallbackPhysicsShape);
-                                    }
-                                    
-                                    if (sprite != null)
-                                    {
-                                        Asset<Sprite>.Register(prefix + graphicMeta.path, sprite, false);
-                                        #if DEBUG_LOG_FLAG && false
-                                        Debug.Log($"Registered sprite asset with id: {prefix + graphicMeta.path} from mod: {metadata.Meta.modName}");
-                                        #endif
-                                    }
-                                    else
-                                    {
-                                        Debug.LogError($"Failed to build sprite for '{define.Id}' with path '{graphicMeta.path}' in mod: {metadata.Meta.modName}");
-                                    }
+                                    Debug.LogError($"Texture not found for path: {graphicMeta.path} in mod: {metadata.Meta.modName} by request create graphicData by Def id: {define.Id} and type: {define.GetType().Name}");
+                                    sprite = GlobalAssets.GetMissingTexture;
                                 }
-                                continue;
+                                else
+                                {
+                                    texture.wrapMode = graphicMeta.wrapMode;
+                                    texture.filterMode = graphicMeta.filterMode;
+                                    sprite = Sprite.Create(texture, new Rect(graphicMeta.startPos.x, graphicMeta.startPos.y, graphicMeta.size.x, graphicMeta.size.y), graphicMeta.pivot, graphicMeta.pixelsPerUnit, graphicMeta.extrude, graphicMeta.spriteMeshType, graphicMeta.border, graphicMeta.generateFallbackPhysicsShape);
+                                }
+
+                                if (sprite != null)
+                                {
+                                    modAssets.TryRegisterAsset($"{graphicMeta.path}", sprite, false);
+                                    //Asset<Sprite>.Register($"{graphicMeta.path}", sprite, false);
+#if DEBUG_LOG_FLAG && false
+                                        Debug.Log($"Registered sprite asset with id: {metadata.Meta.packageId}:{graphicMeta.path} from mod: {metadata.Meta.modName}");
+#endif
+                                }
+                                else
+                                {
+                                    Debug.LogError($"Failed to build sprite for '{define.Id}' with path '{graphicMeta.path}' in mod: {metadata.Meta.modName}");
+                                }
                             }
                         }
                     }
+                    else if (GraphicData.Is(define.graphicData, out AtlasGraphicData atlasGraphic))
+                    {
+                        string atlasPath = atlasGraphic.atlasPath;
+                        if (string.IsNullOrEmpty(atlasGraphic.atlasPath))
+                        {
+                            Debug.LogError($"AtlasGraphicData has null or empty atlasPath for {define.GetType().Name} with ID: {define.Id}");
+                            if (atlasGraphic.metaData == null)
+                            {
+                                Debug.LogError($"AtlasGraphicData has null metaData for {define.GetType().Name} with ID: {define.Id}");
+                                continue;
+                            }
+                            else if (atlasGraphic.metaData.Count == 0)
+                            {
+                                Debug.LogError($"AtlasGraphicData has empty metaData for {define.GetType().Name} with ID: {define.Id}");
+                                continue;
+                            }
+                            else if (string.IsNullOrEmpty(atlasGraphic.metaData.First().path))
+                            {
+                                Debug.LogError($"AtlasGraphicData has null or empty path for {define.GetType().Name} with ID: {define.Id}");
+                                continue;
+                            }
+                            atlasPath = atlasGraphic.metaData.First().path;
+                        }
+
+
+                        ModAssets modAssets = GlobalAssets.GetModAssets(metadata.Meta.packageId);
+                        foreach (var graphicMeta in atlasGraphic.metaData)
+                        {
+                            if (graphicMeta == null) continue;
+                            string rsPath = $"{atlasPath}_{graphicMeta.direction.ToString().Replace(", ", "|")}";
+                            
+                            modAssets.TryGetAsset(rsPath, out Sprite sprite);
+                            if (sprite == null)
+                            {
+                                // load the atlas texture
+                                Texture2D texture = null;
+                                if (!modAssets.TryGetAsset(atlasPath, out texture))
+                                {
+                                    Debug.LogError($"Texture not found for path: {atlasPath} in mod: {metadata.Meta.modName} by request create graphicData by Def id: {define.Id} and type: {define.GetType().Name}");
+                                    sprite = GlobalAssets.GetMissingTexture;
+                                }
+                                else
+                                {
+                                    Vector2 reversePosition = new Vector2(graphicMeta.startPos.x, texture.height - graphicMeta.startPos.y - graphicMeta.size.y);
+                                    Debug.Log(System.String.Format("Creating sprite for {0} from atlas {1} with rect {2}, pivot {3}, pixelsPerUnit {4}, extrude {5}, spriteMeshType {6}, border {7}, generateFallbackPhysicsShape {8}",
+                                        rsPath, atlasPath, new Rect(reversePosition.x, reversePosition.y, graphicMeta.size.x, graphicMeta.size.y), graphicMeta.pivot, graphicMeta.pixelsPerUnit, graphicMeta.extrude, graphicMeta.spriteMeshType, graphicMeta.border, graphicMeta.generateFallbackPhysicsShape));
+                                    
+                                    texture.wrapMode = graphicMeta.wrapMode;
+                                    texture.filterMode = graphicMeta.filterMode;
+                                    sprite = Sprite.Create(texture, new Rect(reversePosition.x, reversePosition.y, graphicMeta.size.x, graphicMeta.size.y), graphicMeta.pivot, graphicMeta.pixelsPerUnit, graphicMeta.extrude, graphicMeta.spriteMeshType, graphicMeta.border, graphicMeta.generateFallbackPhysicsShape);
+                                }
+
+
+                                modAssets.TryRegisterAsset(rsPath, sprite, false);
+                                // Asset<Sprite>.Register(rsPath, sprite, false);
+#if DEBUG_LOG_FLAG && true
+                                Debug.Log($"Registered sprite asset with id: {metadata.Meta.packageId}:{rsPath} from mod: {metadata.Meta.modName}");
+#endif
+                            }
+                            continue;
+                        }
+                    }else
+                    {
+                        Debug.LogError($"GraphicData type {define.graphicData.GetType().Name} is not supported for {define.GetType().Name} with ID: {define.Id}");
+                    }
+
                 }
                 catch (System.Exception ex)
                 {

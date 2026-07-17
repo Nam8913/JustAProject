@@ -87,6 +87,9 @@ public class BuildGhostController : MonoBehaviour
         {
             //Load proper sprite from define data
             _ghostRenderer.sprite = GetSpriteForSelectedStructure(selected);
+        }else
+        {
+            Debug.LogError("selected structure is null. Cannot set ghost sprite.");
         }
 
         _ghostObject.SetActive(true);
@@ -304,89 +307,19 @@ public class BuildGhostController : MonoBehaviour
         if (selected == null)
         {
             Debug.LogError("Selected structure is null. Cannot get sprite.");
-            return null;
+            return GlobalAssets.GetMissingTexture;
         }
 
-        Sprite sprite = null;
+        // Dùng BuildUtility.GetSpriteForDefine() - đã xử lý Single/Multi/Atlas
+        Sprite sprite = BuildUtility.GetSpriteForDefine(selected, GetMouseWorldPosition());
 
-        string packageId = DatabaseThing.GetPackageIdById(selected.Id);
-        ModContent.ModAssets modAssets = GlobalAssets.GetModAssets(packageId);
-    
-        // if (modAssets != null)
-        //     return modAssets.GetAsset<Sprite>(selected.Id);
-
-        sprite = Asset<Sprite>.Get($"{packageId}:{selected.Id}");
-        if(sprite != null)
+        if (sprite != null)
         {
             return sprite;
         }
 
-        // if(selected.graphicData is not null && !string.IsNullOrEmpty(selected.Id))
-        // {
-        //     if(GraphicData.Is(selected.graphicData, out SingleGraphicData singleGraphic))
-        //     {
-        //         sprite = Asset<Sprite>.Get($"{DatabaseThing.GetPackageIdById(selected.Id)}:{singleGraphic.metaData.path}");
-        //         if(sprite == null)
-        //         {
-        //             Texture2D texture = Asset<Texture2D>.Get($"{DatabaseThing.GetPackageIdById(selected.Id)}:{singleGraphic.metaData.path}");
-        //             if(texture == null)
-        //             {
-        //                 Debug.LogError($"Failed to get texture for {selected.Id} at path: {singleGraphic.metaData.path}");
-        //                 return GlobalAssets.GetMissingTexture;
-        //             }
-        //             sprite = Sprite.Create(texture, new Rect(singleGraphic.metaData.startPos.x, singleGraphic.metaData.startPos.y, singleGraphic.metaData.size.x, singleGraphic.metaData.size.y), singleGraphic.metaData.pivot, singleGraphic.metaData.pixelsPerUnit);
-        //             if(!Asset<Sprite>.Register($"{DatabaseThing.GetPackageIdById(selected.Id)}:{singleGraphic.metaData.path}", sprite, false))
-        //             {
-        //                 Debug.LogWarning($"Failed to register sprite for {selected.Id} at path: {singleGraphic.metaData.path}");
-        //             }
-        //         }
-                
-        //         return sprite;
-        //     }else if(GraphicData.Is(selected.graphicData, out MultiGraphicData multiGraphic))
-        //     {
-        //         // For simplicity, return the first sprite in the list
-        //         if(multiGraphic.metaData != null && multiGraphic.metaData.Count > 0)
-        //         {
-        //             var firstMeta = multiGraphic.metaData[0];
-        //             sprite = Asset<Sprite>.Get($"{DatabaseThing.GetPackageIdById(selected.Id)}:{firstMeta.path}");
-        //             if(sprite == null)
-        //             {
-        //                 Texture2D texture = Asset<Texture2D>.Get($"{DatabaseThing.GetPackageIdById(selected.Id)}:{firstMeta.path}");
-        //                 if(texture == null)
-        //                 {
-        //                     return GlobalAssets.GetMissingTexture;
-        //                 }
-        //                 sprite = Sprite.Create(texture, new Rect(firstMeta.startPos.x, firstMeta.startPos.y, firstMeta.size.x, firstMeta.size.y), firstMeta.pivot, firstMeta.pixelsPerUnit);
-        //                 if(!Asset<Sprite>.Register($"{DatabaseThing.GetPackageIdById(selected.Id)}:{firstMeta.path}", sprite, false))
-        //                 {
-        //                     Debug.LogWarning($"Failed to register sprite for {selected.Id} at path: {firstMeta.path}");
-        //                     }
-        //                 }else
-        //                 {
-        //                     Debug.LogError($"Success to register sprite for {selected.Id} at path: {firstMeta.path}");
-        //                 }
-        //             }
-
-        //         return sprite;
-        //     }else
-        //     {
-        //         Debug.LogError($"GraphicData for {selected.Id} is neither SingleGraphicData nor MultiGraphicData.");
-        //     }
-        // }
-
-        sprite = GlobalAssets.GetMissingTexture;
-
-        Debug.LogError(string.Concat(
-            $"Failed to get sprite for selected structure with ID: {selected.Id}",
-            "\n Is GraphicData null? ", selected.graphicData == null,
-            "\n Is GraphicData SingleGraphicData? ", selected.graphicData is SingleGraphicData,
-            "\n Is GraphicData MultiGraphicData? ", selected.graphicData is MultiGraphicData,
-            "\n Selected structure ID: ", selected.Id,
-            "\n Selected structure package ID: ", DatabaseThing.GetPackageIdById(selected.Id),
-            "\n Selected structure graphicData: ", selected.graphicData?.ToString() ?? "null"
-        ));
-
-        return sprite;
+        Debug.LogWarning($"Sprite not found for: {selected.Id}. Using missing texture.");
+        return GlobalAssets.GetMissingTexture;
     }
 
     private GameObject CreateGhostRenderer()
@@ -400,18 +333,10 @@ public class BuildGhostController : MonoBehaviour
         render.sortingLayerName = ghostSortingLayer;
         render.sortingOrder = ghostSortingOrder;
 
-        // TODO: Load proper sprite from define data
-        // For now, create a simple white square texture at runtime
-        if (render.sprite == null)
-        {
-            Texture2D tex = new Texture2D(32, 32);
-            Color[] pixels = new Color[32 * 32];
-            for (int i = 0; i < pixels.Length; i++)
-                pixels[i] = Color.white;
-            tex.SetPixels(pixels);
-            tex.Apply();
-            render.sprite = Sprite.Create(tex, new Rect(0, 0, 32, 32), new Vector2(0.5f, 0.5f), 32);
-        }
+        // Sprite sẽ được set từ Define khi ActivateGhost()
+        // Không tạo placeholder trắng nữa
+
+        render.sprite = GlobalAssets.GetSquareSprite; // Placeholder sprite, sẽ được thay thế khi ActivateGhost()
 
         ghostRendererObj.SetActive(false);
 

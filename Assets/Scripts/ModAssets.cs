@@ -60,11 +60,32 @@ namespace ModContent
             return rs;
         }
 
+        public bool TryGetAsset<T>(string id, out T asset)
+        {
+            id = modMetaData.Meta.packageId + ":" + id;
+            return Asset<T>.Assets.TryGetValue(id, out asset);
+        }
+
         public T RegisterAsset<T>(string id, T asset, bool overwrite = false)
         {
             id = modMetaData.Meta.packageId + ":" + id;
             Asset<T>.Register(id, asset, overwrite);
             return asset;
+        }
+
+        public bool TryRegisterAsset<T>(string id, T asset, bool overwrite = false)
+        {
+            id = modMetaData.Meta.packageId + ":" + id;
+            if (overwrite || !Asset<T>.Assets.ContainsKey(id))
+            {
+                Asset<T>.Register(id, asset, overwrite);
+                return true;
+            }
+            else
+            {
+                Debug.LogWarning($"Asset of type {typeof(T).Name} with id {id} already exists in mod {modMetaData.Meta.modName}. Use overwrite=true to replace it.");
+                return false;
+            }
         }
     }
 }

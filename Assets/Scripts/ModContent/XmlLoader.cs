@@ -392,8 +392,81 @@ public static class XmlLoader
     /// <summary>
     /// Convert string value thành object type T using registered converters.
     /// </summary>
+    /// <summary>
+    /// Deserialize enum từ string. Hỗ trợ cả Flags và thường.
+    /// </summary>
+    /// <typeparam name="T">Enum type</typeparam>
+    /// <param name="value">String value: "ValueA" hoặc "ValueA|ValueB" (flags)</param>
+    public static T DeserializeEnum<T>(string value) where T : struct, System.Enum
+    {
+        Type enumType = typeof(T);
+
+        // Thử parse trực tiếp (hỗ trợ cả tên và số)
+        if (Enum.TryParse<T>(value, true, out T result))
+            return result;
+
+        // Flags enum: parse "ValueA|ValueB"
+        if (enumType.IsDefined(typeof(FlagsAttribute), false))
+        {
+            string[] parts = value.Split('|');
+            long combined = 0;
+            foreach (var part in parts)
+            {
+                string trimmed = part.Trim();
+                if (string.IsNullOrEmpty(trimmed)) continue;
+
+                if (Enum.TryParse<T>(trimmed, true, out T flag))
+                    combined |= Convert.ToInt64(flag);
+                else
+                    Debug.LogWarning($"Unknown enum flag '{trimmed}' for type {enumType.Name}");
+            }
+            return (T)Enum.ToObject(enumType, combined);
+        }
+
+        Debug.LogError($"Cannot parse enum value '{value}' for type {enumType.Name}");
+        return default;
+    }
+
+    /// <summary>
+    /// Deserialize enum không generic (qua reflection).
+    /// Dùng cho trường hợp T không có constraint struct, Enum.
+    /// </summary>
+    private static object DeserializeEnumReflect(Type enumType, string value)
+    {
+        // Thử parse trực tiếp (hỗ trợ cả tên và số)
+        if (Enum.TryParse(enumType, value, true, out object result))
+            return result;
+
+        // Flags enum: parse "ValueA|ValueB"
+        if (enumType.IsDefined(typeof(FlagsAttribute), false))
+        {
+            string[] parts = value.Split('|');
+            long combined = 0;
+            foreach (var part in parts)
+            {
+                string trimmed = part.Trim();
+                if (string.IsNullOrEmpty(trimmed)) continue;
+
+                if (Enum.TryParse(enumType, trimmed, true, out object flag))
+                    combined |= Convert.ToInt64(flag);
+                else
+                    Debug.LogWarning($"Unknown enum flag '{trimmed}' for type {enumType.Name}");
+            }
+            return Enum.ToObject(enumType, combined);
+        }
+
+        Debug.LogError($"Cannot parse enum value '{value}' for type {enumType.Name}");
+        return Activator.CreateInstance(enumType);
+    }
+
     private static object GetObjectFromString<T>(string value, XmlConverterSettings settings, XmlNode contextNode = null)
     {
+        // Fallback: nếu type là enum, dùng DeserializeEnum qua reflection
+        if (typeof(T).IsEnum)
+        {
+            return DeserializeEnumReflect(typeof(T), value);
+        }
+
         if (settings.TryGetConverter(typeof(T), out XmlConverter converter))
         {
             if (!converter.canRead)

@@ -40,7 +40,7 @@ public sealed class MultiGraphicData : GraphicData
 public sealed class AtlasGraphicData : GraphicData
 {
     public string atlasPath;
-    public List<GraphicMetaData> metaData;
+    public List<GraphicDataWithAtlas> metaData;
 }
 
 [System.Serializable]
@@ -55,5 +55,13 @@ public class GraphicMetaData
     public uint extrude = 0u;
     public SpriteMeshType spriteMeshType = SpriteMeshType.Tight;
     public bool generateFallbackPhysicsShape = false;
-}
 
+    // Texture
+    public TextureWrapMode wrapMode = TextureWrapMode.Clamp;
+    public FilterMode filterMode = FilterMode.Point;
+}
+[System.Serializable]
+public class GraphicDataWithAtlas : GraphicMetaData
+{
+    public Direction8 direction;
+}

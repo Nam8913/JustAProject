@@ -10,6 +10,7 @@ public static class GlobalAssets
     {
         // Initialize the mod asset mapping dictionary
         modAssetMapping = new Dictionary<string, ModContent.ModAssets>();
+        registeredTypes = new HashSet<System.Type>();
     }
     private static Dictionary<string, ModContent.ModAssets> modAssetMapping;
     private static HashSet<System.Type> registeredTypes;

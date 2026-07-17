@@ -43,6 +43,7 @@ namespace ModContent
             modContentPack = new ModContentPack();
             modContentPack.LoadContent(this,isOfficial);
             modAssets.LoadContentFromModPackToAssets();
+            modContentPack.PostProcessGraphicData(this, isOfficial);
         }
 
         private DirectoryInfo root;

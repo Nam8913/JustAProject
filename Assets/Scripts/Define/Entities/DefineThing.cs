@@ -93,6 +93,8 @@ public abstract class DefineThing : MonoBehaviour, IContainerOwner
         }
     }
 
+    public virtual void Setup(){}
+
     public T GetComp<T>() where T : EntitiesComp
     {
         foreach(var comp in components)
@@ -150,5 +152,6 @@ public abstract class DefineThing : MonoBehaviour, IContainerOwner
         this.labelDescription = def.description;
         this.modPackageId = DatabaseThing.GetPackageIdById(def.Id);
 
+        this.Setup();
     }
 }
