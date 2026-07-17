@@ -6,7 +6,7 @@ using UnityEngine;
 public class Creature : DefineThing
 {
     StatsHolder statsHolder;
-    BehaviorTree behaviorTree;
+    // BehaviorTree behaviorTree;
 
     public StatsHolder Stats => statsHolder;
     
