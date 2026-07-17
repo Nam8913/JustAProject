@@ -27,33 +27,6 @@ public class Building : DefineThing
         }
     }
 
-    /// <summary>
-    /// Update neighbor mask dựa trên neighbors xung quanh.
-    /// </summary>
-    public void UpdateNeighborMask()
-    {
-        Vector2Int tilePos = new Vector2Int(
-            Mathf.FloorToInt(transform.position.x),
-            Mathf.FloorToInt(transform.position.y));
-
-        neighborMask.mask = BuildUtility.GetDirection8ForTile(tilePos);
-    }
-
-    /// <summary>
-    /// Update sprite dựa trên neighbor mask hiện tại.
-    /// </summary>
-    public void UpdateSprite()
-    {
-        if (def == null) return;
-
-        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
-        if (renderer == null) return;
-
-        Sprite sprite = BuildUtility.GetSpriteForDefine(def, (Vector2)transform.position);
-        if (sprite != null)
-            renderer.sprite = sprite;
-    }
-
     [System.Serializable]
     public struct NeighborMask8
     {

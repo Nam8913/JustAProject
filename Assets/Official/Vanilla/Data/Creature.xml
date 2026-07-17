@@ -2,13 +2,7 @@
 <Data>
     <Define GameObjectTarget = "Creature">
         <Id>HumanDef</Id>
-        <compsProps>
-            <li Class="ContainerProperties">
-                <compClass>ProvideContainer_Comp</compClass>
-                <maxWeight>100</maxWeight>
-                <maxVolume>100</maxVolume>
-                <maxLength>100</maxLength>
-            </li>
-        </compsProps>
+        <label>Human</label>
+        <description>A human being</description>
     </Define>
 </Data>

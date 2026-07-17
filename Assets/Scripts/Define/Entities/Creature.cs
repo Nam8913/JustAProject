@@ -6,20 +6,15 @@ using UnityEngine;
 public class Creature : DefineThing
 {
     StatsHolder statsHolder;
-    TraitsHolder traitsHolder;
     BehaviorTree behaviorTree;
 
     public StatsHolder Stats => statsHolder;
-    public TraitsHolder Traits => traitsHolder;
     
     public Creature()
     {
-        labelName = "DefaultCreature";
-        labelDescription = "A creature with no special traits and no special abilities just for test.";
         statsHolder = new StatsHolder();
         BaseStats.AddAllBaseStatus(statsHolder);
         statsHolder.MS = 0.1f;
-        traitsHolder = new TraitsHolder();
     }
 
     void Awake()
