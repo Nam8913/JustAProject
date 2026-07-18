@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace BehaviorTreePro.Performance
 {
+    using BehaviorTree;
     public class NodePool<T> where T : NodeBT, new()
     {
         private readonly Stack<T> _pool = new Stack<T>();

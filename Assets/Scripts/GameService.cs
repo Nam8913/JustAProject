@@ -9,8 +9,6 @@ public class GameService
     static object _lock = new object();
     static GameService _gameService;
     static Camera _mainCamera;
-    static PlayerInputActions _playerInputActions = new PlayerInputActions();
-
     static Game _game;
     static Game_Play _gamePlay;
     static Game_Entry _gameEntry;
@@ -129,6 +127,8 @@ public class GameService
             }
             this._playerController.SetFocusObject(obj);
         }
+
+        PlayerInputController.Instance.SetTransform(obj.transform);
     }
 
     public GameObject GetFocusObject()
@@ -207,7 +207,7 @@ public class GameService
 
     public NavService Navigation => NavService.Instance;
 
-    public static PlayerInputActions PlayerInput => _playerInputActions;
+    public static PlayerInputController PlayerInput => PlayerInputController.Instance;
 
     public static void SetWorld(World world)
     {

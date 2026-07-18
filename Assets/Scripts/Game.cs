@@ -20,7 +20,6 @@ public abstract class Game : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public virtual void Start()
     {
-        GameService.PlayerInput.Enable();
         PoolManager.CreatePoolManager();
         HolderManager.CreateHolderManager();
     }
@@ -55,7 +54,6 @@ public abstract class Game : MonoBehaviour
 
     public virtual void OnDisable()
     {
-        GameService.PlayerInput.Disable();
     }
 
     public virtual void OnDestroy()

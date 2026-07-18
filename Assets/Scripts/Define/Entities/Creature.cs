@@ -1,15 +1,19 @@
 #if UNITY_EDITOR
 #define DEBUG_LOG_FLAG
 #endif
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Creature : DefineThing
 {
+    CircleCollider2D _collider;
     StatsHolder statsHolder;
     // BehaviorTree behaviorTree;
 
     public StatsHolder Stats => statsHolder;
-    
+    public Vector2 WorldPosition => transform.position;
+    public Vector2Int CurrentChunkPosition => Chunk.GetChunkPosition(transform.position);
+
     public Creature()
     {
         statsHolder = new StatsHolder();
@@ -19,29 +23,17 @@ public class Creature : DefineThing
 
     void Awake()
     {
-        // behaviorTree = GetComponent<BehaviorTree>();
-        // if (behaviorTree == null)
-        // {
-        //     behaviorTree = gameObject.AddComponent<BehaviorTree>();
-        // }
+        _collider = this.gameObject.AddComponent<CircleCollider2D>();
 
-        // RootNodeBH rootNode = behaviorTree.rootNode;
-        // if (rootNode == null)
-        // {
-        //     rootNode = BehaviorTreeFactory.CreateDefaultCreatureTree(this);
-        // }
-
-        // behaviorTree.Initialize(rootNode, this);
+        // set default circle sprite for the creature
+        SpriteRenderer sr = this.gameObject.GetOrAddComponent<SpriteRenderer>();
+        sr.sprite = GlobalAssets.GetCircleSprite;
     }
 
     public override void Start()
     {
         base.Start();
     }
-
-    public Vector2 WorldPosition => transform.position;
-
-    public Vector2Int CurrentChunkPosition => Chunk.GetChunkPosition(transform.position);
 
     public override void ConfigError()
     {

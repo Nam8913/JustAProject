@@ -86,12 +86,23 @@ namespace BehaviorTree.Debug.Editor
             string indent = new string(' ', depth * 2);
             string stateStr = node.CurrentState.ToString();
             bool isActive = node.IsRunning;
-
+            bool isSuccess = node.CurrentState == BHState.Success;
+            bool isFailure = node.CurrentState == BHState.Failure;
             GUIStyle style = new GUIStyle(EditorStyles.label);
             if (isActive)
             {
-                style.normal.textColor = Color.green;
+                style.normal.textColor = Color.yellow;
                 style.fontStyle = FontStyle.Bold;
+            }
+
+            if (isSuccess)
+            {
+                style.normal.textColor = Color.green;
+            }
+
+            if (isFailure)
+            {
+                style.normal.textColor = Color.red;
             }
 
             string tickInfo = node.TotalTicks > 0 ? $" [{node.LastTickDurationMs:F2}ms]" : "";

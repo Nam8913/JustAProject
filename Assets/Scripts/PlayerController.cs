@@ -514,13 +514,13 @@ public class PlayerController : MonoBehaviour
 
         public override void FixedUpdate(PlayerController controller)
         {
-            Rigidbody2D targetRigidbody = target != null ? target.GetComponent<Rigidbody2D>() : null;
-            if (targetRigidbody == null)
-            {
-                return;
-            }
+            // Rigidbody2D targetRigidbody = target != null ? target.GetComponent<Rigidbody2D>() : null;
+            // if (targetRigidbody == null)
+            // {
+            //     return;
+            // }
 
-            targetRigidbody.linearVelocity = controller.ReadDirectionalInput();
+            // targetRigidbody.linearVelocity = controller.ReadDirectionalInput();
         }
         public override void LateUpdate(PlayerController controller)
         {

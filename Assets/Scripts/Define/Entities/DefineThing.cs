@@ -139,6 +139,31 @@ public abstract class DefineThing : MonoBehaviour, IContainerOwner
         components.Add(comp);
         comp.owner = this;
     }
+
+    public List<string> Tags
+    {
+        get
+        {
+            if(def != null)
+            {
+                return def.tags;
+            }
+            else
+            {
+                return null;
+            }
+        }
+    }
+
+    public bool HasTag(string tag)
+    {
+        if(def != null && def.tags != null)
+        {
+            return def.tags.Contains(tag);
+        }
+        return false;
+    }
+
     public void SetDef(Define def)
     {
         if(def == null)

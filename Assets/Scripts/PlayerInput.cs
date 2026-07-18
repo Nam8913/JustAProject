@@ -3,10 +3,11 @@ using UnityEngine.InputSystem;
 
 public static class PlayerInput
 {
-    private static PlayerInputActions InputActions => GameService.PlayerInput;
-    public static Vector2 Move => InputActions.Player.Move.ReadValue<Vector2>();
-    public static Vector2 Look => InputActions.Player.Look.ReadValue<Vector2>();
-    public static Vector2 UIMousePosition => InputActions.UI.Point.ReadValue<Vector2>();
+    private static InputActionMap playerActionMap => GameService.PlayerInput.playerActionMap;
+    private static InputActionMap uiActionMap => GameService.PlayerInput.uiActionMap;
+    public static Vector2 Move => playerActionMap.FindAction("Move").ReadValue<Vector2>();
+    public static Vector2 Look => playerActionMap.FindAction("Look").ReadValue<Vector2>();
+    public static Vector2 UIMousePosition => uiActionMap.FindAction("Point").ReadValue<Vector2>();
     public static Vector2 MousePosition
     {
         get
@@ -17,7 +18,7 @@ public static class PlayerInput
     }
     public static bool isButtonPressed(string buttonName)
     {
-        var button = InputActions.Player.GetType().GetProperty(buttonName)?.GetValue(InputActions.Player) as InputAction;
+        var button = playerActionMap.FindAction(buttonName);
         if (button != null)
         {
             return button.WasPressedThisFrame();
@@ -31,7 +32,7 @@ public static class PlayerInput
 
     public static bool isButtonReleased(string buttonName)
     {
-        var button = InputActions.Player.GetType().GetProperty(buttonName)?.GetValue(InputActions.Player) as InputAction;
+        var button = playerActionMap.FindAction(buttonName);
         if (button != null)
         {
             return button.WasReleasedThisFrame();
@@ -45,7 +46,7 @@ public static class PlayerInput
 
     public static bool isButtonDown(string buttonName)
     {
-        var button = InputActions.Player.GetType().GetProperty(buttonName)?.GetValue(InputActions.Player) as InputAction;
+        var button = playerActionMap.FindAction(buttonName);
         if (button != null)
         {
             return button.IsPressed();

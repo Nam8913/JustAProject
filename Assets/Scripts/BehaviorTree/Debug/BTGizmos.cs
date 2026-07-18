@@ -42,7 +42,7 @@ namespace BehaviorTree.Debug
 
             if (_showSensorRanges)
             {
-                DrawSensorRanges();
+                // DrawSensorRanges();
             }
         }
 
@@ -55,7 +55,7 @@ namespace BehaviorTree.Debug
             else
                 Gizmos.color = _idleColor;
 
-            Gizmos.DrawWireSphere(transform.position + Vector3.up * 0.2f, 0.3f);
+            Gizmos.DrawWireSphere(transform.position, 0.3f);
         }
 
         private void DrawMoveTarget(Blackboard bb)

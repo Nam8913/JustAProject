@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviorTree
@@ -7,36 +8,54 @@ namespace BehaviorTree
         [SerializeField] private float _sightRange = 20f;
         public float SightRange => _sightRange;
         [SerializeField] private float _sightAngle = 90f;
-        [SerializeField] private LayerMask _targetLayers;
+        [SerializeField] private LayerMask _targetLayers = ~0;
         [SerializeField] private LayerMask _obstacleLayers;
+
+        [SerializeField] [ReadOnly] private List<GameObject> lastDetectedTargets = new List<GameObject>();
+        [SerializeField] [ReadOnly] private GameObject closestTarget;
 
         protected override void Sense()
         {
-            var colliders = Physics.OverlapSphere(transform.position, _sightRange, _targetLayers);
+            var colliders = Physics2D.OverlapCircleAll(transform.position, _sightRange, _targetLayers);
+            lastDetectedTargets.Clear();
 
             DefineThing closestThreat = null;
             float closestDist = float.MaxValue;
 
             for (int i = 0; i < colliders.Length; i++)
             {
-                var dir = colliders[i].transform.position - transform.position;
-                float angle = Vector3.Angle(transform.forward, dir);
+                if (colliders[i].gameObject == gameObject)
+                    continue;
 
+                var targetPos = (Vector2)colliders[i].transform.position;
+                var dir = targetPos - (Vector2)transform.position;
+                float distance = dir.magnitude;
+
+                // Kiểm tra góc nhìn (dùng transform.right)
+                float angle = Vector2.Angle(transform.right, dir);
                 if (angle > _sightAngle * 0.5f)
                     continue;
 
-                if (Physics.Raycast(transform.position, dir.normalized, dir.magnitude, _obstacleLayers))
+                // Kiểm tra obstacle chắn đường
+                var hit = Physics2D.Raycast(transform.position, dir.normalized, distance, _obstacleLayers);
+                if (hit.collider != null && hit.collider.gameObject != colliders[i].gameObject)
                     continue;
 
                 var creature = colliders[i].GetComponent<Creature>();
                 if (creature == null)
                     continue;
 
-                float dist = dir.sqrMagnitude;
-                if (dist < closestDist)
+                if (creature.HasTag("ZOMBIE"))
+                    continue;
+
+                lastDetectedTargets.Add(colliders[i].gameObject);
+
+                float distSqr = dir.sqrMagnitude;
+                if (distSqr < closestDist)
                 {
-                    closestDist = dist;
-                    closestThreat = creature; // Creature inherits from DefineThing
+                    closestDist = distSqr;
+                    closestThreat = creature;
+                    closestTarget = creature.gameObject;
                 }
             }
 
@@ -54,15 +73,59 @@ namespace BehaviorTree
 
         private void OnDrawGizmosSelected()
         {
-            Gizmos.color = Color.yellow;
+            Vector2 forward = transform.right;
+
+            // Vẽ tầm nhìn
+            Gizmos.color = new Color(1f, 1f, 0f, 0.05f);
             Gizmos.DrawWireSphere(transform.position, _sightRange);
 
-            Vector3 leftDir = Quaternion.Euler(0, -_sightAngle * 0.5f, 0) * transform.forward;
-            Vector3 rightDir = Quaternion.Euler(0, _sightAngle * 0.5f, 0) * transform.forward;
+            // Vẽ hình nón tầm nhìn
+            
+            int segments = 20;
+            float halfAngle = _sightAngle * 0.5f;
+            // Vector2 prevPoint = transform.position;
 
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawRay(transform.position, leftDir * _sightRange);
-            Gizmos.DrawRay(transform.position, rightDir * _sightRange);
+            // for (int i = 0; i <= segments; i++)
+            // {
+            //     float t = (float)i / segments;
+            //     float currentAngle = Mathf.Lerp(-halfAngle, halfAngle, t);
+            //     Vector2 dir = Quaternion.Euler(0, 0, currentAngle) * forward;
+            //     Vector2 point = (Vector2)transform.position + dir * _sightRange;
+
+            //     Gizmos.DrawLine(prevPoint, point);
+            //     prevPoint = point;
+            // }
+
+            // Vẽ các tia tầm nhìn
+            Gizmos.color = Color.black;
+            for (int i = 0; i <= segments; i++)
+            {
+                float t = (float)i / segments;
+                float currentAngle = Mathf.Lerp(-halfAngle, halfAngle, t);
+                Vector2 dir = Quaternion.Euler(0, 0, currentAngle) * forward;
+                Vector2 point = (Vector2)transform.position + dir * _sightRange;
+
+                Gizmos.DrawLine(transform.position, point);
+            }
+
+            // Vẽ đường viền hai bên
+            Vector2 leftDir = Quaternion.Euler(0, 0, -halfAngle) * forward;
+            Vector2 rightDir = Quaternion.Euler(0, 0, halfAngle) * forward;
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(transform.position, (Vector2)transform.position + leftDir * _sightRange);
+            Gizmos.DrawLine(transform.position, (Vector2)transform.position + rightDir * _sightRange);
+
+            // Vẽ hướng nhìn
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(transform.position, (Vector2)transform.position + forward * _sightRange * 0.5f);
+
+            // Vẽ line đến target
+            if (closestTarget != null)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(transform.position, closestTarget.transform.position);
+            }
         }
     }
 }

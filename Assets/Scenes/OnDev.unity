@@ -473,6 +473,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1567294779}
   - component: {fileID: 1567294780}
+  - component: {fileID: 1567294781}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -519,6 +520,35 @@ MonoBehaviour:
   listMaterialRef:
   - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+--- !u!114 &1567294781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1567294777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13907d6074296f54899b3479cda500c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputController
+  inputActions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  playerActionMap:
+    m_Name: Player
+    m_Id: b41ba3e8-85da-4bea-834f-c2be7fe0febb
+    m_Asset: {fileID: 0}
+    m_Actions: []
+    m_Bindings: []
+  uiActionMap:
+    m_Name: Ui
+    m_Id: 4e4a933f-941e-4131-a493-fc40e19bcc52
+    m_Asset: {fileID: 0}
+    m_Actions: []
+    m_Bindings: []
+  _playerTransform: {fileID: 0}
+  rgb2d: {fileID: 0}
+  _moveSpeed: 5
+  debugInfo: 
 --- !u!1 &1700652762
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,5 +4,16 @@
         <Id>HumanDef</Id>
         <label>Human</label>
         <description>A human being</description>
+        <tags>
+            <li>HUMAN</li>
+        </tags>
+    </Define>
+    <Define GameObjectTarget = "Creature">
+        <Id>ZombieDef</Id>
+        <label>Zombie</label>
+        <description>A mindless zombie</description>
+        <tags>
+            <li>ZOMBIE</li>
+        </tags>
     </Define>
 </Data>
