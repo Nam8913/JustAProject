@@ -26,6 +26,17 @@ namespace BehaviorTree
             _timeSinceLastTick = 0f;
             _needsReset = false;
             IsInitialized = true;
+
+            Blackboard.Set(BBKeys.Self, this.gameObject);
+            Define define = GetComponent<DefineThing>().def;
+            if (define != null)
+            {
+                Blackboard.Set(BBKeys.Define, define);
+            }
+            else
+            {
+                UnityEngine.Debug.LogWarning($"BehaviorTreeRunner on {gameObject.name} does not have a Define component. Blackboard key 'Define' will not be set.");
+            }
         }
 
         private void Update()

@@ -4,6 +4,10 @@ namespace BehaviorTree
 {
     public static class BBKeys
     {
+        // General
+        public static readonly BBKey<GameObject> Self = new("Self");
+        public static readonly BBKey<Define> Define = new("Define");
+
         // Movement
         public static readonly BBKey<Vector3> MoveTarget = new("MoveTarget");
         public static readonly BBKey<Vector3> LookTarget = new("LookTarget");

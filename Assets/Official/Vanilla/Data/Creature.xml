@@ -5,52 +5,44 @@
         <label>Human</label>
         <description>A human being</description>
         <compsProps>
-            <li>
-                <TestProp>
-                    <compClass>TestComp</compClass>
-                    <testFloat>42</testFloat>
-                </TestProp>
+            <li Class="TestProp">
+               <compClass>TestComp</compClass>
+                <testFloat>42</testFloat>
             </li>
-            <li>
-                <AttributesCompProperties>
-                    <compClass>AttributesComp</compClass>
-                    <attributes>
+            <li Class="AttributesCompProperties">
+                <compClass>AttributesComp</compClass>
+                <attributes>
                         <li>
                             <name>Strength</name>
-                            <value>10</value>
+                            <baseValue>10</baseValue>
                         </li>
                         <li>
                             <name>Agility</name>
-                            <value>10</value>
+                            <baseValue>10</baseValue>
                         </li>
                         <li>
                             <name>Intelligence</name>
-                            <value>10</value>
+                            <baseValue>10</baseValue>
                         </li>
-                    </attributes>
-                </AttributesCompProperties>
+                </attributes>
             </li>
-            <li>
-                <VitalsCompProperties>
-                    <compClass>VitalsComp</compClass>
-                    <maxHealth>100</maxHealth>
-                    <maxStamina>100</maxStamina>
-                </VitalsCompProperties>
+            <li Class="VitalsCompProperties">
+                <compClass>VitalsComp</compClass>
+                <maxHealth>100</maxHealth>
+                <maxStamina>100</maxStamina>
             </li>
-            <li>
-                <NeedsCompProperties>
-                    <compClass>NeedsComp</compClass>
-                    <needs>
-                        <li>
-                            <name>Hunger</name>
-                            <value>100</value>
-                        </li>
-                        <li>
-                            <name>Thirst</name>
-                            <value>100</value>
-                        </li>
-                    </needs>
-                </NeedsCompProperties>
+            <li Class="NeedsCompProperties">
+                <compClass>NeedsComp</compClass>
+                <needs>
+                    <li>
+                        <name>Hunger</name>
+                        <maxValue>100</maxValue>
+                    </li>
+                    <li>
+                        <name>Thirst</name>
+                        <maxValue>100</maxValue>
+                    </li>
+                </needs>
             </li>
         </compsProps>
         <tags>

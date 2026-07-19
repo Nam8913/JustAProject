@@ -14,6 +14,18 @@ namespace BehaviorTree
         [SerializeField] [ReadOnly] private List<GameObject> lastDetectedTargets = new List<GameObject>();
         [SerializeField] [ReadOnly] private GameObject closestTarget;
 
+        [Header("Debug")]
+        [SerializeField]
+        private bool drawGizmosDebug = true;
+        [SerializeField]
+        private bool drawVisionSphere = true;
+        [SerializeField]
+        private bool drawvisionCone = true;
+        [SerializeField]
+        private bool drawVisionRays = true;
+        [SerializeField]
+        private bool drawLineToTarget = true;
+
         protected override void Sense()
         {
             var colliders = Physics2D.OverlapCircleAll(transform.position, _sightRange, _targetLayers);
@@ -73,55 +85,59 @@ namespace BehaviorTree
 
         private void OnDrawGizmosSelected()
         {
+            if(!drawGizmosDebug)
+                return;
+
+
             Vector2 forward = transform.right;
-
-            // Vẽ tầm nhìn
-            Gizmos.color = new Color(1f, 1f, 0f, 0.05f);
-            Gizmos.DrawWireSphere(transform.position, _sightRange);
-
-            // Vẽ hình nón tầm nhìn
             
-            int segments = 20;
-            float halfAngle = _sightAngle * 0.5f;
-            // Vector2 prevPoint = transform.position;
-
-            // for (int i = 0; i <= segments; i++)
-            // {
-            //     float t = (float)i / segments;
-            //     float currentAngle = Mathf.Lerp(-halfAngle, halfAngle, t);
-            //     Vector2 dir = Quaternion.Euler(0, 0, currentAngle) * forward;
-            //     Vector2 point = (Vector2)transform.position + dir * _sightRange;
-
-            //     Gizmos.DrawLine(prevPoint, point);
-            //     prevPoint = point;
-            // }
-
-            // Vẽ các tia tầm nhìn
-            Gizmos.color = Color.black;
-            for (int i = 0; i <= segments; i++)
+            // Vẽ tầm nhìn
+            if(drawVisionSphere)
             {
-                float t = (float)i / segments;
-                float currentAngle = Mathf.Lerp(-halfAngle, halfAngle, t);
-                Vector2 dir = Quaternion.Euler(0, 0, currentAngle) * forward;
-                Vector2 point = (Vector2)transform.position + dir * _sightRange;
-
-                Gizmos.DrawLine(transform.position, point);
+                Gizmos.color = new Color(1f, 1f, 0f, 0.05f);
+                Gizmos.DrawWireSphere(transform.position, _sightRange);
             }
+            
+            float halfAngle = _sightAngle * 0.5f;
+            // Vẽ hình nón tầm nhìn
+            if (drawvisionCone)
+            {
+                int segments = 20;
+                Gizmos.color = Color.black;
+                for (int i = 0; i <= segments; i++)
+                {
+                    float t = (float)i / segments;
+                    float currentAngle = Mathf.Lerp(-halfAngle, halfAngle, t);
+                    Vector2 dir = Quaternion.Euler(0, 0, currentAngle) * forward;
+                    Vector2 point = (Vector2)transform.position + dir * _sightRange;
+
+                    Gizmos.DrawLine(transform.position, point);
+                }
+            }
+           
 
             // Vẽ đường viền hai bên
-            Vector2 leftDir = Quaternion.Euler(0, 0, -halfAngle) * forward;
-            Vector2 rightDir = Quaternion.Euler(0, 0, halfAngle) * forward;
+            if(drawvisionCone)
+            {
+                Vector2 leftDir = Quaternion.Euler(0, 0, -halfAngle) * forward;
+                Vector2 rightDir = Quaternion.Euler(0, 0, halfAngle) * forward;
 
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(transform.position, (Vector2)transform.position + leftDir * _sightRange);
-            Gizmos.DrawLine(transform.position, (Vector2)transform.position + rightDir * _sightRange);
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawLine(transform.position, (Vector2)transform.position + leftDir * _sightRange);
+                Gizmos.DrawLine(transform.position, (Vector2)transform.position + rightDir * _sightRange);
 
+            }
+            
             // Vẽ hướng nhìn
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(transform.position, (Vector2)transform.position + forward * _sightRange * 0.5f);
+            if(drawVisionRays)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawLine(transform.position, (Vector2)transform.position + forward * _sightRange * 0.2f);
+            }
+            
 
             // Vẽ line đến target
-            if (closestTarget != null)
+            if (closestTarget != null && drawLineToTarget)
             {
                 Gizmos.color = Color.red;
                 Gizmos.DrawLine(transform.position, closestTarget.transform.position);

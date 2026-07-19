@@ -15,25 +15,26 @@ public class Test : MonoBehaviour
         GameService.Ins.GlobalInitialize();
 
         Creature player = ThingHandler.CreateThingById("HumanDef") as Creature;
-        // if (player != null)
-        // {
-        //     GameService.Ins.SetFocusObject(player.gameObject);
-        // }
+        if (player != null)
+        {
+            GameService.Ins.SetFocusObject(player.gameObject);
+        }
 
-        // // Add debug components
-        // if (FindAnyObjectByType<BTLogger>() == null)
-        // {
-        //     var loggerGO = new GameObject("BTLogger");
-        //     loggerGO.AddComponent<BTLogger>();
-        // }
+        // Add debug components
+        if (FindAnyObjectByType<BTLogger>() == null)
+        {
+            var loggerGO = new GameObject("BTLogger");
+            loggerGO.AddComponent<BTLogger>();
+        }
 
-        // if (FindAnyObjectByType<BTStats>() == null)
-        // {
-        //     var statsGO = new GameObject("BTStats");
-        //     statsGO.AddComponent<BTStats>();
-        // }
+        if (FindAnyObjectByType<BTStats>() == null)
+        {
+            var statsGO = new GameObject("BTStats");
+            statsGO.AddComponent<BTStats>();
+        }
 
-        // Spawn50NPCs();
+        //Spawn50NPCs();
+        Spawn1NPC();
     }
 
     void Update()
@@ -72,6 +73,46 @@ public class Test : MonoBehaviour
             bb.Remove(BBKeys.InCombat);
         }
         Debug.Log("[Test] Removed InCombat for all NPCs");
+    }
+
+    [MakeButtonFuncOnTestClass(true)]
+    private void Spawn1NPC()
+    {
+        var scheduler = FindAnyObjectByType<BTScheduler>();
+        if (scheduler == null)
+        {
+            var schedulerGO = new GameObject("BTScheduler");
+            scheduler = schedulerGO.AddComponent<BTScheduler>();
+        }
+        var mainCam = Camera.main;
+        if (mainCam == null)
+        {
+            Debug.LogError("[Test] No MainCamera found! Add a camera tagged 'MainCamera'.");
+            return;
+        }
+        scheduler.SetPlayerTransform(mainCam.transform);
+
+        var creature = ThingHandler.CreateThingById("ZombieDef") as Creature;
+        if (creature == null) return;
+        creature.transform.position = (Vector3)(Random.insideUnitCircle * 30f);
+
+        var bb = new Blackboard();
+        bb.Set(BBKeys.HealthPercent, 1f);
+        _blackboards.Add(bb);
+
+        var (root, blackboard) = BuildSurvivalBehaviorTree(creature, bb);
+
+        var runner = creature.gameObject.AddComponent<BehaviorTreeRunner>();
+        runner.Initialize(root, blackboard);
+        runner.enabled = false;
+
+        var visionSensor = creature.gameObject.AddComponent<VisionSensor>();
+        visionSensor.Initialize(blackboard);
+
+        #if UNITY_EDITOR
+        creature.gameObject.AddComponent<BTGizmos>();
+        #endif
+        scheduler.Register(runner);
     }
 
     [MakeButtonFuncOnTestClass(true)]

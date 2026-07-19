@@ -2,7 +2,9 @@ using UnityEngine;
 [System.Serializable]
 public abstract class EntitiesComp
 {
+    [HideInInspector]
     public DefineThing owner;
+    [HideInInspector]
     public CompProperties props;
 
     public Define Def => owner.def;

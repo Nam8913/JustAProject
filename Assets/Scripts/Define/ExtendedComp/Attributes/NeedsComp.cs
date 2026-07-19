@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -15,7 +16,8 @@ public class NeedsComp : EntitiesComp
     /// <summary>
     /// Runtime state cho mỗi nhu cầu.
     /// </summary>
-    private Dictionary<string, NeedState> _needs;
+    [SerializeField]
+    private List<NeedState> _needs;
 
     /// <summary>
     /// Sự kiện khi giá trị nhu cầu thay đổi.
@@ -37,7 +39,7 @@ public class NeedsComp : EntitiesComp
 
     public override void Init()
     {
-        _needs = new Dictionary<string, NeedState>();
+        _needs = new List<NeedState>();
 
         var needsProps = props as NeedsCompProperties;
         if (needsProps == null || needsProps.needs == null)
@@ -49,7 +51,7 @@ public class NeedsComp : EntitiesComp
         {
             float startValue = needData.startValue >= 0 ? needData.startValue : needData.maxValue;
 
-            _needs[needData.name] = new NeedState
+            _needs.Add(new NeedState
             {
                 Name = needData.name,
                 CurrentValue = startValue,
@@ -57,7 +59,7 @@ public class NeedsComp : EntitiesComp
                 DecayRate = needData.decayRate,
                 CriticalThreshold = needData.criticalThreshold,
                 WasCritical = startValue < needData.criticalThreshold
-            };
+            });
         }
     }
 
@@ -70,9 +72,8 @@ public class NeedsComp : EntitiesComp
 
         float deltaTime = Time.deltaTime;
 
-        foreach (var kvp in _needs)
+        foreach (var need in _needs)
         {
-            var need = kvp.Value;
             float oldValue = need.CurrentValue;
 
             // Giá trị GIẢM theo thời gian
@@ -105,7 +106,7 @@ public class NeedsComp : EntitiesComp
     /// </summary>
     public NeedState GetNeed(string name)
     {
-        return _needs.TryGetValue(name, out var need) ? need : null;
+        return _needs.FirstOrDefault(n => n.Name == name);
     }
 
     /// <summary>
@@ -134,7 +135,7 @@ public class NeedsComp : EntitiesComp
     /// <summary>
     /// Lấy tất cả nhu cầu (cho debug/UI).
     /// </summary>
-    public IReadOnlyDictionary<string, NeedState> GetAllNeeds()
+    public IReadOnlyList<NeedState> GetAllNeeds()
     {
         return _needs;
     }
@@ -144,7 +145,7 @@ public class NeedsComp : EntitiesComp
     /// </summary>
     public IEnumerable<string> GetNeedNames()
     {
-        return (_needs?.Keys != null || _needs.Keys.Count > 0) ? _needs.Keys : Array.Empty<string>();
+        return _needs.Select(n => n.Name);
     }
 
     public string DebugString()
@@ -155,7 +156,7 @@ public class NeedsComp : EntitiesComp
         }
 
         string result = $"Needs ({owner?.LabelName}):\n";
-        foreach (var need in _needs.Values)
+        foreach (var need in _needs)
         {
             string status = need.IsCritical ? " [CRITICAL]" : "";
             result += $"  {need.Name}: {need.CurrentValue:F1}/{need.MaxValue}{status}\n";
@@ -166,6 +167,7 @@ public class NeedsComp : EntitiesComp
     /// <summary>
     /// Runtime state cho một nhu cầu.
     /// </summary>
+    [System.Serializable]
     public class NeedState
     {
         public string Name;

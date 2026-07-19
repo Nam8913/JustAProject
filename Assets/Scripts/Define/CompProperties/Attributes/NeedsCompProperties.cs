@@ -25,10 +25,6 @@ using System.Collections.Generic;
 [Serializable]
 public class NeedsCompProperties : CompProperties
 {
-    NeedsCompProperties()
-    {
-        compClass = typeof(NeedsComp);
-    }
     /// <summary>
     /// Danh sách các nhu cầu được định nghĩa cho entity này.
     /// </summary>

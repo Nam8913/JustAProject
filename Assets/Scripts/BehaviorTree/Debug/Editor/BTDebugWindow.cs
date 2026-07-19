@@ -134,14 +134,12 @@ namespace BehaviorTree.Debug.Editor
 
             _blackboardScrollPos = EditorGUILayout.BeginScrollView(_blackboardScrollPos);
 
-            DrawBlackboardKey(bb, "HealthPercent", BBKeys.HealthPercent);
-            DrawBlackboardKey(bb, "MoveTarget", BBKeys.MoveTarget);
-            DrawBlackboardKey(bb, "ThreatTarget", BBKeys.ThreatTarget);
-            DrawBlackboardKey(bb, "InCombat", BBKeys.InCombat);
-            DrawBlackboardKey(bb, "CanSeeEnemy", BBKeys.CanSeeEnemy);
-            DrawBlackboardKey(bb, "HeardNoise", BBKeys.HeardNoise);
-            DrawBlackboardKey(bb, "IsHungry", BBKeys.IsHungry);
-
+            List<string> keys = new List<string>(bb.GetAllKeys());
+            keys.Sort();
+            foreach (var key in keys)
+            {
+                DrawBlackboardKey(bb, key, new BBKey<object>(key));
+            }
             EditorGUILayout.EndScrollView();
         }
 

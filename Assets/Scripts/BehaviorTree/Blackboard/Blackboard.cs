@@ -9,6 +9,14 @@ namespace BehaviorTree
         private readonly Dictionary<string, List<Delegate>> _observers = new Dictionary<string, List<Delegate>>();
         private readonly object _lock = new object();
 
+        public IEnumerable<string> GetAllKeys()
+        {
+            lock (_lock)
+            {
+                return new List<string>(_data.Keys);
+            }
+        }
+
         public T Get<T>(BBKey<T> key)
         {
             lock (_lock)
@@ -26,7 +34,16 @@ namespace BehaviorTree
             {
                 if (_data.TryGetValue(key.Name, out var obj))
                 {
-                    value = (T)obj;
+                    try
+                    {
+                        value = (T)obj;
+                    }catch (InvalidCastException)
+                    {
+                        value = default;
+                        UnityEngine.Debug.LogError($"Blackboard key '{key.Name}' has a value of type '{obj.GetType().Name}', which cannot be cast to '{typeof(T).Name}'.");
+                        return false;
+                    }
+                    
                     return true;
                 }
             }
