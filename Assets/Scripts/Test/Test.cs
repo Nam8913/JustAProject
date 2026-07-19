@@ -15,25 +15,25 @@ public class Test : MonoBehaviour
         GameService.Ins.GlobalInitialize();
 
         Creature player = ThingHandler.CreateThingById("HumanDef") as Creature;
-        if (player != null)
-        {
-            GameService.Ins.SetFocusObject(player.gameObject);
-        }
+        // if (player != null)
+        // {
+        //     GameService.Ins.SetFocusObject(player.gameObject);
+        // }
 
-        // Add debug components
-        if (FindAnyObjectByType<BTLogger>() == null)
-        {
-            var loggerGO = new GameObject("BTLogger");
-            loggerGO.AddComponent<BTLogger>();
-        }
+        // // Add debug components
+        // if (FindAnyObjectByType<BTLogger>() == null)
+        // {
+        //     var loggerGO = new GameObject("BTLogger");
+        //     loggerGO.AddComponent<BTLogger>();
+        // }
 
-        if (FindAnyObjectByType<BTStats>() == null)
-        {
-            var statsGO = new GameObject("BTStats");
-            statsGO.AddComponent<BTStats>();
-        }
+        // if (FindAnyObjectByType<BTStats>() == null)
+        // {
+        //     var statsGO = new GameObject("BTStats");
+        //     statsGO.AddComponent<BTStats>();
+        // }
 
-        Spawn50NPCs();
+        // Spawn50NPCs();
     }
 
     void Update()

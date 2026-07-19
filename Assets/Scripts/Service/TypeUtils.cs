@@ -31,6 +31,11 @@ public static class TypeUtils
         
     }
 
+    public static bool IsPrimitive(this Type type)
+    {
+        return type.IsPrimitive;
+    }
+
     public static bool IsClass(this Type type)
     {
         return type.IsClass;

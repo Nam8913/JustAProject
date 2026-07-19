@@ -51,6 +51,11 @@ public static class ThingHandler
                 {
                     System.Type comp = compProp.compClass;
                     bool flag1 = comp != null;
+                    if(!flag1)
+                    {
+                        Debug.LogError($"Comp class is not specified in definition for thing with id {id}. Make sure the compClass is specified.");
+                        continue;
+                    }
                     bool flag2 = typeof(EntitiesComp).IsAssignableFrom(comp);
                     bool flag3 = comp.IsAbstract;
                     if(flag1 && flag2 && !flag3)
