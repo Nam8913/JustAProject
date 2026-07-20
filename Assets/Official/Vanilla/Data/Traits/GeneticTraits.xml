@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ================================================= -->
+<!-- DI TRUYỀN / GENETIC (hereditary, passed by bloodline) -->
+<!-- ================================================= -->
+<Data>
+    <Trait>
+        <Id>trait_genetic_albino</Id>
+        <name>Albino</name>
+        <label>Albino</label>
+        <description>Born with a genetic lack of pigmentation, resulting in pale skin, white hair, and heightened sensitivity to sunlight.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_dwarfism</Id>
+        <name>Dwarfism</name>
+        <label>Dwarfism</label>
+        <description>Inherited condition resulting in significantly shorter stature than average.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_gigantism</Id>
+        <name>Gigantism</name>
+        <label>Gigantism</label>
+        <description>Inherited condition resulting in unusually large stature and bone structure.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_hemophiliac</Id>
+        <name>Hemophiliac</name>
+        <label>Hemophiliac</label>
+        <description>Inherited blood disorder that prevents wounds from clotting properly, making injuries far more dangerous.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_inbred</Id>
+        <name>Inbred</name>
+        <label>Inbred</label>
+        <description>Descended from close relatives, resulting in weakened health and reduced mental acuity.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_fecund</Id>
+        <name>Fecund</name>
+        <label>Fecund</label>
+        <description>Inherited trait that greatly increases fertility and the likelihood of conceiving children.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_infertile</Id>
+        <name>Infertile</name>
+        <label>Infertile</label>
+        <description>Inherited condition that makes conceiving children difficult or impossible.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_colorblind</Id>
+        <name>Colorblind</name>
+        <label>Colorblind</label>
+        <description>Inherited condition that makes it difficult to distinguish between certain colors.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_ginger</Id>
+        <name>Ginger</name>
+        <label>Ginger</label>
+        <description>Carries the hereditary trait for red hair and fair, freckled skin.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_congenital_baldness</Id>
+        <name>Congenital Baldness</name>
+        <label>Congenital Baldness</label>
+        <description>Inherited predisposition to lose hair early in life.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_robust_constitution</Id>
+        <name>Robust Constitution</name>
+        <label>Robust Constitution</label>
+        <description>Inherited a naturally strong immune system, resisting illness and disease far better than most.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_frail_constitution</Id>
+        <name>Frail Constitution</name>
+        <label>Frail Constitution</label>
+        <description>Inherited a naturally weak immune system, making illness and disease far more dangerous.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_genius</Id>
+        <name>Genius</name>
+        <label>Genius</label>
+        <description>Born with exceptional inborn intellect that accelerates learning in almost any field.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_slow_witted</Id>
+        <name>Slow-Witted</name>
+        <label>Slow-Witted</label>
+        <description>Born with below-average intellect, making learning and complex reasoning more difficult.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_beautiful</Id>
+        <name>Beautiful</name>
+        <label>Beautiful</label>
+        <description>Inherited striking good looks that are noticed and remembered by nearly everyone.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_homely</Id>
+        <name>Homely</name>
+        <label>Homely</label>
+        <description>Inherited unremarkable or unattractive features that fail to make a strong impression.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_club_foot</Id>
+        <name>Club Foot</name>
+        <label>Club Foot</label>
+        <description>Born with a twisted foot that causes a permanent limp and reduced mobility.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_longevity</Id>
+        <name>Longevity</name>
+        <label>Longevity</label>
+        <description>Inherited genes that slow the effects of aging, granting an unusually long lifespan.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_left_handed</Id>
+        <name>Left-Handed</name>
+        <label>Left-Handed</label>
+        <description>Inherited a dominant left hand, a trait that runs in the family line.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_genetic_deformed_limb</Id>
+        <name>Deformed Limb</name>
+        <label>Deformed Limb</label>
+        <description>Born with a misshapen limb inherited from a family lineage of similar deformities.</description>
+    </Trait>
+</Data>

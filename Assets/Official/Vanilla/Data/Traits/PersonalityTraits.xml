@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Data>
+    <PersonalityTrait>
+        <Id>trait_personality_cautious</Id>
+        <name>Cautious</name>
+        <label>Cautious</label>
+        <description>Prefers to avoid danger and take a careful approach to situations.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_brave</Id>
+        <name>Brave</name>
+        <label>Brave</label>
+        <description>Faces danger head-on and is willing to take risks.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_cowardly</Id>
+        <name>Cowardly</name>
+        <label>Cowardly</label>
+        <description>Avoids conflict and flees from danger whenever possible.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_reckless</Id>
+        <name>Reckless</name>
+        <label>Reckless</label>
+        <description>Acts without thinking of consequences, often endangering self and others.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_fearless</Id>
+        <name>Fearless</name>
+        <label>Fearless</label>
+        <description>Shows no fear even in the most dangerous situations.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_timid</Id>
+        <name>Timid</name>
+        <label>Timid</label>
+        <description>Easily frightened and hesitant to act.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_friendly</Id>
+        <name>Friendly</name>
+        <label>Friendly</label>
+        <description>Warm and approachable, quick to build rapport with others.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_hostile</Id>
+        <name>Hostile</name>
+        <label>Hostile</label>
+        <description>Quick to anger and often confrontational toward others.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_sociable</Id>
+        <name>Sociable</name>
+        <label>Sociable</label>
+        <description>Enjoys the company of others and seeks out social interaction.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_introverted</Id>
+        <name>Introverted</name>
+        <label>Introverted</label>
+        <description>Prefers solitude and finds large social gatherings draining.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_charismatic</Id>
+        <name>Charismatic</name>
+        <label>Charismatic</label>
+        <description>Naturally charming and able to influence others with ease.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_aloof</Id>
+        <name>Aloof</name>
+        <label>Aloof</label>
+        <description>Keeps emotional distance and rarely engages personally with others.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_shy</Id>
+        <name>Shy</name>
+        <label>Shy</label>
+        <description>Nervous and reserved around unfamiliar people.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_outgoing</Id>
+        <name>Outgoing</name>
+        <label>Outgoing</label>
+        <description>Confident and energetic in social settings.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_gregarious</Id>
+        <name>Gregarious</name>
+        <label>Gregarious</label>
+        <description>Thrives in crowds and constantly seeks out new company.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_honest</Id>
+        <name>Honest</name>
+        <label>Honest</label>
+        <description>Always tells the truth, even when it is inconvenient.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_deceptive</Id>
+        <name>Deceptive</name>
+        <label>Deceptive</label>
+        <description>Frequently lies or misleads others to achieve their goals.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_trustworthy</Id>
+        <name>Trustworthy</name>
+        <label>Trustworthy</label>
+        <description>Reliable and consistent, keeps promises without fail.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_manipulative</Id>
+        <name>Manipulative</name>
+        <label>Manipulative</label>
+        <description>Skilled at controlling others through subtle influence.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_kind</Id>
+        <name>Kind</name>
+        <label>Kind</label>
+        <description>Treats others with warmth, care, and consideration.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_cruel</Id>
+        <name>Cruel</name>
+        <label>Cruel</label>
+        <description>Takes pleasure in causing pain or suffering to others.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_generous</Id>
+        <name>Generous</name>
+        <label>Generous</label>
+        <description>Freely gives time, resources, or help to those in need.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_greedy</Id>
+        <name>Greedy</name>
+        <label>Greedy</label>
+        <description>Obsessed with acquiring wealth and possessions.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_selfish</Id>
+        <name>Selfish</name>
+        <label>Selfish</label>
+        <description>Prioritizes personal gain over the wellbeing of others.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_altruistic</Id>
+        <name>Altruistic</name>
+        <label>Altruistic</label>
+        <description>Selflessly devoted to the welfare of others.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_ruthless</Id>
+        <name>Ruthless</name>
+        <label>Ruthless</label>
+        <description>Shows no mercy in pursuit of their goals.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_compassionate</Id>
+        <name>Compassionate</name>
+        <label>Compassionate</label>
+        <description>Deeply empathetic toward the suffering of others.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_coldhearted</Id>
+        <name>Coldhearted</name>
+        <label>Coldhearted</label>
+        <description>Emotionally distant and indifferent to others' pain.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_vengeful</Id>
+        <name>Vengeful</name>
+        <label>Vengeful</label>
+        <description>Holds grudges and actively seeks retribution.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_forgiving</Id>
+        <name>Forgiving</name>
+        <label>Forgiving</label>
+        <description>Quick to let go of anger and grant second chances.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_righteous</Id>
+        <name>Righteous</name>
+        <label>Righteous</label>
+        <description>Strongly guided by a personal sense of justice and morality.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_corrupt</Id>
+        <name>Corrupt</name>
+        <label>Corrupt</label>
+        <description>Willing to abandon principles for personal advantage.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_calm</Id>
+        <name>Calm</name>
+        <label>Calm</label>
+        <description>Remains composed and level-headed under pressure.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_hottempered</Id>
+        <name>Hot-tempered</name>
+        <label>Hot-tempered</label>
+        <description>Quick to anger and prone to emotional outbursts.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_cheerful</Id>
+        <name>Cheerful</name>
+        <label>Cheerful</label>
+        <description>Maintains a bright, positive outlook in most situations.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_melancholic</Id>
+        <name>Melancholic</name>
+        <label>Melancholic</label>
+        <description>Prone to sadness and reflective, somber moods.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_anxious</Id>
+        <name>Anxious</name>
+        <label>Anxious</label>
+        <description>Easily worried and often expects the worst outcome.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_stoic</Id>
+        <name>Stoic</name>
+        <label>Stoic</label>
+        <description>Suppresses emotion and endures hardship without complaint.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_optimistic</Id>
+        <name>Optimistic</name>
+        <label>Optimistic</label>
+        <description>Believes things will generally turn out well.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_pessimistic</Id>
+        <name>Pessimistic</name>
+        <label>Pessimistic</label>
+        <description>Expects the worst and focuses on potential downsides.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_content</Id>
+        <name>Content</name>
+        <label>Content</label>
+        <description>Satisfied with life and rarely seeks more than what they have.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_jealous</Id>
+        <name>Jealous</name>
+        <label>Jealous</label>
+        <description>Easily envious of others' success or possessions.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_passionate</Id>
+        <name>Passionate</name>
+        <label>Passionate</label>
+        <description>Pursues interests and relationships with intense emotion.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_apathetic</Id>
+        <name>Apathetic</name>
+        <label>Apathetic</label>
+        <description>Shows little interest or concern about most things.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_moody</Id>
+        <name>Moody</name>
+        <label>Moody</label>
+        <description>Emotional state shifts quickly and unpredictably.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_serene</Id>
+        <name>Serene</name>
+        <label>Serene</label>
+        <description>Radiates a deep sense of inner peace and tranquility.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_curious</Id>
+        <name>Curious</name>
+        <label>Curious</label>
+        <description>Eager to explore, learn, and ask questions about the world.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_wise</Id>
+        <name>Wise</name>
+        <label>Wise</label>
+        <description>Possesses deep understanding gained through experience.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_naive</Id>
+        <name>Naive</name>
+        <label>Naive</label>
+        <description>Overly trusting and lacking worldly experience.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_cunning</Id>
+        <name>Cunning</name>
+        <label>Cunning</label>
+        <description>Clever and resourceful, especially in deceiving others.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_foolish</Id>
+        <name>Foolish</name>
+        <label>Foolish</label>
+        <description>Prone to poor judgment and careless decisions.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_analytical</Id>
+        <name>Analytical</name>
+        <label>Analytical</label>
+        <description>Approaches problems through logic and careful reasoning.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_perceptive</Id>
+        <name>Perceptive</name>
+        <label>Perceptive</label>
+        <description>Quick to notice details that others might overlook.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_absentminded</Id>
+        <name>Absent-minded</name>
+        <label>Absent-minded</label>
+        <description>Frequently forgetful and distracted from surroundings.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_studious</Id>
+        <name>Studious</name>
+        <label>Studious</label>
+        <description>Devoted to learning and the pursuit of knowledge.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_ignorant</Id>
+        <name>Ignorant</name>
+        <label>Ignorant</label>
+        <description>Lacks awareness or knowledge of important matters.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_diligent</Id>
+        <name>Diligent</name>
+        <label>Diligent</label>
+        <description>Works hard and persists steadily toward their goals.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_lazy</Id>
+        <name>Lazy</name>
+        <label>Lazy</label>
+        <description>Avoids effort and prefers the easiest path available.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_ambitious</Id>
+        <name>Ambitious</name>
+        <label>Ambitious</label>
+        <description>Driven by a strong desire for success, power, or achievement.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_complacent</Id>
+        <name>Complacent</name>
+        <label>Complacent</label>
+        <description>Satisfied with the status quo and resistant to change.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_meticulous</Id>
+        <name>Meticulous</name>
+        <label>Meticulous</label>
+        <description>Pays extremely close attention to detail and precision.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_sloppy</Id>
+        <name>Sloppy</name>
+        <label>Sloppy</label>
+        <description>Careless and disorganized in work or habits.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_perfectionist</Id>
+        <name>Perfectionist</name>
+        <label>Perfectionist</label>
+        <description>Holds extremely high standards and rarely feels satisfied.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_disciplined</Id>
+        <name>Disciplined</name>
+        <label>Disciplined</label>
+        <description>Maintains strict self-control and consistent habits.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_impulsive</Id>
+        <name>Impulsive</name>
+        <label>Impulsive</label>
+        <description>Acts on sudden urges without considering consequences.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_patient</Id>
+        <name>Patient</name>
+        <label>Patient</label>
+        <description>Able to wait calmly without frustration.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_impatient</Id>
+        <name>Impatient</name>
+        <label>Impatient</label>
+        <description>Easily frustrated by delays or slow progress.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_loyal</Id>
+        <name>Loyal</name>
+        <label>Loyal</label>
+        <description>Remains devoted and faithful to allies and causes.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_treacherous</Id>
+        <name>Treacherous</name>
+        <label>Treacherous</label>
+        <description>Prone to betrayal, even of close allies.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_fickle</Id>
+        <name>Fickle</name>
+        <label>Fickle</label>
+        <description>Frequently changes opinions, loyalties, or affections.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_independent</Id>
+        <name>Independent</name>
+        <label>Independent</label>
+        <description>Prefers to rely on themselves rather than others.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_submissive</Id>
+        <name>Submissive</name>
+        <label>Submissive</label>
+        <description>Easily yields to the will or authority of others.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_commanding</Id>
+        <name>Commanding</name>
+        <label>Commanding</label>
+        <description>Naturally takes charge and directs others with authority.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_rebellious</Id>
+        <name>Rebellious</name>
+        <label>Rebellious</label>
+        <description>Resists authority and established rules on principle.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_obedient</Id>
+        <name>Obedient</name>
+        <label>Obedient</label>
+        <description>Readily follows orders and respects authority.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_diplomatic</Id>
+        <name>Diplomatic</name>
+        <label>Diplomatic</label>
+        <description>Skilled at resolving conflict and negotiating peacefully.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_arrogant</Id>
+        <name>Arrogant</name>
+        <label>Arrogant</label>
+        <description>Overestimates their own abilities and looks down on others.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_humble</Id>
+        <name>Humble</name>
+        <label>Humble</label>
+        <description>Modest about their own abilities and achievements.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_proud</Id>
+        <name>Proud</name>
+        <label>Proud</label>
+        <description>Places great importance on personal honor and reputation.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_modest</Id>
+        <name>Modest</name>
+        <label>Modest</label>
+        <description>Downplays their own accomplishments and avoids attention.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_vain</Id>
+        <name>Vain</name>
+        <label>Vain</label>
+        <description>Excessively concerned with their own appearance and image.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_superstitious</Id>
+        <name>Superstitious</name>
+        <label>Superstitious</label>
+        <description>Believes strongly in omens, luck, and unseen forces.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_pragmatic</Id>
+        <name>Pragmatic</name>
+        <label>Pragmatic</label>
+        <description>Focuses on practical outcomes rather than ideals.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_idealistic</Id>
+        <name>Idealistic</name>
+        <label>Idealistic</label>
+        <description>Strongly guided by principles and a vision of a better world.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_cynical</Id>
+        <name>Cynical</name>
+        <label>Cynical</label>
+        <description>Distrustful of others' motives and skeptical of good intentions.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_stubborn</Id>
+        <name>Stubborn</name>
+        <label>Stubborn</label>
+        <description>Refuses to change their mind once it is made up.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_flexible</Id>
+        <name>Flexible</name>
+        <label>Flexible</label>
+        <description>Adapts easily to new situations and changing plans.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_paranoid</Id>
+        <name>Paranoid</name>
+        <label>Paranoid</label>
+        <description>Constantly suspicious of hidden threats or betrayal.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_trusting</Id>
+        <name>Trusting</name>
+        <label>Trusting</label>
+        <description>Readily believes in the good intentions of others.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_mysterious</Id>
+        <name>Mysterious</name>
+        <label>Mysterious</label>
+        <description>Reveals little about themselves, keeping others guessing.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_eccentric</Id>
+        <name>Eccentric</name>
+        <label>Eccentric</label>
+        <description>Behaves in unconventional or unusual ways.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_playful</Id>
+        <name>Playful</name>
+        <label>Playful</label>
+        <description>Approaches life with humor and a lighthearted spirit.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_serious</Id>
+        <name>Serious</name>
+        <label>Serious</label>
+        <description>Rarely jokes and treats most matters with gravity.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_adventurous</Id>
+        <name>Adventurous</name>
+        <label>Adventurous</label>
+        <description>Seeks out new experiences and unfamiliar places.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_homebody</Id>
+        <name>Homebody</name>
+        <label>Homebody</label>
+        <description>Prefers the comfort and familiarity of home over travel.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_materialistic</Id>
+        <name>Materialistic</name>
+        <label>Materialistic</label>
+        <description>Places high value on wealth and possessions.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_frugal</Id>
+        <name>Frugal</name>
+        <label>Frugal</label>
+        <description>Careful and sparing with money and resources.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_devout</Id>
+        <name>Devout</name>
+        <label>Devout</label>
+        <description>Deeply committed to their faith or beliefs.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_protective</Id>
+        <name>Protective</name>
+        <label>Protective</label>
+        <description>Strongly driven to shield others from harm.</description>
+    </PersonalityTrait>
+    <PersonalityTrait>
+        <Id>trait_personality_competitive</Id>
+        <name>Competitive</name>
+        <label>Competitive</label>
+        <description>Driven to outperform others and win at all costs.</description>
+    </PersonalityTrait>
+</Data>

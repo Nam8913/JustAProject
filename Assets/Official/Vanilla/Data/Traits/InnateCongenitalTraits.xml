@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ================================================= -->
+<!-- BẨM SINH / INNATE-CONGENITAL (nature, present since birth) -->
+<!-- ================================================= -->
+<Data>
+    <Trait>
+        <Id>trait_psychopath</Id>
+        <name>Psychopath</name>
+        <label>Psychopath</label>
+        <description>Lacks empathy and has no remorse for their actions.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_sociopath</Id>
+        <name>Sociopath</name>
+        <label>Sociopath</label>
+        <description>Disregards social norms and rules, acting purely according to their own self-interest.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_empath</Id>
+        <name>Empath</name>
+        <label>Empath</label>
+        <description>Innately attuned to the emotions of others, often feeling their pain and joy as if it were their own.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_narcissist</Id>
+        <name>Narcissist</name>
+        <label>Narcissist</label>
+        <description>Possesses an inborn, unshakeable belief in their own superiority over others.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_prodigy</Id>
+        <name>Prodigy</name>
+        <label>Prodigy</label>
+        <description>Displayed extraordinary talent in a particular skill from a very young age.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_savant</Id>
+        <name>Savant</name>
+        <label>Savant</label>
+        <description>Possesses an extraordinary, narrowly-focused talent despite struggling in most other areas.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_slow_learner</Id>
+        <name>Slow Learner</name>
+        <label>Slow Learner</label>
+        <description>Struggles from birth to grasp new skills and information at a normal pace.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_sixth_sense</Id>
+        <name>Sixth Sense</name>
+        <label>Sixth Sense</label>
+        <description>Has an inborn intuition that warns of danger or hidden truths before they become apparent.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_photographic_memory</Id>
+        <name>Photographic Memory</name>
+        <label>Photographic Memory</label>
+        <description>Born with the ability to recall images and details with near-perfect accuracy.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_kleptomaniac</Id>
+        <name>Kleptomaniac</name>
+        <label>Kleptomaniac</label>
+        <description>Feels an uncontrollable, innate urge to steal, regardless of need or risk.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_pyromaniac</Id>
+        <name>Pyromaniac</name>
+        <label>Pyromaniac</label>
+        <description>Feels an innate fascination with fire and an urge to set things ablaze.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_sleepwalker</Id>
+        <name>Sleepwalker</name>
+        <label>Sleepwalker</label>
+        <description>Prone to walking and performing actions while still fully asleep.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_light_sleeper</Id>
+        <name>Light Sleeper</name>
+        <label>Light Sleeper</label>
+        <description>Wakes at the slightest sound or disturbance, rarely achieving deep rest.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_deep_sleeper</Id>
+        <name>Deep Sleeper</name>
+        <label>Deep Sleeper</label>
+        <description>Sleeps so soundly that even loud noises or danger rarely wake them.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_quick_reflexes</Id>
+        <name>Quick Reflexes</name>
+        <label>Quick Reflexes</label>
+        <description>Born with unusually fast reaction time to sudden events.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_clumsy</Id>
+        <name>Clumsy</name>
+        <label>Clumsy</label>
+        <description>Naturally poor coordination leads to frequent stumbles, drops, and accidents.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_green_thumb</Id>
+        <name>Green Thumb</name>
+        <label>Green Thumb</label>
+        <description>Has an innate talent for nurturing plants, making them grow stronger and faster.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_animal_whisperer</Id>
+        <name>Animal Whisperer</name>
+        <label>Animal Whisperer</label>
+        <description>Naturally at ease with animals, easily earning their trust and calm.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_night_owl</Id>
+        <name>Night Owl</name>
+        <label>Night Owl</label>
+        <description>Naturally most alert, energetic, and productive during the night.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_congenital_early_riser</Id>
+        <name>Early Riser</name>
+        <label>Early Riser</label>
+        <description>Naturally most alert, energetic, and productive in the early morning.</description>
+    </Trait>
+</Data>

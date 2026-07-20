@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ================================================= -->
+<!-- NGOẠI HÌNH / APPEARANCE (visual traits) -->
+<!-- ================================================= -->
+<Data>
+    <Trait>
+        <Id>trait_appearance_attractive</Id>
+        <name>Attractive</name>
+        <label>Attractive</label>
+        <description>Possesses features that others find immediately pleasing and memorable.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_unattractive</Id>
+        <name>Unattractive</name>
+        <label>Unattractive</label>
+        <description>Possesses features that others find unappealing or off-putting.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_obese</Id>
+        <name>Obese</name>
+        <label>Obese</label>
+        <description>Carries significantly more body weight than average, affecting mobility and stamina.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_underweight</Id>
+        <name>Underweight</name>
+        <label>Underweight</label>
+        <description>Carries significantly less body weight than average, appearing gaunt and frail.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_muscular</Id>
+        <name>Muscular</name>
+        <label>Muscular</label>
+        <description>Has a visibly well-built, powerful physique.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_tall</Id>
+        <name>Tall</name>
+        <label>Tall</label>
+        <description>Stands notably taller than the average person.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_short</Id>
+        <name>Short</name>
+        <label>Short</label>
+        <description>Stands notably shorter than the average person.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_scarred</Id>
+        <name>Scarred</name>
+        <label>Scarred</label>
+        <description>Bears visible scars from past wounds or battles.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_tattooed</Id>
+        <name>Tattooed</name>
+        <label>Tattooed</label>
+        <description>Body is marked with tattoos, often signifying identity, culture, or personal history.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_long_hair</Id>
+        <name>Long Hair</name>
+        <label>Long Hair</label>
+        <description>Wears their hair notably long, a distinctive feature of their appearance.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_distinctive_birthmark</Id>
+        <name>Distinctive Birthmark</name>
+        <label>Distinctive Birthmark</label>
+        <description>Bears a prominent, easily-recognized birthmark.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_missing_teeth</Id>
+        <name>Missing Teeth</name>
+        <label>Missing Teeth</label>
+        <description>Has lost several teeth, visibly altering their smile and speech.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_heterochromia</Id>
+        <name>Heterochromia</name>
+        <label>Heterochromia</label>
+        <description>Has two different colored eyes, an eye-catching and unusual trait.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_pale_complexion</Id>
+        <name>Pale Complexion</name>
+        <label>Pale Complexion</label>
+        <description>Has unusually pale skin, whether from genetics, illness, or a lack of sunlight.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_sun_weathered_skin</Id>
+        <name>Sun-Weathered Skin</name>
+        <label>Sun-Weathered Skin</label>
+        <description>Skin is darkened and roughened from prolonged exposure to the sun.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_well_groomed</Id>
+        <name>Well-Groomed</name>
+        <label>Well-Groomed</label>
+        <description>Always appears neat, clean, and carefully put together.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_unkempt</Id>
+        <name>Unkempt</name>
+        <label>Unkempt</label>
+        <description>Appears disheveled, with little attention paid to grooming.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_striking_eyes</Id>
+        <name>Striking Eyes</name>
+        <label>Striking Eyes</label>
+        <description>Has unusually vivid or piercing eyes that others find hard to forget.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_imposing_stature</Id>
+        <name>Imposing Stature</name>
+        <label>Imposing Stature</label>
+        <description>Physical presence alone is enough to intimidate or command attention.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_appearance_disfigured</Id>
+        <name>Disfigured</name>
+        <label>Disfigured</label>
+        <description>Bears a severe facial or bodily disfigurement from injury, illness, or birth.</description>
+    </Trait>
+</Data>

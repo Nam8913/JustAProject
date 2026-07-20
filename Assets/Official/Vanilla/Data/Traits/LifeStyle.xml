@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ================================================= -->
+<!-- LỐI SỐNG / LIFESTYLE (habits, vices, daily living) -->
+<!-- ================================================= -->
+<Data>
+    <Trait>
+        <Id>trait_lifestyle_smoker</Id>
+        <name>Smoker</name>
+        <label>Smoker</label>
+        <description>Regularly smokes tobacco, craving cigarettes to remain calm and focused.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_chain_smoker</Id>
+        <name>Chain Smoker</name>
+        <label>Chain Smoker</label>
+        <description>Smokes constantly and heavily, suffering severe cravings without a steady supply.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_alcoholic</Id>
+        <name>Alcoholic</name>
+        <label>Alcoholic</label>
+        <description>Depends heavily on alcohol, suffering withdrawal and cravings without regular drinking.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_drug_addict</Id>
+        <name>Drug Addict</name>
+        <label>Drug Addict</label>
+        <description>Depends on a substance to function normally, suffering severe withdrawal without it.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_gambler</Id>
+        <name>Gambler</name>
+        <label>Gambler</label>
+        <description>Compulsively seeks out games of chance, often risking more than they can afford to lose.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_glutton</Id>
+        <name>Glutton</name>
+        <label>Glutton</label>
+        <description>Regularly overeats, finding it difficult to resist food even when full.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_ascetic</Id>
+        <name>Ascetic</name>
+        <label>Ascetic</label>
+        <description>Deliberately lives with minimal comfort and possessions, favoring restraint and simplicity.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_vegetarian</Id>
+        <name>Vegetarian</name>
+        <label>Vegetarian</label>
+        <description>Refuses to eat meat, relying entirely on plant-based foods.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_workaholic</Id>
+        <name>Workaholic</name>
+        <label>Workaholic</label>
+        <description>Constantly driven to work, struggling to relax or disengage from tasks.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_hoarder</Id>
+        <name>Hoarder</name>
+        <label>Hoarder</label>
+        <description>Compulsively collects and keeps possessions, refusing to discard even useless items.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_minimalist</Id>
+        <name>Minimalist</name>
+        <label>Minimalist</label>
+        <description>Prefers to own as little as possible, valuing simplicity over accumulation.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_neat_freak</Id>
+        <name>Neat Freak</name>
+        <label>Neat Freak</label>
+        <description>Obsessively keeps their surroundings clean and organized at all times.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_slob</Id>
+        <name>Slob</name>
+        <label>Slob</label>
+        <description>Shows little regard for cleanliness or order in their living space.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_loner</Id>
+        <name>Loner</name>
+        <label>Loner</label>
+        <description>Prefers solitude and actively avoids spending time around others.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_socialite</Id>
+        <name>Socialite</name>
+        <label>Socialite</label>
+        <description>Thrives on social gatherings and constantly seeks the company of others.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_thrill_seeker</Id>
+        <name>Thrill-Seeker</name>
+        <label>Thrill-Seeker</label>
+        <description>Constantly pursues excitement and danger, growing restless without it.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_sedentary</Id>
+        <name>Sedentary</name>
+        <label>Sedentary</label>
+        <description>Prefers minimal physical activity, favoring rest and stillness over exertion.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_fitness_enthusiast</Id>
+        <name>Fitness Enthusiast</name>
+        <label>Fitness Enthusiast</label>
+        <description>Maintains a rigorous exercise routine and prioritizes physical conditioning.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_frugal_living</Id>
+        <name>Frugal Living</name>
+        <label>Frugal Living</label>
+        <description>Spends as little as possible, carefully rationing money and resources.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_extravagant_living</Id>
+        <name>Extravagant Living</name>
+        <label>Extravagant Living</label>
+        <description>Spends freely and lavishly, rarely holding back on comfort or luxury.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_wanderer</Id>
+        <name>Wanderer</name>
+        <label>Wanderer</label>
+        <description>Rarely stays in one place for long, preferring a nomadic way of life.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_lifestyle_recluse</Id>
+        <name>Recluse</name>
+        <label>Recluse</label>
+        <description>Withdraws from society entirely, living apart from others by choice.</description>
+    </Trait>
+</Data>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ================================================= -->
+<!-- THỂ CHẤT / PHYSICAL (body, health, senses) -->
+<!-- ================================================= -->
+<Data>
+    <Trait>
+        <Id>trait_physical_strong</Id>
+        <name>Strong</name>
+        <label>Strong</label>
+        <description>Possesses well above-average physical strength.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_weak</Id>
+        <name>Weak</name>
+        <label>Weak</label>
+        <description>Possesses below-average physical strength.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_tough</Id>
+        <name>Tough</name>
+        <label>Tough</label>
+        <description>Body withstands injury and hardship far better than most.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_fragile</Id>
+        <name>Fragile</name>
+        <label>Fragile</label>
+        <description>Body is unusually susceptible to injury and harm.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_fast_healer</Id>
+        <name>Fast Healer</name>
+        <label>Fast Healer</label>
+        <description>Wounds and injuries close and mend at an accelerated rate.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_slow_healer</Id>
+        <name>Slow Healer</name>
+        <label>Slow Healer</label>
+        <description>Wounds and injuries take much longer than normal to heal.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_iron_stomach</Id>
+        <name>Iron Stomach</name>
+        <label>Iron Stomach</label>
+        <description>Digestive system easily tolerates spoiled food and toxins that would sicken others.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_weak_stomach</Id>
+        <name>Weak Stomach</name>
+        <label>Weak Stomach</label>
+        <description>Digestive system is easily upset, leading to frequent nausea and vomiting.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_high_pain_tolerance</Id>
+        <name>High Pain Tolerance</name>
+        <label>High Pain Tolerance</label>
+        <description>Endures pain far better than most, remaining functional despite serious injury.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_pain_sensitive</Id>
+        <name>Pain Sensitive</name>
+        <label>Pain Sensitive</label>
+        <description>Feels pain far more intensely than most, making injuries especially debilitating.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_nearsighted</Id>
+        <name>Nearsighted</name>
+        <label>Nearsighted</label>
+        <description>Struggles to clearly see objects that are far away.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_farsighted</Id>
+        <name>Farsighted</name>
+        <label>Farsighted</label>
+        <description>Struggles to clearly see objects that are close up.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_asthmatic</Id>
+        <name>Asthmatic</name>
+        <label>Asthmatic</label>
+        <description>Suffers from a chronic respiratory condition that causes shortness of breath under exertion.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_bad_back</Id>
+        <name>Bad Back</name>
+        <label>Bad Back</label>
+        <description>Chronic back pain reduces the amount of weight that can be comfortably carried.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_deaf</Id>
+        <name>Deaf</name>
+        <label>Deaf</label>
+        <description>Cannot hear, relying on other senses to perceive the surrounding world.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_mute</Id>
+        <name>Mute</name>
+        <label>Mute</label>
+        <description>Cannot speak, communicating instead through gesture or writing.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_blind</Id>
+        <name>Blind</name>
+        <label>Blind</label>
+        <description>Cannot see, relying on other senses to navigate the world.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_night_vision</Id>
+        <name>Night Vision</name>
+        <label>Night Vision</label>
+        <description>Eyes are naturally adapted to see clearly in low-light conditions.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_anosmic</Id>
+        <name>Anosmic</name>
+        <label>Anosmic</label>
+        <description>Has no sense of smell, unable to detect scents both pleasant and dangerous.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_insomniac</Id>
+        <name>Insomniac</name>
+        <label>Insomniac</label>
+        <description>Struggles to fall or stay asleep, leading to chronic fatigue.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_chronic_pain</Id>
+        <name>Chronic Pain</name>
+        <label>Chronic Pain</label>
+        <description>Lives with a lingering old injury that causes persistent discomfort.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_weak_immune_system</Id>
+        <name>Weak Immune System</name>
+        <label>Weak Immune System</label>
+        <description>Falls ill more easily and recovers from sickness more slowly than most.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_high_stamina</Id>
+        <name>High Stamina</name>
+        <label>High Stamina</label>
+        <description>Possesses exceptional endurance, able to exert themselves for long periods without tiring.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_physical_maimed</Id>
+        <name>Maimed</name>
+        <label>Maimed</label>
+        <description>Has lost, or permanently lost the use of, a limb, limiting physical capability.</description>
+    </Trait>
+</Data>

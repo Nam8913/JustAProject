@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Data>
+    <!-- ================================================= -->
+    <!-- CHUYÊN MÔN / PROFESSION (trained skills, occupation) -->
+    <!-- ================================================= -->
+    <Trait>
+        <Id>trait_profession_blacksmith</Id>
+        <name>Blacksmith</name>
+        <label>Blacksmith</label>
+        <description>Trained in forging and shaping metal into tools, weapons, and armor.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_herbalist</Id>
+        <name>Herbalist</name>
+        <label>Herbalist</label>
+        <description>Skilled in identifying, gathering, and preparing medicinal and poisonous plants.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_hunter</Id>
+        <name>Hunter</name>
+        <label>Hunter</label>
+        <description>Skilled at tracking and hunting wild game for food and materials.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_farmer</Id>
+        <name>Farmer</name>
+        <label>Farmer</label>
+        <description>Experienced in cultivating crops and managing agricultural land.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_cook</Id>
+        <name>Cook</name>
+        <label>Cook</label>
+        <description>Trained in preparing meals that are both nourishing and appealing.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_physician</Id>
+        <name>Physician</name>
+        <label>Physician</label>
+        <description>Trained in diagnosing and treating illness and injury.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_scholar</Id>
+        <name>Scholar</name>
+        <label>Scholar</label>
+        <description>Devoted to the study of books, history, and academic knowledge.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_engineer</Id>
+        <name>Engineer</name>
+        <label>Engineer</label>
+        <description>Skilled in designing and constructing mechanical or structural systems.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_mechanic</Id>
+        <name>Mechanic</name>
+        <label>Mechanic</label>
+        <description>Experienced in repairing and maintaining machinery and equipment.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_carpenter</Id>
+        <name>Carpenter</name>
+        <label>Carpenter</label>
+        <description>Skilled in working with wood to build and repair structures and furniture.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_merchant</Id>
+        <name>Merchant</name>
+        <label>Merchant</label>
+        <description>Experienced in trade, negotiation, and the buying and selling of goods.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_warrior</Id>
+        <name>Warrior</name>
+        <label>Warrior</label>
+        <description>Trained extensively in combat and the use of weapons.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_strategist</Id>
+        <name>Strategist</name>
+        <label>Strategist</label>
+        <description>Skilled in planning campaigns, battles, and long-term tactical decisions.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_diplomat</Id>
+        <name>Diplomat</name>
+        <label>Diplomat</label>
+        <description>Trained in negotiation, persuasion, and resolving conflicts between parties.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_theologian</Id>
+        <name>Theologian</name>
+        <label>Theologian</label>
+        <description>Devoted to the study and practice of religious doctrine and faith.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_administrator</Id>
+        <name>Administrator</name>
+        <label>Administrator</label>
+        <description>Skilled in managing bureaucracy, records, and the affairs of an organization.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_craftsman</Id>
+        <name>Craftsman</name>
+        <label>Craftsman</label>
+        <description>Skilled in creating fine handmade goods with precision and care.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_scout</Id>
+        <name>Scout</name>
+        <label>Scout</label>
+        <description>Trained in reconnaissance, tracking, and navigating unfamiliar terrain.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_master_thief</Id>
+        <name>Master Thief</name>
+        <label>Master Thief</label>
+        <description>Highly skilled in stealth, lockpicking, and stealing unnoticed.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_musician</Id>
+        <name>Musician</name>
+        <label>Musician</label>
+        <description>Skilled in performing music, able to captivate audiences with their craft.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_fisherman</Id>
+        <name>Fisherman</name>
+        <label>Fisherman</label>
+        <description>Experienced in catching fish and navigating bodies of water.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_miner</Id>
+        <name>Miner</name>
+        <label>Miner</label>
+        <description>Experienced in extracting ore, stone, and other resources from the earth.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_tailor</Id>
+        <name>Tailor</name>
+        <label>Tailor</label>
+        <description>Skilled in sewing and crafting clothing and fabric goods.</description>
+    </Trait>
+    <Trait>
+        <Id>trait_profession_alchemist</Id>
+        <name>Alchemist</name>
+        <label>Alchemist</label>
+        <description>Skilled in combining substances to create potions, elixirs, and reagents.</description>
+    </Trait>
+
+</Data>
