@@ -95,6 +95,37 @@ public abstract class DefineThing : MonoBehaviour, IContainerOwner
 
     public virtual void Setup(){}
 
+    public T GetProperty<T>() where T : CompProperties
+    {
+        if(def != null && def.compsProps != null)
+        {
+            T rs = default(T);
+            CompProperties comp = def.compsProps.Find(x => x is T targetProp);
+            try
+            {
+                rs = (T)comp;
+            }
+            catch(InvalidCastException)
+            {
+                Debug.LogError($"Failed to cast property to type {typeof(T).Name}");
+            }catch(Exception ex)
+            {
+                Debug.LogError($"Unexpected error while getting property of type {typeof(T).Name}: {ex.Message}");
+            }
+            
+        }
+        return null;
+    }
+
+    public bool HasProperty<T>() where T : CompProperties
+    {
+        if(def != null && def.compsProps != null)
+        {
+            return def.compsProps.Exists(x => x is T);
+        }
+        return false;
+    }
+
     public T GetComp<T>() where T : EntitiesComp
     {
         foreach(var comp in components)

@@ -7,18 +7,13 @@ using UnityEngine;
 public class Creature : DefineThing
 {
     CircleCollider2D _collider;
-    StatsHolder statsHolder;
     // BehaviorTree behaviorTree;
 
-    public StatsHolder Stats => statsHolder;
     public Vector2 WorldPosition => transform.position;
     public Vector2Int CurrentChunkPosition => Chunk.GetChunkPosition(transform.position);
 
     public Creature()
     {
-        statsHolder = new StatsHolder();
-        BaseStats.AddAllBaseStatus(statsHolder);
-        statsHolder.MS = 0.1f;
     }
 
     void Awake()

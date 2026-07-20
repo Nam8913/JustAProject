@@ -409,7 +409,7 @@ public class MoveToCoverAction : ActionNode
 
     protected override void OnEnter()
     {
-        _moveSpeed = _creature.Stats.MS * 10f;
+        _moveSpeed = _creature.GetComp<AttributesComp>().Agility * 10f;
     }
 
     protected override BHState OnEvaluate()
@@ -507,7 +507,7 @@ public class MoveToEnemyAction : ActionNode
 
     protected override void OnEnter()
     {
-        _moveSpeed = _creature.Stats.MS * 10f;
+        _moveSpeed = _creature.GetComp<AttributesComp>().Agility * 10f;
     }
 
     protected override BHState OnEvaluate()
@@ -604,7 +604,7 @@ public class MoveToNoiseSourceAction : ActionNode
 
     protected override void OnEnter()
     {
-        _moveSpeed = _creature.Stats.MS * 10f;
+        _moveSpeed = _creature.GetComp<AttributesComp>().Agility * 10f;
     }
 
     protected override BHState OnEvaluate()
@@ -797,7 +797,7 @@ public class MoveToTargetAction : ActionNode
 
     protected override void OnEnter()
     {
-        _moveSpeed = _creature.Stats.MS * 10f;
+        _moveSpeed = _creature.GetComp<AttributesComp>().Agility * 10f;
     }
 
     protected override BHState OnEvaluate()
