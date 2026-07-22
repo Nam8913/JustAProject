@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ================================================================== -->
+<!-- Chop_Axe — Method: "Chặt bằng rìu" (how, phục vụ FellTree)       -->
+<!-- ================================================================== -->
+<Data>
+    <MethodDef>
+        <Id>Chop_Axe</Id>
+        <label>Chop with Axe</label>
+        <description>Chặt cây bằng rìu</description>
+
+        <!-- Executor: class ChopExecutor (BaseMethodExecutor) -->
+        <executor Class="ChopExecutor"/>
+
+        <!-- Method này phục vụ effectTag nào -->
+        <producesEffectTags>
+            <li>TreeFelled</li>
+        </producesEffectTags>
+
+        <!-- Actor phải có tag "HasAxeEquipped" để dùng method này -->
+        <requiredActorCapabilities>
+            <li Class="ActorHasTagCondition">
+                <tag>HasAxeEquipped</tag>
+            </li>
+        </requiredActorCapabilities>
+
+        <!-- Tham số cho executor -->
+        <parameters>
+            <li>
+                <key>duration</key>
+                <value>5.0</value>
+            </li>
+            <li>
+                <key>toolWearRate</key>
+                <value>0.1</value>
+            </li>
+        </parameters>
+
+        <!-- Hiệu ứng phụ riêng của method (scoped bởi appliesTo) -->
+        <extraEffects>
+            <!-- +3 wood_log vào inventory actor -->
+            <li>
+                <effectType>ProduceItem</effectType>
+                <parameters>
+                    <li>
+                        <key>item</key>
+                        <value>wood_log</value>
+                    </li>
+                    <li>
+                        <key>amount</key>
+                        <value>3</value>
+                    </li>
+                </parameters>
+                <appliesTo>TreeFelled</appliesTo>
+            </li>
+            <!-- -0.1 durability cho rìu -->
+            <li>
+                <effectType>DamageTool</effectType>
+                <parameters>
+                    <li>
+                        <key>amount</key>
+                        <value>0.1</value>
+                    </li>
+                </parameters>
+                <appliesTo>TreeFelled</appliesTo>
+            </li>
+        </extraEffects>
+    </MethodDef>
+</Data>

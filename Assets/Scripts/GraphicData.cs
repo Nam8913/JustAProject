@@ -47,6 +47,7 @@ public sealed class AtlasGraphicData : GraphicData
 public class GraphicMetaData
 {
     public string path;
+    public string extraId;
     public float pixelsPerUnit;
     public Vector2 pivot;
     public Vector2 startPos;

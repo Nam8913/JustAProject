@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace ModContent
@@ -63,36 +64,53 @@ namespace ModContent
             }
         }
 
-        public static void BuildModList()
+        public static async System.Threading.Tasks.Task BuildModList()
         {
             allModsCached.Clear();
             enabledModsInLoadOrderCached.Clear();
 
             // Load all mods from the Official folder
-            foreach(var modPath in from d in new DirectoryInfo(FilePathHandler.OfficialDataFolderPath).GetDirectories() select d.FullName)
-            {
-                ModMetaData meta = new ModMetaData(modPath, isOfficial: true);
-                allModsCached.Add(meta);
-
-                if(data.activeMods.Contains(meta.Meta.packageId))
-                {
-                    enabledModsInLoadOrderCached.Add(meta);
-                }
-            }
-
+            Task officialModsTask = LoadOfficialModsTask();
+            
             // Load all mods from the Mods folder
-            foreach(var modPath in from d in new DirectoryInfo(FilePathHandler.ModsFolderPath).GetDirectories() select d.FullName)
-            {
-                ModMetaData meta = new ModMetaData(modPath, isOfficial: false);
-                allModsCached.Add(meta);
+            Task modsTask = LoadModsTask();
+            
+            await Task.WhenAll(officialModsTask, modsTask);
+        }
 
-                if(data.activeMods.Contains(meta.Meta.packageId))
+        static async Task LoadOfficialModsTask()
+        {
+            using(DisposableStopwatch sw = new DisposableStopwatch("ModsConfig.BuildOfficialModList"))
+            {
+                foreach(var modPath in from d in new DirectoryInfo(FilePathHandler.OfficialDataFolderPath).GetDirectories() select d.FullName)
                 {
-                    enabledModsInLoadOrderCached.Add(meta);
+                    ModMetaData meta = new ModMetaData(modPath, isOfficial: true);
+                    allModsCached.Add(meta);
+
+                    if(data.activeMods.Contains(meta.Meta.packageId))
+                    {
+                        enabledModsInLoadOrderCached.Add(meta);
+                    }
                 }
             }
+            await Task.CompletedTask;
+        }
+        static async Task LoadModsTask()
+        {
+            using(DisposableStopwatch sw = new DisposableStopwatch("ModsConfig.BuildModList"))
+            {
+                foreach(var modPath in from d in new DirectoryInfo(FilePathHandler.ModsFolderPath).GetDirectories() select d.FullName)
+                {
+                    ModMetaData meta = new ModMetaData(modPath, isOfficial: false);
+                    allModsCached.Add(meta);
 
-
+                    if(data.activeMods.Contains(meta.Meta.packageId))
+                    {
+                        enabledModsInLoadOrderCached.Add(meta);
+                    }
+                }
+            }
+            await Task.CompletedTask;
         }
 
         private static ModsConfigData data = new ModsConfigData();

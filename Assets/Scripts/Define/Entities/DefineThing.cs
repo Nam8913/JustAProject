@@ -7,6 +7,7 @@ using UnityEngine;
 
 public abstract class DefineThing : MonoBehaviour, IContainerOwner
 {
+    [Header("General Info")]
     [SerializeField]
     protected string Id;
     [SerializeField]
@@ -15,13 +16,26 @@ public abstract class DefineThing : MonoBehaviour, IContainerOwner
     [TextArea(3, 10)]
     protected string labelDescription;
 
+    [Header("Defs")]
     [SerializeField]
     public Define def;
     [SerializeField]
     [SerializeReference]
     public List<EntitiesComp> components = new List<EntitiesComp>();
+    
+    [Header("Components")]
+    [SerializeField]
+    public SpriteRenderer spriteRenderer;
+    [SerializeField]
+    public Collider2D mainCollider;
+    [SerializeField]
+    public Rigidbody2D rbg2d;
+
+    [Header("Other")]
     [SerializeField]
     private string modPackageId = string.Empty;
+    [SerializeField]
+    private HashSet<string> tags = new HashSet<string>();
 
     public String ID => this.Id;
     public String LabelName => labelName;
@@ -47,16 +61,6 @@ public abstract class DefineThing : MonoBehaviour, IContainerOwner
 
     public virtual void Start()
     {
-        #if DEBUG_LOG_FLAG && false
-        Debug.Log($"Starting to apply definition for {this.GetType().Name} with ID: {Id}");
-        #endif
-        foreach(var comp in components)
-        {
-            comp.Init();
-        }
-        #if DEBUG_LOG_FLAG && false
-        Debug.Log($"Finished applying definition for {this.GetType().Name} with ID: {Id}");
-        #endif
     }
 
     public virtual void Update()
@@ -99,20 +103,11 @@ public abstract class DefineThing : MonoBehaviour, IContainerOwner
     {
         if(def != null && def.compsProps != null)
         {
-            T rs = default(T);
-            CompProperties comp = def.compsProps.Find(x => x is T targetProp);
-            try
+            CompProperties comp = def.compsProps.Find(x => x is T);
+            if(comp is T typed)
             {
-                rs = (T)comp;
+                return typed;
             }
-            catch(InvalidCastException)
-            {
-                Debug.LogError($"Failed to cast property to type {typeof(T).Name}");
-            }catch(Exception ex)
-            {
-                Debug.LogError($"Unexpected error while getting property of type {typeof(T).Name}: {ex.Message}");
-            }
-            
         }
         return null;
     }
@@ -170,29 +165,91 @@ public abstract class DefineThing : MonoBehaviour, IContainerOwner
         components.Add(comp);
         comp.owner = this;
     }
+    
+    public void RemoveComp(EntitiesComp comp)
+    {
+        if(comp == null)
+        {
+            Debug.LogError($"Cannot remove null HelperComp from {this.GetType().Name}");
+            return;
+        }
+        components.Remove(comp);
+        comp.owner = null;
+    }
 
-    public List<string> Tags
+    public void RemoveComp<T>() where T : EntitiesComp
+    {
+        EntitiesComp compToRemove = GetComp<T>();
+        if(compToRemove != null)
+        {
+            components.Remove(compToRemove);
+            compToRemove.owner = null;
+            compToRemove = null;
+        }
+    }
+
+    public HashSet<string> Tags
     {
         get
         {
-            if(def != null)
-            {
-                return def.tags;
-            }
-            else
-            {
-                return null;
-            }
+            return tags;
+        }
+        set
+        {
+            tags = value;
         }
     }
 
     public bool HasTag(string tag)
     {
-        if(def != null && def.tags != null)
+        if(tags != null && tags.Count > 0)
         {
-            return def.tags.Contains(tag);
+            return tags.Contains(tag);
         }
         return false;
+    }
+
+    public void AddTag(string tag)
+    {
+        if(!string.IsNullOrEmpty(tag))
+        {
+            tags.Add(tag);
+        }
+    }
+
+    public void RemoveTag(string tag)
+    {
+        if(!string.IsNullOrEmpty(tag))
+        {
+            tags.Remove(tag);
+        }
+    }
+
+    // ── State helpers (delegates to StateComp) ──
+
+    public string GetState()
+    {
+        var state = GetComp<StateComp>();
+        if(state == null)
+        {
+            UnityEngine.Debug.LogWarning($"StateComp is missing for {this.GetType().Name} with ID: {Id}");
+        }
+        return state?.GetState();
+    }
+
+    public void SetState(string newState)
+    {
+        var state = GetComp<StateComp>();
+        if (state != null)
+        {
+            state.SetState(newState);
+        }
+    }
+
+    public bool IsInState(string state)
+    {
+        var stateComp = GetComp<StateComp>();
+        return stateComp != null && stateComp.IsInState(state);
     }
 
     public void SetDef(Define def)
@@ -209,5 +266,9 @@ public abstract class DefineThing : MonoBehaviour, IContainerOwner
         this.modPackageId = DatabaseThing.GetPackageIdById(def.Id);
 
         this.Setup();
+
+        this.spriteRenderer = this.gameObject.GetComponent<SpriteRenderer>();
+        this.rbg2d = this.gameObject.GetComponent<Rigidbody2D>();
+        this.mainCollider = this.gameObject.GetComponent<Collider2D>();
     }
 }

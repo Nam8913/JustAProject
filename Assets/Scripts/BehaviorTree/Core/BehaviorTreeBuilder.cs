@@ -97,7 +97,7 @@ namespace BehaviorTree
             return this;
         }
 
-        public BehaviorTreeBuilder Service(float interval, Action service)
+        public BehaviorTreeBuilder Service(float interval, System.Action service)
         {
             UnityEngine.Debug.LogWarning("[BehaviorTreeBuilder] Service() is not yet implemented. Service node skipped.");
             return this;

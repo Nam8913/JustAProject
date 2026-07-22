@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Data>
+    <Define GameObjectTarget = "TallThing">
+        <Id>TreeDef</Id>
+        <label>Tree</label>
+        <description>A tall tree</description>
+
+        <!-- Tags: dùng cho HasTagCondition và TargetStateCondition -->
+        <tags>
+            <li>IsTree</li>
+            <li>Standing</li>
+        </tags>
+
+        <!-- Components: StateComp để track per-instance state -->
+        <compsProps>
+            <li Class="StateCompProperties">
+                <compClass>StateComp</compClass>
+                <initialState>Standing</initialState>
+            </li>
+        </compsProps>
+
+        <graphicData Class="MultiGraphicData">
+            <metaData>
+                <li>
+                    <path>giant</path>
+                    <extraId>rootTree</extraId>
+                    <pixelsPerUnit>22</pixelsPerUnit>
+                    <pivot>0.5, 1</pivot>
+                    <startPos>1157, 486</startPos>
+                    <size>91, 16</size>
+                </li>
+                <li>
+                    <path>giant</path>
+                    <extraId>topTree</extraId>
+                    <pixelsPerUnit>22</pixelsPerUnit>
+                    <pivot>0.5, 0</pivot>
+                    <startPos>1157, 502</startPos>
+                    <size>91, 71</size>
+                </li>
+            </metaData>
+        </graphicData>
+
+    </Define>
+</Data>

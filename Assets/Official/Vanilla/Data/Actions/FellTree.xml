@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ================================================================== -->
+<!-- FellTree — Action: "Cây sẽ bị đốn" (what, không biết công cụ nào) -->
+<!-- ================================================================== -->
+<Data>
+    <ActionDef>
+        <Id>FellTree</Id>
+        <label>Fell Tree</label>
+        <description>Đốn cây để lấy gỗ</description>
+
+        <!-- EffectTag chung: mọi method phục vụ FellTree phải produces "TreeFelled" -->
+        <effectTag>TreeFelled</effectTag>
+
+        <!-- Điều kiện target phải thỏa trước khi action được phép -->
+        <targetRequirements>
+            <!-- Target phải có tag "IsTree" -->
+            <li Class="HasTagCondition">
+                <tag>IsTree</tag>
+            </li>
+            <!-- Target phải đang ở state "Standing" (chưa bị đốn) -->
+            <li Class="TargetStateCondition">
+                <requiredState>Standing</requiredState>
+            </li>
+        </targetRequirements>
+
+        <!-- Event bắn ra sau khi hoàn thành (quest system) -->
+        <OnCompleteEventId>tree_felled</OnCompleteEventId>
+    </ActionDef>
+</Data>

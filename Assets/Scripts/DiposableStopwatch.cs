@@ -19,8 +19,8 @@ public class DisposableStopwatch : IDisposable
     public void Dispose()
     {
         stopwatch.Stop();
-        #if DEBUG_LOG_FLAG && false
-        UnityEngine.Debug.Log($"{str}: Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
+        #if DEBUG_LOG_FLAG && true
+        UnityEngine.Debug.LogWarning($"{str}: Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
         #endif
     } 
 }

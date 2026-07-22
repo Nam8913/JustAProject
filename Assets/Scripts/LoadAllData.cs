@@ -25,14 +25,13 @@ public static class LoadAllData
         {
             TypeUtils.LoadTypesCachedFromAssembly(assembly);
         }
-        using(DisposableStopwatch sw = new DisposableStopwatch())
+        
+        _ = ModsConfig.BuildModList();
+        Debug.Log($"Enabled mods in load order: {string.Join(", ", ModsConfig.EnabledModsInLoadOrder)}");
+        foreach(var mod in ModsConfig.EnabledModsInLoadOrder)
         {
-            ModsConfig.BuildModList();
-            foreach(var mod in ModsConfig.EnabledModsInLoadOrder)
+            using(DisposableStopwatch sw = new DisposableStopwatch($"Loading data from mod: {mod.Meta.modName} ({mod.Meta.packageId})"))
             {
-                #if DEBUG_LOG_FLAG && false
-                Debug.Log($"Loading data from mod: {mod.Meta.modName} ({mod.Meta.packageId})");
-                #endif
                 mod.LoadModContent();
             }
         }

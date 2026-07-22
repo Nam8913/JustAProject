@@ -26,7 +26,7 @@ public static class ThingHandler
         }
 
         string typeName = getThingById[id];
-        System.Type typeOfDifineThing = System.Type.GetType(typeName);
+        System.Type typeOfDifineThing = TypeUtils.TryGetType(typeName);
         if (typeOfDifineThing == null)
         {
             Debug.LogError($"Type not found for name: {typeName}");
@@ -35,10 +35,7 @@ public static class ThingHandler
 
         
 
-        GameObject newObj = new GameObject(id);
-        DefineThing defineThing = newObj.AddComponent(typeOfDifineThing) as DefineThing;
-        thingsActive.Add(defineThing);
-
+        GameObject newObj = new GameObject();
         Type typeDef = DatabaseThing.GetTypeById(id);
         if(typeDef != null)
         {
@@ -46,56 +43,11 @@ public static class ThingHandler
             dataDict.TryGetValue(id, out var data);
             if(data is Define define)
             {
-                defineThing.SetDef(define);
-                foreach(var compProp in define.compsProps)
-                {
-                    System.Type comp = compProp.compClass;
-                    bool flag1 = comp != null;
-                    if(!flag1)
-                    {
-                        Debug.LogError($"Comp class is not specified in definition for thing with id {id}. Make sure the compClass is specified.");
-                        continue;
-                    }
-                    bool flag2 = typeof(EntitiesComp).IsAssignableFrom(comp);
-                    bool flag3 = comp.IsAbstract;
-                    if(flag1 && flag2 && !flag3)
-                    {
-                        EntitiesComp compInstance = (EntitiesComp)Activator.CreateInstance(comp);
-                        compInstance.props = compProp;
-                        compInstance.owner = defineThing;
-                        if(compInstance != null)
-                        {
-                            defineThing.AddComp(compInstance);
-                        }
-                        else
-                        {
-                            Debug.LogError($"Failed to create an instance of HelperComp type {comp.Name} for thing with id {id}. Make sure the type has a parameterless constructor.");
-                        }
-                    }
-                    else
-                    {
-                        if(flag3)
-                        {
-                            Debug.LogWarning($"Comp class {comp.Name} is abstract and cannot be instantiated for thing with id {id}. Skipping this comp. Make sure the compClass is not abstract.");
-                            continue;
-                        }else if(!flag1)
-                        {
-                            Debug.LogError($"Comp class is not specified in definition for thing with id {id}. Make sure the compClass is specified.");
-                        }else if(!flag2)
-                        {
-                            Debug.LogError($"Comp class {comp.Name} does not inherit from HelperComp in definition for thing with id {id}. Make sure the compClass inherits from HelperComp.");
-                        }else
-                        {
-                            Debug.LogError($"Comp class {comp.Name} is invalid for thing with id {id}. Make sure the compClass is a non-abstract class that inherits from HelperComp.");
-                        }
-                    }
-                }
+                newObj.name = define.label ?? define.Id;
+                return DeloymentThingToObject(define, newObj);
             }
         }
-
-        defineThing.ConfigError();
-
-        return defineThing;
+        return null;
     }
 
     public static DefineThing DeloymentThingToObject(Define define, GameObject targetObject)
@@ -107,7 +59,7 @@ public static class ThingHandler
             return null;
         }
 
-        System.Type typeOfDifineThing = System.Type.GetType(typeName);
+        System.Type typeOfDifineThing = TypeUtils.TryGetType(typeName);
         if (typeOfDifineThing == null)
         {
             Debug.LogError($"Type not found for name: {typeName}");
@@ -118,50 +70,14 @@ public static class ThingHandler
         thingsActive.Add(defineThing);
 
         defineThing.SetDef(define);
-        foreach(var compProp in define.compsProps)
-        {
-            System.Type comp = compProp.compClass;
-            if(comp == null)
-            {
-                continue;
-            }
-            bool flag1 = comp != null;
-            bool flag2 = typeof(EntitiesComp).IsAssignableFrom(comp);
-            bool flag3 = comp.IsAbstract;
-            if(flag1 && flag2 && !flag3)
-            {
-                EntitiesComp compInstance = (EntitiesComp)Activator.CreateInstance(comp);
-                compInstance.props = compProp;
-                compInstance.owner = defineThing;
-                if(compInstance != null)
-                {
-                    defineThing.AddComp(compInstance);
-                }
-                else
-                {
-                    Debug.LogError($"Failed to create an instance of HelperComp type {comp.Name} for thing with id {define.Id}. Make sure the type has a parameterless constructor.");
-                }
-            }
-            else
-            {
-                if(flag3)
-                {
-                    Debug.LogWarning($"Comp class {comp.Name} is abstract and cannot be instantiated for thing with id {define.Id}. Skipping this comp. Make sure the compClass is not abstract.");
-                    continue;
-                }else if(!flag1)
-                {
-                    Debug.LogError($"Comp class is not specified in definition for thing with id {define.Id}. Make sure the compClass is specified.");
-                }else if(!flag2)
-                {
-                    Debug.LogError($"Comp class {comp.Name} does not inherit from HelperComp in definition for thing with id {define.Id}. Make sure the compClass inherits from HelperComp.");
-                }else
-                {
-                    Debug.LogError($"Comp class {comp.Name} is invalid for thing with id {define.Id}. Make sure the compClass is a non-abstract class that inherits from HelperComp.");
-                }
-            }
-        }
+        MakeCompForDefineThing(defineThing, define);
 
         defineThing.ConfigError();
+
+        if(define.tags != null && define.tags.Count > 0)
+        {
+            defineThing.Tags = new HashSet<string>(define.tags);
+        }
 
         return defineThing;
     }
@@ -211,5 +127,53 @@ public static class ThingHandler
             return;
         }
         getThingById[id] = typeName;
+    }
+
+    private static void MakeCompForDefineThing(DefineThing defineThing, Define define)
+    {
+        foreach(var compProp in define.compsProps)
+        {
+            System.Type comp = compProp.compClass;
+            bool flag1 = comp != null;
+            if(!flag1)
+            {
+                Debug.LogError($"Comp class is not specified in definition for thing with id {define.Id}. Make sure the compClass is specified.");
+                continue;
+            }
+            bool flag2 = typeof(EntitiesComp).IsAssignableFrom(comp);
+            bool flag3 = comp.IsAbstract;
+            if(flag1 && flag2 && !flag3)
+            {
+                EntitiesComp compInstance = (EntitiesComp)Activator.CreateInstance(comp);
+                compInstance.props = compProp;
+                compInstance.owner = defineThing;
+                if(compInstance != null)
+                {
+                    defineThing.AddComp(compInstance);
+                }
+                else
+                {
+                    Debug.LogError($"Failed to create an instance of HelperComp type {comp.Name} for thing with id {define.Id}. Make sure the type has a parameterless constructor.");
+                }
+                compInstance.Init();
+            }
+            else
+            {
+                if(flag3)
+                {
+                    Debug.LogWarning($"Comp class {comp.Name} is abstract and cannot be instantiated for thing with id {define.Id}. Skipping this comp. Make sure the compClass is not abstract.");
+                    continue;
+                }else if(!flag1)
+                {
+                    Debug.LogError($"Comp class is not specified in definition for thing with id {define.Id}. Make sure the compClass is specified.");
+                }else if(!flag2)
+                {
+                    Debug.LogError($"Comp class {comp.Name} does not inherit from HelperComp in definition for thing with id {define.Id}. Make sure the compClass inherits from HelperComp.");
+                }else
+                {
+                    Debug.LogError($"Comp class {comp.Name} is invalid for thing with id {define.Id}. Make sure the compClass is a non-abstract class that inherits from HelperComp.");
+                }
+            }
+        }
     }
 }

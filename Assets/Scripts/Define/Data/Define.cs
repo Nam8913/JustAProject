@@ -15,5 +15,6 @@ public class Define : BuildableData
     public float length = 1f;
     public bool destroyable = true;
     
+    [SerializeReference]
     public GraphicData graphicData;
 }

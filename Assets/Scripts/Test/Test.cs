@@ -4,37 +4,58 @@ using UnityEngine.UI;
 using BehaviorTree;
 using BehaviorTree.Performance;
 using BehaviorTree.Debug;
+using Unity.VisualScripting;
 
 public class Test : MonoBehaviour
 {
     private BehaviorTreeRunner _runner;
     private List<Blackboard> _blackboards = new List<Blackboard>();
 
+    /// <summary>
+    /// [SerializeField]
+    /// </summary>
+    //private List<Sprite> _loadedSprites = new List<Sprite>();
+
     void Start()
     {
         GameService.Ins.GlobalInitialize();
+ 
+        
 
-        Creature player = ThingHandler.CreateThingById("HumanDef") as Creature;
-        if (player != null)
-        {
-            GameService.Ins.SetFocusObject(player.gameObject);
-        }
+        // for (int i = 0; i < 3; i++)
+        // {
+        //     DefineThing tree = ThingHandler.CreateThingById("TreeDef");
+        //     SpriteRenderer spriteRenderer = tree.GetOrAddComponent<SpriteRenderer>();
+        //     MultiGraphicData multiGraphicData = tree.def.graphicData as MultiGraphicData;
+        //    // _loadedSprites.Add(tree.LocalPackAssets.GetAsset<Sprite>(multiGraphicData.metaData[0].path));
+        //    string path = $"{multiGraphicData.metaData[i].path}" + $"{(string.IsNullOrEmpty(multiGraphicData.metaData[i].extraId) ? "" : $"_{multiGraphicData.metaData[i].extraId}")}";
+        //     spriteRenderer.sprite = tree.LocalPackAssets.GetAsset<Sprite>(path);
+        // }
 
-        // Add debug components
-        if (FindAnyObjectByType<BTLogger>() == null)
-        {
-            var loggerGO = new GameObject("BTLogger");
-            loggerGO.AddComponent<BTLogger>();
-        }
+        DefineThing tree = ThingHandler.CreateThingById("TreeDef");
+        
 
-        if (FindAnyObjectByType<BTStats>() == null)
-        {
-            var statsGO = new GameObject("BTStats");
-            statsGO.AddComponent<BTStats>();
-        }
+        // Creature player = ThingHandler.CreateThingById("HumanDef") as Creature;
+        // if (player != null)
+        // {
+        //     GameService.Ins.SetFocusObject(player.gameObject);
+        // }
 
-        //Spawn50NPCs();
-        Spawn1NPC();
+        // // Add debug components
+        // if (FindAnyObjectByType<BTLogger>() == null)
+        // {
+        //     var loggerGO = new GameObject("BTLogger");
+        //     loggerGO.AddComponent<BTLogger>();
+        // }
+
+        // if (FindAnyObjectByType<BTStats>() == null)
+        // {
+        //     var statsGO = new GameObject("BTStats");
+        //     statsGO.AddComponent<BTStats>();
+        // }
+
+        // //Spawn50NPCs();
+        // Spawn1NPC();
     }
 
     void Update()

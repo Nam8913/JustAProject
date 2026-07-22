@@ -91,63 +91,83 @@ namespace ModContent
                 }
                 if (root != null && root.HasChildNodes)
                 {
-                    foreach (XmlNode node in root.ChildNodes)
+                    using(DisposableStopwatch watch = new DisposableStopwatch($"Loading defines from XML file: {file}"))
                     {
-                        if (node.NodeType != XmlNodeType.Element)
+                        using (var enumerator = LoadDefinesFromXmlNode(root.ChildNodes, file, metadata))
                         {
-                            continue;
-                        }
-                        System.Type type = TypeUtils.GetAllTypes().FirstOrDefault(t => t.Name == node.Name);
-                        if (type == null)
-                        {
-                            Debug.LogError($"Type {node.Name} not found for XML node in file {file}.At node: {node.OuterXml}");
-                            continue;
-                        }
-
-                        var method = typeof(XmlLoader).GetMethod("DeserializeFromXml", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-                        var genericMethod = method.MakeGenericMethod(type);
-                        object value = genericMethod.Invoke(null, new object[] { node, null, false });
-
-                        RawData raw = value as RawData;
-
-                        if (raw == null)
-                        {
-                            Debug.LogError($"Deserialized object from XML node is not of type RawData in file {file}. At node: {node.OuterXml}");
-                            continue;
-                        }
-
-                        if (string.IsNullOrEmpty(raw.Id))
-                        {
-                            Debug.LogError($"RawData object deserialized from XML node has null or empty Id in file {file}. At node: {node.OuterXml}");
-                            continue;
-                        }
-
-                        var addMethod = typeof(DatabaseThing)
-                            .GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)
-                            .Single(methodInfo =>
-                                methodInfo.Name == "AddData" &&
-                                methodInfo.IsGenericMethodDefinition &&
-                                methodInfo.GetParameters().Length == 3 &&
-                                methodInfo.GetParameters()[0].ParameterType == typeof(string) &&
-                                methodInfo.GetParameters()[1].ParameterType.IsGenericParameter &&
-                                methodInfo.GetParameters()[2].ParameterType == typeof(bool));
-                        var genericAddMethod = addMethod.MakeGenericMethod(type);
-                        genericAddMethod.Invoke(null, new object[] { raw.Id, value, false });
-
-                        DatabaseThing.SetIdWithPackageId(raw.Id, metadata.Meta.packageId);
-
-                        if (value is Define define)
-                        {
-                            if (string.IsNullOrEmpty(define.Id))
+                            while (enumerator.MoveNext())
                             {
-                                continue;
+                                var define = enumerator.Current;
+                                if (define != null)
+                                {
+                                    defines.TryAdd(define.Id, define);
+                                }
                             }
-                            defines.TryAdd(define.Id, define);
-
                         }
                     }
                 }
             }
+        }
+
+        private IEnumerator<Define> LoadDefinesFromXmlNode(XmlNodeList nodes,string file,ModMetaData metadata)
+        {
+            foreach (XmlNode node in nodes)
+            {
+                if (node.NodeType != XmlNodeType.Element)
+                {
+                    continue;
+                }
+                System.Type type = TypeUtils.GetAllTypes().FirstOrDefault(t => t.Name == node.Name);
+                if (type == null)
+                {
+                    Debug.LogError($"Type {node.Name} not found for XML node in file {file}.At node: {node.OuterXml}");
+                    continue;
+                }
+
+                var method = typeof(XmlLoader).GetMethod("DeserializeFromXml", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                var genericMethod = method.MakeGenericMethod(type);
+                object value = genericMethod.Invoke(null, new object[] { node, null, false });
+
+                RawData raw = value as RawData;
+
+                if (raw == null)
+                {
+                    Debug.LogError($"Deserialized object from XML node is not of type RawData in file {file}. At node: {node.OuterXml}");
+                    continue;
+                }
+
+                if (string.IsNullOrEmpty(raw.Id))
+                {
+                    Debug.LogError($"RawData object deserialized from XML node has null or empty Id in file {file}. At node: {node.OuterXml}");
+                    continue;
+                }
+
+                var addMethod = typeof(DatabaseThing)
+                    .GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)
+                    .Single(methodInfo =>
+                        methodInfo.Name == "AddData" &&
+                        methodInfo.IsGenericMethodDefinition &&
+                        methodInfo.GetParameters().Length == 3 &&
+                        methodInfo.GetParameters()[0].ParameterType == typeof(string) &&
+                        methodInfo.GetParameters()[1].ParameterType.IsGenericParameter &&
+                        methodInfo.GetParameters()[2].ParameterType == typeof(bool));
+                var genericAddMethod = addMethod.MakeGenericMethod(type);
+                genericAddMethod.Invoke(null, new object[] { raw.Id, value, false });
+
+                DatabaseThing.SetIdWithPackageId(raw.Id, metadata.Meta.packageId);
+
+                if (value is Define define)
+                {
+                    if (string.IsNullOrEmpty(define.Id))
+                    {
+                        Debug.LogError($"Define object deserialized from XML node has null or empty Id in file {file}. At node: {node.OuterXml}");
+                        continue;
+                    }
+                    yield return define;
+                }
+                yield return null;
+            }
+            yield break;
         }
 
         /// <summary>
@@ -216,7 +236,8 @@ namespace ModContent
                             if (graphicMeta == null || string.IsNullOrEmpty(graphicMeta.path)) continue;
 
                             ModAssets modAssets = GlobalAssets.GetModAssets(metadata.Meta.packageId);
-                            modAssets.TryGetAsset($"{graphicMeta.path}", out Sprite sprite);
+                            string path = $"{graphicMeta.path}"+$"{(string.IsNullOrEmpty(graphicMeta.extraId) ? "" : $"_{graphicMeta.extraId}")}";
+                            modAssets.TryGetAsset($"{path}", out Sprite sprite);
                             if (sprite == null)
                             {
                                 modAssets.TryGetAsset($"{graphicMeta.path}", out Texture2D texture);
@@ -234,7 +255,7 @@ namespace ModContent
 
                                 if (sprite != null)
                                 {
-                                    modAssets.TryRegisterAsset($"{graphicMeta.path}", sprite, false);
+                                    modAssets.TryRegisterAsset($"{path}", sprite, false);
                                     //Asset<Sprite>.Register($"{graphicMeta.path}", sprite, false);
 #if DEBUG_LOG_FLAG && false
                                         Debug.Log($"Registered sprite asset with id: {metadata.Meta.packageId}:{graphicMeta.path} from mod: {metadata.Meta.modName}");
@@ -291,9 +312,10 @@ namespace ModContent
                                 else
                                 {
                                     Vector2 reversePosition = new Vector2(graphicMeta.startPos.x, texture.height - graphicMeta.startPos.y - graphicMeta.size.y);
+#if DEBUG_LOG_FLAG && false
                                     Debug.Log(System.String.Format("Creating sprite for {0} from atlas {1} with rect {2}, pivot {3}, pixelsPerUnit {4}, extrude {5}, spriteMeshType {6}, border {7}, generateFallbackPhysicsShape {8}",
                                         rsPath, atlasPath, new Rect(reversePosition.x, reversePosition.y, graphicMeta.size.x, graphicMeta.size.y), graphicMeta.pivot, graphicMeta.pixelsPerUnit, graphicMeta.extrude, graphicMeta.spriteMeshType, graphicMeta.border, graphicMeta.generateFallbackPhysicsShape));
-                                    
+#endif         
                                     texture.wrapMode = graphicMeta.wrapMode;
                                     texture.filterMode = graphicMeta.filterMode;
                                     sprite = Sprite.Create(texture, new Rect(reversePosition.x, reversePosition.y, graphicMeta.size.x, graphicMeta.size.y), graphicMeta.pivot, graphicMeta.pixelsPerUnit, graphicMeta.extrude, graphicMeta.spriteMeshType, graphicMeta.border, graphicMeta.generateFallbackPhysicsShape);
@@ -302,7 +324,7 @@ namespace ModContent
 
                                 modAssets.TryRegisterAsset(rsPath, sprite, false);
                                 // Asset<Sprite>.Register(rsPath, sprite, false);
-#if DEBUG_LOG_FLAG && true
+#if DEBUG_LOG_FLAG && false
                                 Debug.Log($"Registered sprite asset with id: {metadata.Meta.packageId}:{rsPath} from mod: {metadata.Meta.modName}");
 #endif
                             }

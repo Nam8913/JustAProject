@@ -6,14 +6,11 @@ using UnityEngine;
 public abstract class Game : MonoBehaviour
 {
     private void Awake()
-    { 
-        #if DEBUG_LOG_FLAG && false
-        Debug.Log("Game Awake" + this.GetType().Name);
-        #endif
+    {
         if(!isGlobalInitialized)
         {
-            isGlobalInitialized = true;
             GameService.Ins.GlobalInitialize();
+            isGlobalInitialized = true;
         }
         GameService.Ins.InitializeWhenChangeScene();
     }
